@@ -1,0 +1,15 @@
+funcao(){
+a = b;
+c = 'c';
+d = 0;
+e = 0;
+	enquanto(d <= 10){
+		a += 'd'
+		e ++
+	}
+	
+	se(e == 5){
+		b = a && c
+		f = a||c
+	}
+}

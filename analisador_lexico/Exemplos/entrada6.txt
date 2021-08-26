@@ -1,0 +1,3 @@
+a+b ++ -+ -= inteiro falso
+a + b enquanto variaveis - + x / y D >= Y
+s == b s=b

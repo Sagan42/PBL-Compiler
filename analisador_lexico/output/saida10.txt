@@ -1,0 +1,16 @@
+01 CAR 'a'
+01 DEL ;
+01 DEL {
+01 CAR '\''
+01 CAR '\'
+02 IDE asdasda
+02 IDE ass
+02 CAR ''
+
+01 CaMF 'asddfds'
+01 CaMF 'asddssas\'
+01 CaMF 'ffdfds\''
+02 CaMF 'a+'
+02 CaMF 'dadsadsas\'
+02 CaMF '   '
+02 CaMF 'teste '
