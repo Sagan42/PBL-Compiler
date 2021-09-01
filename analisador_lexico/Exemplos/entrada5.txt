@@ -1,3 +1,0 @@
-gabriel ab falso verdadeiro
-enquanto algoritmo leia
-inteiro

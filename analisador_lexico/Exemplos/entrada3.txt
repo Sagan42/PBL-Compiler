@@ -1,4 +1,0 @@
-senao funcao_2 registrar
-ola retorno mundo
-registro teste variaveis
-enquanto
