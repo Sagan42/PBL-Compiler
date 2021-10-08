@@ -1,0 +1,35 @@
+01 NRO 7
+03 PRE se
+03 DEL (
+03 NRO 123
+03 NRO 3
+03 DEL )
+04 PRE escreva
+04 DEL (
+04 CAD "uma palavra aqui"
+04 DEL )
+04 DEL ;
+05 PRE leia
+05 DEL (
+05 DEL )
+07 PRE enquanto
+07 IDE a
+08 PRE char
+08 IDE c
+08 REL =
+08 DEL )
+08 DEL )
+09 IDE c
+11 IDE da
+11 IDE like
+11 IDE no
+11 IDE video
+11 IDE e
+11 PRE se
+11 IDE inscreva
+
+03 OpMF <>
+07 OpMF +1
+08 CaMF 'soif084dinf&&&@@*
+08 CaMF '
+09 OpMF nome==

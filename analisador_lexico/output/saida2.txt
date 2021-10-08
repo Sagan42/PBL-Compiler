@@ -1,0 +1,9 @@
+01 ART *
+02 ART ++
+04 ART +
+05 ART -
+06 IDE a
+07 ART --
+08 ART /
+
+03 OpMF +-
