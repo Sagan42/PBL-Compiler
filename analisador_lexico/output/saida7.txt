@@ -1,0 +1,10 @@
+01 IDE algoritmo5_087fheru
+02 PRE inteiro
+02 DEL (
+02 DEL )
+03 IDE anna
+03 DEL ;
+04 PRE se
+04 DEL (
+05 IDE a
+05 CAD "something"

@@ -78,7 +78,7 @@ class Files():
 
 	def write_in_file(self, data):
 		# Monta o caminho de escrita do arquivo de saída.
-		path = self.__absolute_Path + self.__outputPath + "/" + self.__nameOutputFile 
+		path = self.__absolute_Path + self.__outputPath + "/" + self.__nameOutputFile
 		# Verifica se o arquivo existe
 		if not os.path.exists(path):
 			"""Creates the output file"""
