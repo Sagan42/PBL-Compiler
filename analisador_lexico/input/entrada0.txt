@@ -1,2 +1,20 @@
-12 12.12434 23143.1234342 12$34534 
-12.__  12@12 221_. 12.a1
+{#
+
+# teste 
+fsfsdfrtrttertt54645fgdsfgf
+
+#}
+
+teste 12.12 # {# gdfgfgdgsfgfgsf
+
+$ #} teste1
+
+{# gdfgdfggfgf
+fdgdgfgf
+ereerter
+
+343453453454 #} "tst\/" {# teste 
+
+#} teste2 {# comentário 
+
+#}teste
