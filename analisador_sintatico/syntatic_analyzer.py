@@ -14,6 +14,8 @@ class Syntatic_analyzer():
 	def next_token():
 		return
 
+	# ============================================================================================
+	# === Gramatica para declaracao de elementos do tipo registro ================================
 	# <declaration_reg>    ::= registro id '{' <declaration_reg1> |
 	def declaration_reg():
 		if(self.__currentToken['token'] == "registro"):
@@ -117,6 +119,65 @@ class Syntatic_analyzer():
 		else:
 			print("Erro sintático na linha " + self.__currentToken['linha'] + "\n")
 
+	# =========================================================================================
+	# =========================================================================================
+
+	# =======================================================================================
+	# === Gramatica para acesso a elementos do tipo registro ================================
+	# <elem_registro>         ::= '.' id <nested_elem_registro>
+	def elem_registro():
+		if(self.__currentToken['token'] == "."):
+			self.__currentToken = next_token()
+			if(self.__currentToken['sigla'] == "IDE"):
+				self.__currentToken = next_token()
+				if(First("nested_elem_registro",self.__currentToken['token'], self.__currentToken['sigla']) == True):
+					self.nested_elem_registro()
+				else:
+					print("Erro sintático na linha " + self.__currentToken['linha'] + "\n")
+			else:
+				print("Erro sintático na linha " + self.__currentToken['linha'] + "\n")
+		else:
+			print("Erro sintático na linha " + self.__currentToken['linha'] + "\n")
+
+
+	# <nested_elem_registro>  ::= '.' id <nested_elem_registro1> | <v_m_access> <nested_elem_registro1> |
+	def nested_elem_registro():
+		if(self.__currentToken['token'] == "."):
+			self.__currentToken = next_token()
+			if(self.__currentToken['sigla'] == "IDE"):
+				self.__currentToken = next_token()
+				if(First("nested_elem_registro1",self.__currentToken['token'], self.__currentToken['sigla']) == True):
+					self.nested_elem_registro1()
+					return
+				else:
+					print("Erro sintático na linha " + self.__currentToken['linha'] + "\n")
+			else:
+				print("Erro sintático na linha " + self.__currentToken['linha'] + "\n")
+		else:
+			if(First("v_m_access",self.__currentToken['token'], self.__currentToken['sigla']) == True):
+				self.v_m_access()
+				self.__currentToken = next_token()
+				if(First("nested_elem_registro1",self.__currentToken['token'], self.__currentToken['sigla']) == True):
+					self.nested_elem_registro1()
+					return
+				else:
+					print("Erro sintático na linha " + self.__currentToken['linha'] + "\n")
+			else:
+				print("Erro sintático na linha " + self.__currentToken['linha'] + "\n")
+
+	# <nested_elem_registro1> ::= <elem_registro> |
+	def elem_registro():
+		if(First("elem_registro",self.__currentToken['token'], self.__currentToken['sigla']) == True):
+			self.elem_registro()
+			return
+		else:
+			return # Vazio
+	# =========================================================================================
+	# =========================================================================================
+	
+
+	# =======================================================================================
+	# === Gramatica para declaracao do bloco de constantes ==================================
 	# <declaration_const>  ::= constantes '{' <declaration_const1>
 	def declaration_const():
 		if(self.__currentToken['token'] == "constantes"):
@@ -188,9 +249,13 @@ class Syntatic_analyzer():
 				print("Erro sintático na linha " + self.__currentToken['linha'] + "\n") 
 		else:
 			print("Erro sintático na linha " + self.__currentToken['linha'] + " . Esperando token ',' , ';' ")
+	# =========================================================================================
+	# =========================================================================================
+	
 
-
-	#<declaration_var>  ::= variaveis '{' <declaration_var1>
+	# =======================================================================================
+	# === Gramatica para declaracao do bloco de variaveis ===================================
+	# <declaration_var>  ::= variaveis '{' <declaration_var1>
 	def declaration_var():
 		if(self.__currentToken['token'] == "variaveis"):
 			self.__currentToken = next_token()
@@ -225,7 +290,7 @@ class Syntatic_analyzer():
 			print("Erro sintático na linha " + self.__currentToken['linha'] + " . Esperando identificador ou token '}' or 'inteiro', 'real', 'booleano', 'char', 'cadeia', 'vazio'")
 
 
-	#<declaration_var2> ::= '=' <value> <declaration_var3> | <vector_matrix> | <declaration_var3>
+	# <declaration_var2> ::= '=' <value> <declaration_var3> | <vector_matrix> | <declaration_var3>
 	def declaration_var2():
 		if(self.__currentToken['token'] == "="):
 			self.__currentToken = next_token()
@@ -246,7 +311,7 @@ class Syntatic_analyzer():
 			print("Erro sintático na linha " + self.__currentToken['linha'] + " . Esperando token '=', '[' , ',' , ';' ")
 
 
-	#<declaration_var3> ::= ',' id <declaration_var2>  | ';' <declaration_var1> 
+	# <declaration_var3> ::= ',' id <declaration_var2>  | ';' <declaration_var1> 
 	def declaration_var3():
 		if(self.__currentToken['token'] == ','):
 			self.__currentToken = next_token()
@@ -266,10 +331,13 @@ class Syntatic_analyzer():
 				print("Erro sintático na linha " + self.__currentToken['linha'] + "\n") 
 		else:
 			print("Erro sintático na linha " + self.__currentToken['linha'] + " . Esperando token ',' , ';' ")
+	# =========================================================================================
+	# =========================================================================================
+	
 
-
-
-	#<vector_matrix>   ::= '[' number ']' <vector_matrix_1>
+	# =======================================================================================
+	# === Gramatica para declaracao de vetores e matrizes ===================================
+	# <vector_matrix>   ::= '[' number ']' <vector_matrix_1>
 	def vector_matrix():
 		if(self.__currentToken['token'] == '['):
 			self.__currentToken = next_token()
@@ -290,7 +358,7 @@ class Syntatic_analyzer():
 			print("Erro sintático na linha " + self.__currentToken['linha'] + "\n") 
 
 
-	#<vector_matrix_1> ::= '[' number ']' <vector_matrix_2> | '=' <init_vector> <declaration_var3> | <declaration_var3>
+	# <vector_matrix_1> ::= '[' number ']' <vector_matrix_2> | '=' <init_vector> <declaration_var3> | <declaration_var3>
 	def vector_matrix_1():
 		if(self.__currentToken['token'] == '['):
 			self.__currentToken = next_token()
@@ -324,7 +392,7 @@ class Syntatic_analyzer():
 			print("Erro sintático na linha " + self.__currentToken['linha'] + "\n") 
 
 	
-	#<vector_matrix_2> ::= '=' <init_matrix> <declaration_var3> | <declaration_var3>
+	# <vector_matrix_2> ::= '=' <init_matrix> <declaration_var3> | <declaration_var3>
 	def vector_matrix_2():
 		if(self.__currentToken['token'] == '='):
 			self.__currentToken = next_token()
@@ -341,8 +409,12 @@ class Syntatic_analyzer():
 			return
 		else:
 			print("Erro sintático na linha " + self.__currentToken['linha'] + "\n") 
+	# =========================================================================================
+	# =========================================================================================
+	
 
-
+	# =========================================================================================
+	# === Gramatica para inicializacao de vetores e matrizes ==================================
 	# <init_matrix>     ::= '[' <init_matrix_1>
 	def init_matrix():
 		if(self.__currentToken['token'] == '['):
@@ -421,8 +493,12 @@ class Syntatic_analyzer():
 			return
 		else:
 			print("Erro sintático na linha " + self.__currentToken['linha'] + "\n") 
+	# =========================================================================================
+	# =========================================================================================
+	
 
-
+	# =======================================================================================
+	# === Gramatica para acesso a vetores e matrizes ========================================
 	# <v_m_access>   ::= '[' <v_m_access1>
 	def v_m_access():
 		if(self.__currentToken['token'] == '['):
@@ -492,7 +568,8 @@ class Syntatic_analyzer():
 				print("Erro sintático na linha " + self.__currentToken['linha'] + "\n")
 		else:
 			return
-
+	# =========================================================================================
+	# =========================================================================================
 
 
 
