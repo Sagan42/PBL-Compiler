@@ -1,0 +1,7 @@
+08 IDE teste
+08 NRO 12.12
+08 SIB #
+10 IDE teste1
+16 CAD "tst\/"
+18 IDE teste2
+20 IDE teste
