@@ -12,6 +12,8 @@ class Auxiliary_Functions():
 		elif(non_terminal == "declaration_reg2"):
 			return self.__declaration_reg2()
 		elif(non_terminal == "declaration_reg3"):
+			return self.__declaration_reg3()
+		elif(non_terminal == "declaration_reg4"):
 			return self.__declaration_reg4()
 		elif(non_terminal == "declaration_reg5"):
 			return self.__declaration_reg5()
