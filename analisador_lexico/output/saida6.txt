@@ -1,8 +1,0 @@
-01 REL ==
-02 LOG &&
-02 DEL ,
-02 DEL ;
-02 LOG ||
-
-01 OpMF &
-02 OpMF |

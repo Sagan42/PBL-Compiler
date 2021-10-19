@@ -1,0 +1,59 @@
+####################################################################
+# Instituição: Universidade Estadual de Feira de Santana
+# Autores: Gabriel Sá e João Pedro
+# Data: -- de -- de 2021
+# ##################################################################
+import os
+dict = {}
+
+def __init__(self):
+    self.__absolute_Path = os.path.abspath("")
+    self.__inputPath = "../analisador_lexico/output"
+
+def read(self):
+    path = self.__absolute_Path + self.__inputPath
+    # Busca todos os nomes dos arquivos de entrada.
+    self.__files = name_files = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
+    self.__sort_file()
+    if (len(self.__files) == 0):
+        # Não existem arquivos de entrada
+        return False
+    else:
+        # Seta o primeiro arquivo a ser lido
+        name = self.__files[0]
+        name = name.replace(".txt", "")
+        self.__inputFile_ID = name[7:]
+        self.__nameOutputFile = "saida" + self.__inputFile_ID + ".txt"
+        self.__indexFile += 1
+        # Busca e ler o primeiro arquivo a ser analisado
+        file_path = self.__absolute_Path + self.__inputPath + "/" + self.__files[0]
+        with open(file_path, 'r') as f:
+            # Ler linha a linha do arquivo
+            for lines in f:
+                line = lines.split(' ')
+                key = line[2]
+                value = line[1]
+                dict[key] = value
+        f.close()
+        return True
+
+def set_nextFile(self):
+    size = len(self.__files)
+    if (self.__indexFile < size):
+        # Busca e ler o proximo arquivo a ser analisado
+        file_path = self.__absolute_Path + self.__inputPath + "/" + self.__files[self.__indexFile]
+        with open(file_path, 'r') as f:
+            # Ler todas as linhas do arquivo
+            self.__lines = f.readlines()
+        f.close()
+        # Atualiza o ID para o arquivo atual
+        name = self.__files[self.__indexFile]
+        name = name.replace(".txt", "")
+        self.__inputFile_ID = name[7:]
+        self.__nameOutputFile = "saida" + self.__inputFile_ID + ".txt"
+        # Atualiza o index para o proximo arquivo
+        self.__indexFile += 1
+        return True
+    else:
+        # Todos os arquivos ja foram processados
+        return False
