@@ -1,0 +1,5 @@
+registro Pessoa {
+	inteiro a,b,c;
+	char roupas[5];
+	cadeia teste;
+}
