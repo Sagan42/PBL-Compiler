@@ -17,7 +17,7 @@ class Syntatic_analyzer():
 	# ============================================================================================
 	# === Gramatica para declaracao de elementos do tipo registro ================================
 	# <declaration_reg>    ::= registro id '{' <declaration_reg1> |
-	def declaration_reg():
+	def declaration_reg(self):
 		if(self.__currentToken['token'] == "registro"):
 			self.__currentToken = next_token()
 			if(self.__currentToken['token'] == "IDE"):
@@ -38,7 +38,7 @@ class Syntatic_analyzer():
 
 
 	# <declaration_reg1>   ::= <primitive_type> id <declaration_reg4> <declaration_reg2> | id id <declaration_reg4> <declaration_reg2> 
-	def declaration_reg1():
+	def declaration_reg1(self):
 		if(First("primitive_type",self.__currentToken['token'], self.__currentToken['sigla']) == True):
 			self.__currentToken = next_token()
 			if(First("declaration_reg4",self.__currentToken['token'], self.__currentToken['sigla']) == True):
@@ -71,7 +71,7 @@ class Syntatic_analyzer():
 
 
 	# <declaration_reg2>   ::= ',' id <declaration_reg2> | ';' <declaration_reg5>
-	def declaration_reg2():
+	def declaration_reg2(self):
 		if(self.__currentToken['token'] == ","):
 			self.__currentToken = next_token()
 			if(self.__currentToken['sigla'] == "IDE"):
@@ -93,7 +93,7 @@ class Syntatic_analyzer():
 			print("Erro sintático na linha " + self.__currentToken['linha'] + " . Esperando token ',' ou ';' \n")
 
 	# <declaration_reg3>   ::= '}' <declaration_reg>
-	def declaration_reg3():
+	def declaration_reg3(self):
 		if(self.__currentToken['token'] == "}"):
 			self.__currentToken = next_token()
 			if(First("declaration_reg",self.__currentToken['token'], self.__currentToken['sigla']) == True):
@@ -104,14 +104,14 @@ class Syntatic_analyzer():
 			print("Erro sintático na linha " + self.__currentToken['linha'] + " . Esperando token '}'\n")
 
 	# <declaracao_reg4>   ::= <v_m_access> |
-	def declaration_reg4():
+	def declaration_reg4(self):
 		if(First("v_m_access",self.__currentToken['token'], self.__currentToken['sigla']) == True):
 			self.v_m_access()
 		else:
 			return
 
 	# <declaration_reg5>   ::= <declaration_reg1> | <declaration_reg3>
-	def declaration_reg5():
+	def declaration_reg5(self):
 		if(First("declaration_reg1",self.__currentToken['token'], self.__currentToken['sigla']) == True):
 			self.declaration_reg1()
 		elif(First("declaration_reg3",self.__currentToken['token'], self.__currentToken['sigla']) == True):
