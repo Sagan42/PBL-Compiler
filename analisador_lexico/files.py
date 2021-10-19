@@ -3,7 +3,7 @@ import os
 class Files():
 	def __init__(self):
 		self.__absolute_Path  = os.path.abspath("")
-		self.__inputPath      = "/input-2"
+		self.__inputPath      = "/input"
 		self.__outputPath     = "/output"    #
 		self.__nameOutputFile = ""
 		self.__counterFile   = 0 

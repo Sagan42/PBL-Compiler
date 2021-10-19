@@ -4,7 +4,7 @@ class Files():
     def __init__(self):
         self.__tokens = []
         self.__absolute_Path = os.path.abspath("../")
-        self.__inputPath = "\\analisador_lexico\\output"
+        self.__inputPath = "/analisador_lexico/output"
         self.__nameOutputFile = ""
         self.__counterFile = 0
         self.__inputFile_ID = 0  # identificador do arquivo de entrada atual.
@@ -34,9 +34,9 @@ class Files():
                 # Ler linha a linha do arquivo
                 for lines in f:
                     line = lines.split(' ')
-                    token = line[2]
-                    sigla = line[1]
-                    linha = line[0]
+                    token = line[2].replace("\n","")
+                    sigla = line[1].replace("\n","")
+                    linha = line[0].replace("\n","")
                     dict = {"token": token, "sigla": sigla, "linha": linha}
                     self.__tokens.append(dict)
             f.close()
