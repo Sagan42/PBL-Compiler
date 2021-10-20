@@ -1,0 +1,37 @@
+Modo Pânico:
+1. Relata-se o erro.
+2. Pulam-se tokens até que um token de sincronização seja encontrado.
+
+Tokens de sincronização: pontos do programa (palavras-chave, delimitadores, etc) em que é possível se retomar a análise sintática com certa segurança. Esses token precisam ser determinados pelo projetista do compilador.
+
+Nos ASD recursivos, a busca por tokens de sincronização é feita sempre que um token esperado não é encontrado. Ou seja, no ponto de erro dos procedimentos recursivos.
+
+Os tokens de sincronização podem ser o conjunto Follow ou First de um símbolo não-terminal.
+
+=================================================================================================================
+Seleção dos tokens de sincronização de cada possível erro na gramática de declaração de constantes:
+
+terminal esperado |  token de sincronização
+ (não-recebido)   |
+-------------------------------------------
+ "constantes"     |  "variaveis"
+    "{"           |  "variaveis"
+tipos primitivos  |  ";" ou "," ou "}" ou "variaveis"
+     "="          |  ";" ou "," ou "}" ou "variaveis"
+   valor da       |  ";" ou "," ou "}" ou "variaveis"
+ inicialização    |
+     ","          |  "," ou ";" ou "}" ou "variaveis"
+	 ";"          |  tipos primitivos ou "}" ou "variaveis"
+	 "}"          |  "variaveis"
+
+constantes {
+	inteiro a = 0;
+	inteiro b = 0;
+	inteiro c = 0, d = 3, e = 4;	
+}
+
+variaveis { 
+	inteiro a;
+	inteiro b;
+}
+

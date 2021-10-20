@@ -54,6 +54,18 @@ class Lexical_analyzer:
 			return ["OpMF", self.__lexema, index]  # Acabou a linha e não encontrou um delimitador
 
 
+	def auto_erro_number(self, line, index):
+		while(index < len(line)):
+			c = line[index]
+			if(self.__functions.isDelimiter(c)):
+				return ["NMF", self.__lexema, index]
+			else:
+				self.__lexema += c
+				index += 1
+		else:
+			return ["NMF", self.__lexema, index] # Acabou a linha e não encontrou um delimitador
+
+
 	def auto_relational_operators(self, line, initial):
 		state     = 1
 		self.__lexema = ""
@@ -237,8 +249,8 @@ class Lexical_analyzer:
 				self.__lexema += c
 				index +=1
 			elif(state == 2):
-				if(self.__functions.isOperatorRelational(c) == True or self.__functions.isArithmeticOperators(c) == True or self.__functions.isLogicalOperators(c) == True):
-					return self.auto_erro_operator(line, index)				
+				if(self.__functions.isSymbol(c) == True or self.__functions.isOperatorRelational(c) == True or self.__functions.isArithmeticOperators(c) == True or self.__functions.isLogicalOperators(c) == True):
+					return self.auto_erro_number(line, index)				
 				elif(self.__functions.isDigit(c)):
 					state = 2
 					self.__lexema += c
@@ -249,7 +261,7 @@ class Lexical_analyzer:
 					index +=1
 				elif(self.__functions.isDelimiter(c)):
 					return ["NRO", self.__lexema, index]
-				elif(c == "\'" or c == "\"" or self.__functions.isSymbol(c) == True):
+				elif(c == "\'" or c == "\""):
 					return ["NRO", self.__lexema, index]
 				else:
 					state = 5 # erro
@@ -261,8 +273,8 @@ class Lexical_analyzer:
 				else:
 					state = 5 # erro
 			elif(state == 4):
-				if(self.__functions.isOperatorRelational(c) == True or self.__functions.isArithmeticOperators(c) == True or self.__functions.isLogicalOperators(c) == True):
-					return self.auto_erro_operator(line, index)
+				if(self.__functions.isSymbol(c) == True or self.__functions.isOperatorRelational(c) == True or self.__functions.isArithmeticOperators(c) == True or self.__functions.isLogicalOperators(c) == True):
+					return self.auto_erro_number(line, index)
 				elif(c == "."):
 					state = 5 # erro
 				elif(self.__functions.isDigit(c)):
@@ -271,7 +283,7 @@ class Lexical_analyzer:
 					index +=1
 				elif(self.__functions.isDelimiter(c)):
 					return ["NRO", self.__lexema, index]
-				elif(c == "\'" or c == "\"" or self.__functions.isSymbol(c) == True):
+				elif(c == "\'" or c == "\""):
 					return ["NRO", self.__lexema, index]
 				else:
 					state = 5 # erro
