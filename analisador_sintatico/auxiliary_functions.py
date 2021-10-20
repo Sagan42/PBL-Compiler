@@ -6,7 +6,15 @@ class Auxiliary_Functions():
 		pass
 	# Funcao que verifica se um símbolo terminal pertence ao conjunto primeiro de um nao-terminal da linguagem.
 	def First(self, non_terminal, token, sigla):
-		if(non_terminal == "primitive_type"):
+		if(non_terminal == "value_with_IDE"):
+			return self.__value_with_IDE(token,sigla)
+		elif(non_terminal == "value_without_IDE"):
+			return self.__value(token,sigla)
+		elif(non_terminal == "type"):
+			return self.__type(token, sigla)
+		elif(non_terminal == "value"):
+			return self.__value(token, sigla)
+		elif(non_terminal == "primitive_type"):
 			return self.__primitive_type(token, sigla)
 		elif(non_terminal == "declaration_reg"):
 			return self.__declaration_reg(token, sigla)
@@ -66,6 +74,24 @@ class Auxiliary_Functions():
 			return self.__declaration_var2(token, sigla)
 		elif(non_terminal == "declaration_var3"):
 			return self.__declaration_var3(token, sigla)
+		else:
+			return False
+
+	def __value_with_IDE(self,token,sigla):
+		if(self.__value(token,sigla) == True or sigla == "IDE"):
+			return True
+		else:
+			return False
+
+	def __type(self,token,sigla):
+		if(self.__primitive_type(token, sigla) == True or sigla == "IDE"):
+			return True
+		else:
+			return False
+
+	def __value(self, token, sigla):
+		if(sigla == "NRO" or sigla == "CAD" or sigla == "CAR" or token == "verdadeiro" or token == "falso"):
+			return True
 		else:
 			return False
 

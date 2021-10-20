@@ -27,7 +27,7 @@ tipos primitivos  |  ";" ou "," ou "}" ou "variaveis"
 constantes {
 	inteiro a = 0;
 	inteiro b = 0;
-	inteiro c = 0 d = 3, e = 4;	
+	inteiro c = 0, d = 3, e = 4;	
 }
 
 variaveis { 

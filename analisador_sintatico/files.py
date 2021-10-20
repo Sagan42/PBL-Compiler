@@ -14,7 +14,6 @@ class Files():
 
     def read(self):
         path = self.__absolute_Path + self.__inputPath
-        print(path)
         # Busca todos os nomes dos arquivos de entrada.
         self.__files = name_files = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
         self.__sort_file()
