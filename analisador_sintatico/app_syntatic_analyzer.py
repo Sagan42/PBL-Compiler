@@ -14,6 +14,7 @@ def main():
 	#print(my_tokens)
 	syntatic_analyzer = Syntatic_analyzer(my_tokens)
 	if( syntatic_analyzer.number_of_tokens() > 0):
+		print("[INFO] Análise Sintática Iniciada.")
 		syntatic_analyzer.Program()
 		print("[INFO] Análise Sintática Encerrada.")
 
