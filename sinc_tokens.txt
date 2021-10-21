@@ -9,6 +9,7 @@ tipos primitivos  |  tipo primitivos ou "}" ou ";"
 	"["           |  tipo primitivos ou "}" ou ";"
 	"]"           |  tipo primitivos ou "}" ou ";"
 	";"           |  tipo primitivos ou "}" ou ";"
+	"}"           |  "constantes"
 	
 -------------------------------------------
 CONSTANTES
@@ -36,4 +37,5 @@ tipos primitivos  |  ";" ou tipos primitivos ou "}"
 	"="           |  tipo primitivos ou "}" ou ";"
 	","           |  NRO ou tipo primitivos ou "}" ou ";"
 	NRO           |  tipo primitivos ou "}" ou ";"
+	"}"           |  "funcao"
 -------------------------------------------
