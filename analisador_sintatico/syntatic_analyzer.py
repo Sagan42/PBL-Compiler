@@ -284,9 +284,19 @@ class Syntatic_analyzer():
 				self.declaration_const1()
 				return
 			else:
-				print("Erro sintático na linha " + self.__currentToken['linha'] + " . Esperando token '}' \n")
+				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '{'\n")
+				while(True):
+					if(self.__currentToken["token"] == "variaveis"):
+						return
+					else:
+						self.__currentToken = self.next_token()
 		else:
-			print("Erro sintático na linha " + self.__currentToken['linha'] + " . Esperando token 'constantes' \n")
+			print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token 'constantes'\n")
+			while(True):
+				if(self.__currentToken["token"] == "variaveis"):
+					return
+				else:
+					self.__currentToken = self.next_token()
 
 	# <declaration_const1> ::= <primitive_type> id '=' <value> <declaration_const2> | '}'
 	def declaration_const1(self):
@@ -301,17 +311,56 @@ class Syntatic_analyzer():
 						self.declaration_const2()
 						return
 					else:
-						print("Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '='\n")	
+						print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token para atribuição.\n")
+						while(True):
+							if(self.__currentToken["token"] == "," or self.__currentToken["token"] == ";"):
+								self.declaration_const2()
+							elif(self.match("}",1) == True):
+								self.__currentToken = self.next_token()
+								return
+							elif(self.__currentToken["token"] == "variaveis"):
+								return
+							else:
+								self.__currentToken = self.next_token()	
 				else:
-					print("Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '='\n")
+					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '='\n")
+					while(True):
+						if(self.__currentToken["token"] == "," or self.__currentToken["token"] == ";"):
+							self.declaration_const2()
+						elif(self.match("}",1) == True):
+							self.__currentToken = self.next_token()
+							return
+						elif(self.__currentToken["token"] == "variaveis"):
+							return
+						else:
+							self.__currentToken = self.next_token()
 			else:
-				print("Erro sintático na linha " + self.__currentToken['linha'] + " . Esperando identificador\n")
+				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando identificador.\n")
+				while(True):
+					if(self.__currentToken["token"] == "," or self.__currentToken["token"] == ";"):
+						self.declaration_const2()
+					elif(self.match("}",1) == True):
+						self.__currentToken = self.next_token()
+						return
+					elif(self.__currentToken["token"] == "variaveis"):
+						return
+					else:
+						self.__currentToken = self.next_token()
 		elif(self.match("}", 1) == True):
 			self.__currentToken = self.next_token()
 			return
 		else:
-			print("Erro sintático na linha " + self.__currentToken['linha'] + " . Esperando identificador ou token '}' or 'inteiro', 'real', 'booleano', 'char', 'cadeia', 'vazio'\n")
-
+			print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '}' ou tipo primitivo.\n")
+			while(True):
+				if(self.__currentToken["token"] == "," or self.__currentToken["token"] == ";"):
+					self.declaration_const2()
+				elif(self.match("}",1) == True):
+					self.__currentToken = self.next_token()
+					return
+				elif(self.__currentToken["token"] == "variaveis"):
+					return
+				else:
+					self.__currentToken = self.next_token()
 
 	# <declaration_const2> ::= ',' id '=' <value> <declaration_const2> | ';' <declaration_const1>
 	def declaration_const2(self):
@@ -326,17 +375,57 @@ class Syntatic_analyzer():
 						self.declaration_const2()
 						return
 					else:
-						print("Erro sintático na linha " + self.__currentToken['linha'] + "\n") 
+						print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando valor para atribuição.\n")
+						while(True):
+							if(self.__currentToken["token"] == "," or self.__currentToken["token"] == ";"):
+								self.declaration_const2()
+							elif(self.match("}",1) == True):
+								self.__currentToken = self.next_token()
+								return
+							elif(self.__currentToken["token"] == "variaveis"):
+								return
+							else:
+								self.__currentToken = self.next_token()
 				else:
-					print("Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '='\n")
+					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '='\n")
+					while(True):
+						if(self.__currentToken["token"] == "," or self.__currentToken["token"] == ";"):
+							self.declaration_const2()
+						elif(self.match("}",1) == True):
+							self.__currentToken = self.next_token()
+							return
+						elif(self.__currentToken["token"] == "variaveis"):
+							return
+						else:
+							self.__currentToken = self.next_token()
 			else:
-				print("Erro sintático na linha " + self.__currentToken['linha'] + " . Esperando identificador\n")
+				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando identificador\n")
+				while(True):
+					if(self.__currentToken["token"] == "," or self.__currentToken["token"] == ";"):
+						self.declaration_const2()
+					elif(self.match("}",1) == True):
+						self.__currentToken = self.next_token()
+						return
+					elif(self.__currentToken["token"] == "variaveis"):
+						return
+					else:
+						self.__currentToken = self.next_token()
 		elif(self.match(";", 1) == True):
 			self.__currentToken = self.next_token()
 			self.declaration_const1()
 			return
 		else:
-			print("Erro sintático na linha " + self.__currentToken['linha'] + " . Esperando token ',' , ';'\n")
+			print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ',' , ';'\n")
+			while(True):
+				if(self.__currentToken["token"] == "," or self.__currentToken["token"] == ";"):
+					self.declaration_const2()
+				elif(self.match("}",1) == True):
+					self.__currentToken = self.next_token()
+					return
+				elif(self.__currentToken["token"] == "variaveis"):
+					return
+				else:
+					self.__currentToken = self.next_token()
 	# =========================================================================================
 	# =========================================================================================
 	
