@@ -4,6 +4,13 @@ class Auxiliary_Functions():
 	"""docstring for Auxiliary_Functions"""
 	def __init__(self):
 		pass
+
+	# Funcao que verifica se um símbolo terminal pertence ao conjunto seguinte de um nao-terminal da linguagem.
+	def Follow(self, non_terminal, token, sigla):
+		if(non_terminal == "v_m_access"):
+			return self.__follow_v_m_access(token, sigla)
+
+
 	# Funcao que verifica se um símbolo terminal pertence ao conjunto primeiro de um nao-terminal da linguagem.
 	def First(self, non_terminal, token, sigla):
 		if(non_terminal == "value_with_IDE"):
@@ -77,6 +84,8 @@ class Auxiliary_Functions():
 		else:
 			return False
 
+
+	# == Conjuntos Primeiro ===============================================================================
 	def __value_with_IDE(self,token,sigla):
 		if(self.__value(token,sigla) == True or sigla == "IDE"):
 			return True
@@ -286,3 +295,13 @@ class Auxiliary_Functions():
 			return True
 		else:
 			return False
+	# == Fim dos Conjuntos Primeiro ==========================================================================
+
+
+	# == Conjuntos Seguinte ==================================================================================
+	def __follow_v_m_access(self,token,sigla):
+		if(token == "," or token == ";" or token == ")" or token == "+" or token == "++" or token == "." or token == "=" or token == "}"):
+			return True
+		else:
+			return False
+	# == Fim dos Conjuntos Seguinte ==========================================================================

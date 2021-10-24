@@ -1,22 +1,37 @@
 registro Carro {
-	Pneu p1;
+	Pneu p1
 	Pneu p2;
-	Pneu p3;
+	Pneu ;
 	Pneu p4;
+	inteiro ;
 	Janelas a[Janelas.qtd];
 	Bancos  frente[Bancos.frente.qtd];
 }
 
-registro Pessoa {
+registro {
 	inteiro a,b,c;
 	char roupas[5];
 	cadeia teste;
 }
 
-registro Pessoa2 {
+registro Pessoa2
 	char a, b;
 	char teste[a][b];
 	char teste[3][3];
+} 
+
+registro
+	inteiro a,b,c;
+	char roupas[5];
+	cadeia teste;
+}
+
+registro Teste_de_Matriz_vetores {
+	inteiro a[2];
+	char    b[], d[2];
+	inteiro c[1
+	real    e[][a];
+	inteiro e[a
 }
 
 constantes {

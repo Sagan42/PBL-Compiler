@@ -70,10 +70,28 @@ class Syntatic_analyzer():
 					self.declaration_reg1()
 					return
 				else:
-					print("Erro sintático na linha " + self.__currentToken['linha'] + " . Esperando token '}'\n")
+					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '{'\n")
+					while(True):
+						if(self.__currentToken["token"] == "registro"):
+							self.declaration_reg()
+						elif(self.__currentToken["token"] == "constantes"):
+							return
+						else:
+							self.__currentToken = self.next_token()
 			else:
-				print("Erro sintático na linha " + self.__currentToken['linha'] + " . Esperando identificador \n")
-		else:
+				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token identificador \n")
+				if(self.match("{",1)):
+					self.__currentToken = self.next_token()
+					self.declaration_reg1()
+					return
+				else:
+					while (True):
+						if(self.__currentToken["token"] == "registro"):
+							self.declaration_reg()
+						elif(self.__currentToken["token"] == "constantes"):
+							return
+						else:
+							self.__currentToken = self.next_token()
 			return # Nao existe declaration de registro
 
 	# <declaration_reg1>   ::= <primitive_type> id <declaration_reg4> <declaration_reg2> | id id <declaration_reg4> <declaration_reg2> 
@@ -86,7 +104,14 @@ class Syntatic_analyzer():
 				self.declaration_reg2()
 				return
 			else:
-				print("Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token identificador." +"\n")
+				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token identificador." +"\n")
+				while(True):
+					if(self.__currentToken["token"] == "registro"):
+						self.declaration_reg()
+					elif(self.__currentToken["token"] == "constantes"):
+						return
+					else:
+						self.__currentToken = self.next_token()
 		elif(self.match("IDE", 2) == True):
 			self.__currentToken = self.next_token()
 			if(self.match("IDE", 2) == True):
@@ -95,10 +120,30 @@ class Syntatic_analyzer():
 				self.declaration_reg2()
 				return 
 			else:
-				print("Erro sintático na linha " + self.__currentToken['linha'] + " . Esperando identificador \n")
+				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token identificador \n")
+				while(True):
+					if(self.__currentToken["token"] == "registro"):
+						self.declaration_reg()
+					elif(self.__currentToken["token"] == "constantes"):
+						return
+					else:
+						self.__currentToken = self.next_token()
 		else:
-			print("Erro sintático na linha " + self.__currentToken['linha'] + " . Esperando tipo primitivo ou identificador \n")				
-
+			print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando tipo primitivo ou identificador.\n")
+			while(True):
+				if(self.match(";", 1) == True):
+					self.__currentToken = self.next_token()
+					self.declaration_reg5()
+					return
+				elif(self.match("}", 1) == True):
+					self.__currentToken = self.next_token()
+					self.declaration_reg()
+				elif(self.__currentToken["token"] == "registro"):
+					self.declaration_reg()
+				elif(self.__currentToken["token"] == "constantes"):
+					return
+				else:
+					self.__currentToken = self.next_token()
 
 	# <declaration_reg2>   ::= ',' id <declaration_reg2> | ';' <declaration_reg5>
 	def declaration_reg2(self):
@@ -106,15 +151,40 @@ class Syntatic_analyzer():
 			self.__currentToken = self.next_token()
 			if(self.match("IDE", 2) == True):
 				self.__currentToken = self.next_token()
+				self.declaration_reg4()
 				self.declaration_reg2()
 				return
 			else:
-				print("Erro sintático na linha " + self.__currentToken['linha'] + " . Esperando identificador \n")
+				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando identificador \n")
+				while(True):
+					if(self.__currentToken["token"] == ";" or self.__currentToken["token"] == ","):
+						self.declaration_reg2()
+						return
+					elif(self.match("}", 1) == True):
+						self.__currentToken = self.next_token()
+						self.declaration_reg()
+					else:
+						self.__currentToken = self.next_token()
 		elif(self.match(";", 1) == True):
 			self.__currentToken = self.next_token()
 			self.declaration_reg5()
 		else:
-			print("Erro sintático na linha " + self.__currentToken['linha'] + " . Esperando token ',' ou ';' \n")
+			print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ',' ou ';' \n")
+			while(True):
+				if(self.match(";", 1) == True):
+					self.__currentToken = self.next_token()
+					self.declaration_reg5()
+					return
+				elif(self.match("}", 1) == True):
+					self.__currentToken = self.next_token()
+					self.declaration_reg()
+					return
+				elif(self.__currentToken["token"] == "registro"):
+					self.declaration_reg()
+				elif(self.__currentToken["token"] == "constantes"):
+					return
+				else:
+					self.__currentToken  = self.next_token()
 
 	# <declaration_reg3>   ::= '}' <declaration_reg>
 	def declaration_reg3(self):
@@ -122,7 +192,15 @@ class Syntatic_analyzer():
 			self.__currentToken = self.next_token()
 			self.declaration_reg()
 		else:
-			print("Erro sintático na linha " + self.__currentToken['linha'] + " . Esperando token '}'\n")
+			print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '}'\n")
+			while(True):
+				if(self.__currentToken["token"] == "registro"):
+					self.declaration_reg()
+					return
+				elif(self.__currentToken["token"] == "constantes"):
+					return
+				else:
+					self.__currentToken = self.next_token()
 
 	# <declaracao_reg4>   ::= <v_m_access> |
 	def declaration_reg4(self):
@@ -139,9 +217,15 @@ class Syntatic_analyzer():
 		elif(self.__functions_aux.First("declaration_reg3",self.__currentToken['token'], self.__currentToken['sigla']) == True):
 			self.declaration_reg3()
 		else:
-			print("Erro sintático na linha " + self.__currentToken['linha'] + "\n")
-			return
-
+			print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando tipo primitivo ou identificador ou ',' ou ';'\n")
+			while(True):
+				if(self.__currentToken["token"] == "registro"):
+					self.declaration_reg()
+					return
+				elif(self.__currentToken["token"] == "constantes"):
+					return
+				else:
+					self.__currentToken = self.next_token()
 	# =========================================================================================
 	# =========================================================================================
 
@@ -457,7 +541,18 @@ class Syntatic_analyzer():
 			self.v_m_access1()
 			return
 		else:
-			print("Erro sintático na linha " + self.__currentToken['linha'] + "\n") 
+			print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '['\n")
+			if(self.__functions_aux.First("v_m_access1") == True):
+				self.v_m_access1()
+				return
+			else:
+				while(True):
+					if(self.match("]",1) == True):
+						self.__currentToken = self.next_token()
+						self.v_m_access3()
+						return
+					else:
+						self.__currentToken = self.next_token()
 
 	# <v_m_access1>  ::= id  <v_m_access2>                    | number ']' <v_m_access3> 
 	def v_m_access1(self):
@@ -472,10 +567,23 @@ class Syntatic_analyzer():
 				self.v_m_access3()
 				return
 			else:
-				print("Erro sintático na linha " + self.__currentToken['linha'] + " . Esperando token ']' \n")
+				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ']'.\n")
+				while(True):
+					if(self.__functions_aux.Follow("v_m_access",self.__currentToken["token"],self.__currentToken["sigla"]) == True):
+						return
+					else:
+						self.__currentToken = self.next_token()
 		else:
-			print("Erro sintático na linha " + self.__currentToken['linha'] + " . Esperando identificador ou numero \n")
-
+			print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando identificador ou numero.\n")
+			while(True):
+				if(self.match("]",1) == True):
+					self.__currentToken = self.next_token()
+					self.v_m_access3()
+					return
+				elif(self.__functions_aux.Follow("v_m_access",self.__currentToken["token"],self.__currentToken["sigla"]) == True):
+					return
+				else:
+					self.__currentToken = self.next_token()
 
 	# <v_m_access2>  ::= <elem_registro> ']' <v_m_access3>    | ']'        <v_m_access3>
 	def v_m_access2(self):
@@ -486,14 +594,24 @@ class Syntatic_analyzer():
 				self.v_m_access3()
 				return
 			else:
-				print("Erro sintático na linha " + self.__currentToken['linha'] + " . Esperando token ']' \n")
+				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ']' \n")
+				while(True):
+					if(self.__functions_aux.Follow("v_m_access",self.__currentToken["token"],self.__currentToken["sigla"]) == True):
+						return
+					else:
+						self.__currentToken = self.next_token()
 		elif(self.match("]", 1) == True):
 			self.__currentToken = self.next_token()
 			self.v_m_access3()
 			return
 		else:
-			print("Erro sintático na linha " + self.__currentToken['linha'] + "\n")
-
+			print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '.' ou ']'.\n")
+			while(True):
+				if(self.__functions_aux.Follow("v_m_access",self.__currentToken["token"],self.__currentToken["sigla"]) == True):
+					return
+				else:
+					self.__currentToken = self.next_token()
+	
 	# <v_m_access3>   ::= '[' <v_m_access1>
 	def v_m_access3(self):
 		if(self.match("[", 1) == True):
