@@ -35,11 +35,13 @@ registro Teste_de_Matriz_vetores {
 }
 
 constantes {
-	inteiro  a = 0;
-	char     b = 'a';
-	booleano c = verdadeiro;
-	real     teste = 2.1, teste1 = 3.565, teste2 = 55677.3434;
-}
+	inteiro  a = 0
+	char     b  'a';
+	booleano  = verdadeiro;
+	real     teste = 2.1 teste1 = 3.565, teste2 = 55677.3434;
+	d = "cadeiaz\"\a";
+	booleano teste = 
+
 
 variaveis {
     Pessoa  teste[0];
