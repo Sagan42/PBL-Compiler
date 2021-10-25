@@ -9,6 +9,8 @@ class Auxiliary_Functions():
 	def Follow(self, non_terminal, token, sigla):
 		if(non_terminal == "v_m_access"):
 			return self.__follow_v_m_access(token, sigla)
+		elif(non_terminal == "vector_matrix"):
+			return self.__follow_vector_matrix(token,sigla)
 
 
 	# Funcao que verifica se um símbolo terminal pertence ao conjunto primeiro de um nao-terminal da linguagem.
@@ -301,6 +303,12 @@ class Auxiliary_Functions():
 	# == Conjuntos Seguinte ==================================================================================
 	def __follow_v_m_access(self,token,sigla):
 		if(token == "," or token == ";" or token == ")" or token == "+" or token == "++" or token == "." or token == "=" or token == "}"):
+			return True
+		else:
+			return False
+
+	def __follow_vector_matrix(self,token,sigla):
+		if(token == "," or token == ";"):
 			return True
 		else:
 			return False
