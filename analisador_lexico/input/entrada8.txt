@@ -1,0 +1,14 @@
+escreva("cadeia_de_caracteres.");
+escreva(teste);
+escreva(a[carro.tamanho]);
+escreva(a[a][2]);
+escreva(a[2]);
+escreva(elemento.composto);
+escreva(elemento.composto, a, teste[1], matriz[0][0], "cadeia_de_caracteres");
+
+leia(teste);
+leia(a[carro.tamanho]);
+leia(a[a][2]);
+leia(a[2]);
+leia(elemento.composto);
+leia(elemento.composto, a, teste[1], matriz[0][0]);
