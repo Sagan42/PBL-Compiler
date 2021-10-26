@@ -55,8 +55,11 @@ class Syntatic_analyzer():
 			self.declaration_reg()
 		self.declaration_const()
 		self.declaration_var()
+		#for x in range(7):
+		#	self.write_cmd() # teste do comando escreva.
 
-
+		#for x in range(6):
+		#	self.read_cmd()
 	# ============================================================================================
 	# === Gramatica para declaracao de elementos do tipo registro ================================
 	# <declaration_reg>    ::= registro id '{' <declaration_reg1> |
@@ -636,6 +639,118 @@ class Syntatic_analyzer():
 			return
 		else:
 			return
+
+	# =======================================================================================
+	# === Gramatica para o comando escreva ==================================================
+	# <write_cmd>   ::= escreva '(' <write_value> <write_value_list> ')' ';'
+	def write_cmd(self):
+		if(self.match("escreva", 1)):
+			self.__currentToken = self.next_token()
+			if(self.match("(", 1)):
+				self.__currentToken = self.next_token()
+				self.write_value()
+				self.write_value_list()
+				if(self.match(")", 1)):
+					self.__currentToken = self.next_token()
+					if(self.match(";", 1)):
+						self.__currentToken = self.next_token()
+					else:
+						if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
+							print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ';'.\n")
+				else:
+					if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
+						print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ')'.\n")
+			else:
+				if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
+						print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '('.\n")
+
+	# <write_value_list> ::= ',' <write_value> <write_value_list> |
+	def write_value_list(self):
+		if(self.match(",", 1)):
+			self.__currentToken = self.next_token()
+			self.write_value()
+			self.write_value_list()
+		else:
+			return # Vazio
+
+	# <write_value>      ::= id <write_value_1> | number | cad | char
+	def write_value(self):
+		if(self.match("NRO", 2) == True or self.match("CAR", 2) == True or self.match("CAD", 2) == True):
+			self.__currentToken = self.next_token()
+			return
+		elif(self.match("IDE", 2) == True):
+			self.__currentToken = self.next_token()
+			self.write_value_1()
+			return
+		else:
+			if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
+				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando valor para escrita..\n")
+	
+	# <write_value_1>    ::= <v_m_access> | <elem_registro> |
+	def write_value_1(self):
+		if(self.__functions_aux.First("v_m_access", self.__currentToken["token"], self.__currentToken["sigla"] ) == True):
+			self.v_m_access()
+			return
+		elif(self.__functions_aux.First("elem_registro", self.__currentToken["token"], self.__currentToken["sigla"] ) == True):
+			self.elem_registro()
+			return
+		else:
+			return # Vazio
+
+
+	# =======================================================================================
+	# === Gramatica para o comando leia ====================================================
+	# <read_cmd> ::= leia '(' <read_value> <read_value_list> ')' ';'
+	def read_cmd(self):
+		if(self.match("leia", 1)):
+			self.__currentToken = self.next_token()
+			if(self.match("(", 1)):
+				self.__currentToken = self.next_token()
+				self.read_value()
+				self.read_value_list()
+				if(self.match(")", 1)):
+					self.__currentToken = self.next_token()
+					if(self.match(";", 1)):
+						self.__currentToken = self.next_token()
+					else:
+						if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
+							print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ';'.\n")
+				else:
+					if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
+						print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ')'.\n")
+			else:
+				if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
+						print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '('.\n")
+
+	# <read_value_list> ::= ',' <read_value> <read_value_list> |
+	def read_value_list(self):
+		if(self.match(",", 1)):
+			self.__currentToken = self.next_token()
+			self.read_value()
+			self.read_value_list()
+		else:
+			return # Vazio
+
+	# <read_value>      ::= id <read_value_1>
+	def read_value(self):
+		if(self.match("IDE", 2) == True):
+			self.__currentToken = self.next_token()
+			self.read_value_1()
+			return
+		else:
+			if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
+				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token identificador.\n")
+	
+	# <read_value_1>    ::= <v_m_access> | <elem_registro> |
+	def read_value_1(self):
+		if(self.__functions_aux.First("v_m_access", self.__currentToken["token"], self.__currentToken["sigla"] ) == True):
+			self.v_m_access()
+			return
+		elif(self.__functions_aux.First("elem_registro", self.__currentToken["token"], self.__currentToken["sigla"] ) == True):
+			self.elem_registro()
+			return
+		else:
+			return # Vazio
 	# =========================================================================================
 	# =========================================================================================
 	def __error1_reg(self):
