@@ -34,6 +34,7 @@ registro Teste_de_Matriz_vetores {
 	inteiro e[a
 }
 
+{#
 constantes {
 	inteiro  a = 0
 	char     b  'a';
@@ -57,8 +58,10 @@ variaveis {
     inteiro b[2] = [0,1,];
     real    c[][2];
     real    d[2][2] = [0.1, 0.2, 0.3; , 1.2, 1.3; 2.1, 2.2, 2.3];
-}
+} #}
 
-funcao inteiro funcao_teste_1 (inteiro a, real b, inteiro a[], inteiro x[][]){
+{# funcao inteiro soma(inteiro a, inteiro b) {
 
-}
+} #}
+
+funcao_teste_2 (alou, "teste", teste[a], teste2[b][c], a.ola);

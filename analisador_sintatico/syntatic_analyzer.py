@@ -53,10 +53,11 @@ class Syntatic_analyzer():
 		self.__currentToken = self.next_token()
 		if(self.__functions_aux.First("declaration_reg",self.__currentToken['token'], self.__currentToken['sigla']) == True):
 			self.declaration_reg()
-		self.declaration_const()
-		self.declaration_var()
-		self.function_declaration()
-		# self.functionCall() Necessário adaptar para testar ou esperar até construir corpo da função
+		#self.declaration_const()
+		#self.declaration_var()
+
+		#self.function_declaration()
+		self.functionCall()
 		#for x in range(7):
 		#	self.write_cmd() # teste do comando escreva.
 
@@ -836,23 +837,6 @@ class Syntatic_analyzer():
 			else:
 				self.__currentToken = self.next_token()
 
-	# <value_without_IDE>  ::= number | boolean | cad
-	def value_without_IDE(self):
-		if (self.match("NRO", 2) == True):
-			self.__currentToken = self.next_token()
-		elif (self.match("verdadeiro", 1) == True):
-			self.__currentToken = self.next_token()
-		elif (self.match("falso", 1) == True):
-			self.__currentToken = self.next_token()
-		elif (self.match("CAD", 2) == True):
-			self.__currentToken = self.next_token()
-
-	# <value_with_IDE>     ::= <value_without_IDE> | id
-	def value_with_IDE(self):
-		self.value_without_IDE()
-		if (self.match("IDE", 2) == True):
-			return
-
 	# =======================================================================================
 	# === Gramática para declaração de função ==================================================
 	# <function_declaration>  ::= funcao <type> <function_declaration1>
@@ -982,9 +966,11 @@ class Syntatic_analyzer():
 
 	# <varList0>     ::= <value_without_IDE> <varList2> | id <varList1> | <varList2>
 	def varList0(self):
-		self.value_without_IDE()
-		self.varList2()
-		if (self.match("IDE", 2) == True):
+		if(self.__functions_aux.First("value_without_IDE",self.__currentToken['token'], self.__currentToken['sigla']) == True):
+			self.__currentToken = self.next_token()
+			self.varList2()
+		elif (self.match("IDE", 2) == True):
+			self.__currentToken = self.next_token()
 			self.varList1()
 		else:
 			self.varList2()
