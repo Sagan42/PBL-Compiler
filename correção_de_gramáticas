@@ -1,0 +1,20 @@
+! COMANDO ESCREVA
+<write_cmd>        ::= escreva '(' <write_value> <write_value_list> ')' ';'
+<write_value_list> ::= ',' <write_value> <write_value_list> |
+<write_value>      ::= id <write_value_1> | number | cad | char
+<write_value_1>    ::= <v_m_access> | <elem_registro> |
+
+! COMANDO LEIA
+<read_cmd>        ::= leia '(' <read_value> <read_value_list> ')' ';'
+<read_value_list> ::= ',' <read_value> <read_value_list> |
+<read_value>      ::= id <read_value_1>
+<read_value_1>    ::= <v_m_access> | <elem_registro> |
+
+
+! ATRIBUIÇOES DE VARIAVEIS
+<var_atr>   ::= id <var_atr_1> 
+<var_atr_1> ::= <atr> | <v_m_access> <atr> | <elem_registro> <atr>
+<atr>       ::= '=' <atr_1>
+<atr_1>     ::= number <atr_2> | boolean <atr_2> | cad <atr_2> | char <atr_2> | <expr> <atr_2> | <functionCall> <atr_2>
+<atr_2> ::= ',' <var_atr> | ';'
+

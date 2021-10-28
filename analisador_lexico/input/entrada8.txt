@@ -1,4 +1,4 @@
-escreva("cadeia_de_caracteres.");
+{# escreva("cadeia_de_caracteres.");
 escreva(teste);
 escreva(a[carro.tamanho]);
 escreva(a[a][2]);
@@ -12,3 +12,12 @@ leia(a[a][2]);
 leia(a[2]);
 leia(elemento.composto);
 leia(elemento.composto, a, teste[1], matriz[0][0]);
+
+teste   = 2;
+a[2]    = 4;
+b[a][2] = "cadeiade-\"z-\de-caractesres.";
+acesso.idade = 20;
+teste_4 = verdadeiro;
+teste_4 = falso;  
+teste_5 = 'c'; #}
+

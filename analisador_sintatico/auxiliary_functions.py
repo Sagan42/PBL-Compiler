@@ -15,7 +15,21 @@ class Auxiliary_Functions():
 
 	# Funcao que verifica se um símbolo terminal pertence ao conjunto primeiro de um nao-terminal da linguagem.
 	def First(self, non_terminal, token, sigla):
-		if(non_terminal == "value_with_IDE"):
+		if(non_terminal == "function_parameters"):
+			return self.__function_parameters(token, sigla)
+		elif(non_terminal == "function_parameters2"):
+			return self.__function_parameters2(token, sigla)
+		elif(non_terminal == "function_parameters5"):
+			return self.__function_parameters5(token, sigla)
+		elif(non_terminal == "varList2"):
+			return self.__varList2(token, sigla)
+		elif(non_terminal == "functionCall"):
+			return self.__functionCall(token, sigla)
+		elif(non_terminal == "atr"):
+			return self.__atr(token, sigla)
+		elif(non_terminal == "var_atr"):
+			return self.__var_atr(token, sigla)
+		elif(non_terminal == "value_with_IDE"):
 			return self.__value_with_IDE(token,sigla)
 		elif(non_terminal == "value_without_IDE"):
 			return self.__value(token,sigla)
@@ -88,6 +102,48 @@ class Auxiliary_Functions():
 
 
 	# == Conjuntos Primeiro ===============================================================================
+	def __function_parameters(self, token, sigla):
+		if(token == "(" ):
+			return True
+		else:
+			return False
+
+	def __function_parameters2(self, token, sigla):
+		if(self.__primitive_type(token, sigla) == True or sigla == "IDE"):
+			return True
+		else:
+			return False
+	
+	def __function_parameters5(self, token, sigla):
+		if(token == "," or token == ")" ):
+			return True
+		else:
+			return False
+
+	def  __varList2(self, token, sigla):
+		if(token == "," or sigla == ")" ):
+			return True
+		else:
+			return False
+
+	def  __functionCall(self, token, sigla):
+		if(sigla == "IDE"):
+			return True
+		else:
+			return False
+	
+	def  __atr(self, token, sigla):
+		if(token == "="):
+			return True
+		else:
+			return False
+
+	def  __var_atr(self, token, sigla):
+		if(sigla == "IDE"):
+			return True
+		else:
+			return False
+
 	def __value_with_IDE(self,token,sigla):
 		if(self.__value(token,sigla) == True or sigla == "IDE"):
 			return True
