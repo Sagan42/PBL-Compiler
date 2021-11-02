@@ -64,4 +64,6 @@ variaveis {
 
 } #}
 
-funcao_teste_2 (alou, "teste", teste[a], teste2[b][c], a.ola);
+{# funcao_teste_2 (alou, "teste", teste[a], teste2[b][c], a.ola); #}
+
+15 + 7 * (12 - 8)

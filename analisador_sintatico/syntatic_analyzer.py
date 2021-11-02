@@ -57,7 +57,8 @@ class Syntatic_analyzer():
 		#self.declaration_var()
 
 		#self.function_declaration()
-		self.functionCall()
+		#self.functionCall()
+		self.exprNumber()
 		#for x in range(7):
 		#	self.write_cmd() # teste do comando escreva.
 
@@ -977,12 +978,12 @@ class Syntatic_analyzer():
 
 	# <varList1>     ::= <varList2>     | <v_m_access> <varList2> | <elem_registro> <varList2>
 	def varList1(self):
-		if (self.match(",", 1) == True):
+		if (self.__functions_aux.First("varList2", self.__currentToken['token'], self.__currentToken['sigla']) == True):
 			self.varList2()
-		elif (self.match("[", 1) == True):
+		elif (self.__functions_aux.First("v_m_access", self.__currentToken['token'], self.__currentToken['sigla']) == True):
 			self.v_m_access()
 			self.varList2()
-		elif (self.match(".", 1) == True):
+		elif (self.__functions_aux.First("elem_registro", self.__currentToken['token'], self.__currentToken['sigla']) == True):
 			self.elem_registro()
 			self.varList2()
 		else:
@@ -1004,6 +1005,244 @@ class Syntatic_analyzer():
 		else:
 			if (self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ',' ou ')'.\n")
+
+	# =======================================================================================
+	# === Gramática para expressões =========================================================
+	# <exprNumber>   ::= <exprArt> | '(' <exprNumber> ')' <exprMultiPos> <exprNumber1>
+	def exprNumber(self):
+		if (self.__functions_aux.Follow("exprArt", self.__currentToken["token"], self.__currentToken["sigla"]) == True):
+			self.exprArt()
+		elif (self.match("(", 1) == True):
+			self.__currentToken = self.next_token()
+			self.exprNumber()
+			if (self.match(")", 1) == True):
+				self.__currentToken = self.next_token()
+				self.exprMultiPos()
+				self.exprNumber1()
+			else:
+				if (self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
+					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ')'.\n")
+		else:
+			if (self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
+				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando um número ou token '(', '+', '-'.\n")
+
+	# <exprNumber1>  ::= <operatorSoma> <exprNumber> | <>
+	def exprNumber1(self):
+		if (self.__functions_aux.First("operatorSoma", self.__currentToken['token'], self.__currentToken['sigla']) == True):
+			self.operatorSoma()
+			self.exprNumber()
+		else:
+			return
+
+	# =======================================================================================
+	# === Gramática para expressões aritméticas =============================================
+	# <exprValorMod> ::=  number | <operatorAuto0> <read_value> | <read_value> <operatorAuto>
+	def exprValorMod(self):
+		if (self.match("NRO", 2) == True):
+			self.__currentToken = self.next_token()
+			return
+		elif (self.__functions_aux.First("operatorAuto0", self.__currentToken['token'], self.__currentToken['sigla']) == True):
+			self.__currentToken = self.next_token()
+			self.read_value()
+		elif (self.__functions_aux.First("read_value", self.__currentToken['token'], self.__currentToken['sigla']) == True):
+			self.read_value()
+			self.operatorAuto()
+		else:
+			if (self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
+				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando número ou identificador ou token '++', '--'.\n")
+
+	# <exprMulti> ::= <operatorSoma> <exprValorMod> <exprMultiPos> | <exprValorMod> <exprMultiPos> | '(' <exprNumber>
+	def exprMulti(self):
+		if (self.__functions_aux.First("operatorSoma", self.__currentToken['token'], self.__currentToken['sigla']) == True):
+			self.__currentToken = self.next_token()
+			self.exprValorMod()
+			self.exprMultiPos()
+		elif (self.__functions_aux.Follow("exprValorMod",self.__currentToken["token"],self.__currentToken["sigla"]) == True):
+			self.exprValorMod()
+			self.exprMultiPos()
+		elif (self.__functions_aux.Follow("exprNumber",self.__currentToken["token"],self.__currentToken["sigla"]) == True):
+			self.exprNumber()
+		else:
+			if (self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
+				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando número ou identificador ou token '+', '-', '++', '--' .\n")
+
+	# <exprArt>   ::= <exprMulti> <expr1>
+	def exprArt(self):
+		self.exprMulti()
+		self.expr1()
+
+	# <exprMultiPos> ::= <operatorMulti> <exprMulti> | <>
+	def exprMultiPos(self):
+		if (self.__functions_aux.First("operatorMulti", self.__currentToken['token'], self.__currentToken['sigla']) == True):
+			self.operatorMulti()
+			self.exprMulti()
+		else:
+			return
+
+	# <expr1> ::= <operatorSoma> <exprNumber> | <>
+	def expr1(self):
+		if (self.__functions_aux.First("operatorSoma", self.__currentToken['token'], self.__currentToken['sigla']) == True):
+			self.operatorSoma()
+			self.exprNumber()
+		else:
+			return
+
+	# <operatorSoma> ::= '+' | '-'
+	def operatorSoma(self):
+		if (self.match("+", 1) == True):
+			self.__currentToken = self.next_token()
+			return
+		elif (self.match("-", 1) == True):
+			self.__currentToken = self.next_token()
+			return
+		else:
+			if (self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
+				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '+' ou '-'.\n")
+
+	# <operatorMulti> ::= '*' | '/'
+	def operatorMulti(self):
+		if (self.match("*", 1) == True):
+			self.__currentToken = self.next_token()
+			return
+		elif (self.match("/", 1) == True):
+			self.__currentToken = self.next_token()
+			return
+		else:
+			if (self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
+				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '*' ou '/'.\n")
+
+	# <operatorAuto0> ::= '++' | '--'
+	def operatorAuto0(self):
+		if (self.match("++", 1) == True):
+			self.__currentToken = self.next_token()
+			return
+		elif (self.match("--", 1) == True):
+			self.__currentToken = self.next_token()
+			return
+		else:
+			if (self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
+				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '+' ou '-'.\n")
+
+	# <operatorAuto> ::= '++' | '--' | <>
+	def operatorAuto(self):
+		if (self.match("++", 1) == True):
+			self.__currentToken = self.next_token()
+		elif (self.match("--", 1) == True):
+			self.__currentToken = self.next_token()
+		else:
+			return
+
+	# =======================================================================================
+	# === Gramática para expressões relacionais =============================================
+	# <exprRel0>   ::= <exprRel> | '(' <expressao> ')'
+	def exprRel0(self):
+		if (self.__functions_aux.Follow("exprRel", self.__currentToken["token"], self.__currentToken["sigla"]) == True):
+			self.exprRel()
+		elif (self.match("(", 1) == True):
+			self.__currentToken = self.next_token()
+			self.expressao()
+			if (self.match(")", 1) == True):
+				self.__currentToken = self.next_token()
+				return
+			else:
+				if (self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
+					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ')'.\n")
+		else:
+			if (self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
+				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando número, identificador ou token '+', '-', '++', '--', 'verdadeiro', 'falso' ou '('.\n")
+
+	# <exprRel>   ::= <exprArt> <exprRel1> | boolean <exprRel1>
+	def exprRel(self):
+		if (self.__functions_aux.Follow("exprArt", self.__currentToken["token"], self.__currentToken["sigla"]) == True):
+			self.exprArt()
+			self.exprRel1()
+		elif (self.match("verdadeiro", 1) == True or self.match("falso", 1) == True):
+			self.__currentToken = self.next_token()
+			self.exprRel1()
+		else:
+			if (self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
+				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando número ou identificador ou token '+', '-', '++', '--', 'verdadeiro', 'falso' .\n")
+
+	# <exprRel1> ::= <operatorRel> <exprRel0> | <>
+	def exprRel1(self):
+		if (self.__functions_aux.First("operatorRel", self.__currentToken['token'], self.__currentToken['sigla']) == True):
+			self.operatorRel()
+			self.exprRel0()
+		else:
+			return
+
+	# <operatorRel> ::= '==' | '>=' | '<=' | '!=' | '>' | '<'
+	def operatorRel(self):
+		if (self.match("==", 1) == True):
+			self.__currentToken = self.next_token()
+		elif (self.match(">=", 1) == True):
+			self.__currentToken = self.next_token()
+		elif (self.match("<=", 1) == True):
+			self.__currentToken = self.next_token()
+		elif (self.match("!=", 1) == True):
+			self.__currentToken = self.next_token()
+		elif (self.match(">", 1) == True):
+			self.__currentToken = self.next_token()
+		elif (self.match("<", 1) == True):
+			self.__currentToken = self.next_token()
+		else:
+			if (self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
+				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '==', '>=', '<=', '!=', '>' ou '<'.\n")
+
+	# =======================================================================================
+	# === Gramática para expressões lógicas =================================================
+	# <expressao>   ::= <exprRel> <exprLog1> | '(' <expressao> ')' <exprLog2> | '!' <expressao>
+	def expressao(self):
+		if (self.__functions_aux.Follow("exprRel", self.__currentToken["token"], self.__currentToken["sigla"]) == True):
+			self.exprRel()
+			self.exprLog1()
+		elif (self.match("(", 1) == True):
+			self.__currentToken = self.next_token()
+			self.expressao()
+			if (self.match(")", 1) == True):
+				self.__currentToken = self.next_token()
+				self.exprLog2()
+		elif (self.match("!", 1) == True):
+			self.__currentToken = self.next_token()
+			self.expressao()
+		else:
+			if (self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
+				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando número ou identificador ou token '(', ')', '!', '+', '-', '++', '--' 'verdadeiro', 'falso' .\n")
+
+	# <exprLog1> ::=  <operatorLog> <expressao> | <>
+	def exprLog1(self):
+		if (self.__functions_aux.First("operatorLog", self.__currentToken['token'], self.__currentToken['sigla']) == True):
+			self.operatorLog()
+			self.expressao()
+		else:
+			return
+
+	# <exprLog2> ::= <operatorLog> <expressao> | <operatorMulti> <expressao> | <operatorRel> <expressao> | <operatorSoma> <expressao> | <>
+	def exprLog2(self):
+		if (self.__functions_aux.First("operatorLog", self.__currentToken['token'], self.__currentToken['sigla']) == True):
+			self.__currentToken = self.next_token()
+			self.expressao()
+		elif (self.__functions_aux.First("operatorMulti", self.__currentToken['token'], self.__currentToken['sigla']) == True):
+			self.__currentToken = self.next_token()
+			self.expressao()
+		elif (self.__functions_aux.First("operatorRel", self.__currentToken['token'], self.__currentToken['sigla']) == True):
+			self.__currentToken = self.next_token()
+			self.expressao()
+		elif (self.__functions_aux.First("operatorSoma", self.__currentToken['token'], self.__currentToken['sigla']) == True):
+			self.__currentToken = self.next_token()
+			self.expressao()
+		else:
+			return
+
+	# <operatorLog> ::= '&&' | '||'
+	def operatorLog(self):
+		if (self.match("&&", 1) == True):
+			self.__currentToken = self.next_token()
+		elif (self.match("||", 1) == True):
+			self.__currentToken = self.next_token()
+		else:
+			if (self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
+				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '&&' ou '||'.\n")
 
 	def main_function(self):
 		print("A construir")

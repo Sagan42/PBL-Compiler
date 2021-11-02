@@ -10,8 +10,15 @@ class Auxiliary_Functions():
 		if(non_terminal == "v_m_access"):
 			return self.__follow_v_m_access(token, sigla)
 		elif(non_terminal == "vector_matrix"):
-			return self.__follow_vector_matrix(token,sigla)
-
+			return self.__follow_vector_matrix(token, sigla)
+		elif(non_terminal == "exprValorMod"):
+			return self.__exprValorMod(token, sigla)
+		elif(non_terminal == "exprArt"):
+			return self.__follow_exprArt(token, sigla)
+		elif(non_terminal == "exprRel"):
+			return self.__follow_exprRel(token, sigla)
+		elif(non_terminal == "exprNumber"):
+			return self.__follow_exprNumber(token, sigla)
 
 	# Funcao que verifica se um símbolo terminal pertence ao conjunto primeiro de um nao-terminal da linguagem.
 	def First(self, non_terminal, token, sigla):
@@ -83,9 +90,24 @@ class Auxiliary_Functions():
 			return self.__declaration_var2(token, sigla)
 		elif(non_terminal == "declaration_var3"):
 			return self.__declaration_var3(token, sigla)
+		elif(non_terminal == "varList2"):
+			return self.__varList2(token, sigla)
+		elif(non_terminal == "v_m_access"):
+			return self.__v_m_access(token, sigla)
+		elif(non_terminal == "operatorSoma"):
+			return self.__operatorSoma(token, sigla)
+		elif(non_terminal == "operatorAuto0"):
+			return self.__operatorAuto0(token, sigla)
+		elif(non_terminal == "read_value"):
+			return self.__read_value(token, sigla)
+		elif(non_terminal == "operatorLog"):
+			return self.__operatorLog(token, sigla)
+		elif(non_terminal == "operatorMulti"):
+			return self.__operatorMulti(token, sigla)
+		elif(non_terminal == "operatorRel"):
+			return self.__operatorRel(token, sigla)
 		else:
 			return False
-
 
 	# == Conjuntos Primeiro ===============================================================================
 	def __value_with_IDE(self,token,sigla):
@@ -297,6 +319,49 @@ class Auxiliary_Functions():
 			return True
 		else:
 			return False
+
+	def __varList2(self, token, sigla):
+		if(token == ","):
+			return True
+		else:
+			return False
+
+	def __operatorSoma(self, token, sigla):
+		if(token == "+" or token == "-"):
+			return True
+		else:
+			return False
+
+	def __operatorAuto0(self, token, sigla):
+		if(token == "++" or token == "--"):
+			return True
+		else:
+			return False
+
+	def __read_value(self, token, sigla):
+		if (sigla == "IDE"):
+			return True
+		else:
+			return False
+
+	def __operatorLog(self, token, sigla):
+		if (token == "&&" or token == "||"):
+			return True
+		else:
+			return False
+
+	def __operatorMulti(self, token, sigla):
+		if (token == "*" or token == "/"):
+			return True
+		else:
+			return False
+
+	def __operatorRel(self, token, sigla):
+		if (token == "==" or token == ">=" or token == "<=" or token == "!=" or token == ">" or token == "<"):
+			return True
+		else:
+			return False
+
 	# == Fim dos Conjuntos Primeiro ==========================================================================
 
 
@@ -312,4 +377,29 @@ class Auxiliary_Functions():
 			return True
 		else:
 			return False
+
+	def __exprValorMod(self, token, sigla):
+		if(sigla == "NRO" or token == "++" or sigla == "IDE"):
+			return True
+		else:
+			return False
+
+	def __follow_exprArt(self, token, sigla):
+		if(token == "+" or token == "-" or sigla == "NRO" or token == "++" or token == "--" or sigla == "IDE"):
+			return True
+		else:
+			return False
+
+	def __follow_exprRel(self, token, sigla):
+		if (token == "+" or token == "-" or sigla == "NRO" or token == "++" or token == "--" or sigla == "IDE" or token == "verdadeiro" or token == "falso"):
+			return True
+		else:
+			return False
+
+	def __follow_exprNumber(self, token, sigla):
+		if (token == "("):
+			return True
+		else:
+			return False
+
 	# == Fim dos Conjuntos Seguinte ==========================================================================
