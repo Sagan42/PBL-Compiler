@@ -20,9 +20,50 @@ class Auxiliary_Functions():
 		elif(non_terminal == "exprNumber"):
 			return self.__follow_exprNumber(token, sigla)
 
+
 	# Funcao que verifica se um símbolo terminal pertence ao conjunto primeiro de um nao-terminal da linguagem.
 	def First(self, non_terminal, token, sigla):
-		if(non_terminal == "value_with_IDE"):
+		if(non_terminal == "function_body1"):
+			return self.__function_body1(token, sigla)
+		elif(non_terminal == "function_body2"):
+			return self.__function_body2(token, sigla)
+		elif(non_terminal == "expressao"):
+			return self.__expressao(token, sigla)
+		elif(non_terminal == "value_with_expressao"):
+			return self.__value_with_expressao(token, sigla)
+		elif(non_terminal == "functionCall_2"):
+			return self.__functionCall_2(token, sigla)
+		elif(non_terminal == "com_retornar"):
+			return self.__com_retornar(token,sigla)
+		elif(non_terminal == "read_cmd"):
+			return self.__read_cmd(token,sigla)
+		elif(non_terminal == "write_cmd"):
+			return self.__write_cmd(token,sigla)
+		elif(non_terminal == "com_para"):
+			return self.__com_para(token,sigla)
+		elif(non_terminal == "com_enquanto"):
+			return self.__com_enquanto(token,sigla)
+		elif(non_terminal == "se"):
+			return self.__se(token,sigla)
+		elif(non_terminal == "senao"):
+			return self.__senao(token,sigla)
+		elif(non_terminal == "function_parameters"):
+			return self.__function_parameters(token, sigla)
+		elif(non_terminal == "function_parameters2"):
+			return self.__function_parameters2(token, sigla)
+		elif(non_terminal == "function_parameters5"):
+			return self.__function_parameters5(token, sigla)
+		elif(non_terminal == "varList2"):
+			return self.__varList2(token, sigla)
+		elif(non_terminal == "functionCall"):
+			return self.__functionCall(token, sigla)
+		elif(non_terminal == "atr"):
+			return self.__atr(token, sigla)
+		elif(non_terminal == "var_atr"):
+			return self.__var_atr(token, sigla)
+		elif(non_terminal == "var_atr_1"):
+			return self.__var_atr_1(token, sigla)
+		elif(non_terminal == "value_with_IDE"):
 			return self.__value_with_IDE(token,sigla)
 		elif(non_terminal == "value_without_IDE"):
 			return self.__value(token,sigla)
@@ -90,10 +131,6 @@ class Auxiliary_Functions():
 			return self.__declaration_var2(token, sigla)
 		elif(non_terminal == "declaration_var3"):
 			return self.__declaration_var3(token, sigla)
-		elif(non_terminal == "varList2"):
-			return self.__varList2(token, sigla)
-		elif(non_terminal == "v_m_access"):
-			return self.__v_m_access(token, sigla)
 		elif(non_terminal == "operatorSoma"):
 			return self.__operatorSoma(token, sigla)
 		elif(non_terminal == "operatorAuto0"):
@@ -109,7 +146,127 @@ class Auxiliary_Functions():
 		else:
 			return False
 
+
 	# == Conjuntos Primeiro ===============================================================================
+	def __function_body1(self, token, sigla):
+		if(self.__declaration_var(token, sigla) == True or self.__function_body2(token,sigla) == True):
+			return True
+		else:
+			return False
+
+	def __function_body2(self, token, sigla):
+		if(self.__com_enquanto(token, sigla) == True or self.__com_para(token, sigla) == True or self.__se(token, sigla) == True or self.__write_cmd(token, sigla) == True or self.__read_cmd(token, sigla) == True or sigla == "IDE" or token == "retorno"):
+			return True
+		else:
+			return False
+
+	def __value_with_expressao(self,token,sigla):
+		if(self.__expressao(token, sigla) == True or sigla == "CAD" or sigla == "CAR"):
+			return True
+		else:
+			return False
+
+	def __expressao(self,token,sigla):
+		if(self.__follow_exprRel(token, sigla) == True or token == "(" or token == "!"):
+			return True
+		else:
+			return False
+
+	def __functionCall_2(self,token,sigla):
+		if(token == "("):
+			return True
+		else:
+			return False
+
+	def __com_retornar(self,token,sigla):
+		if(token == "retorno"):
+			return True
+		else:
+			return False
+	def __write_cmd(self, token, sigla):
+		if(token == "escreva"):
+			return True
+		else:
+			return False
+
+	def __read_cmd(self, token, sigla):
+		if(token == "leia"):
+			return True
+		else:
+			return False
+
+	def __com_enquanto(self, token, sigla):
+		if(token == "enquanto"):
+			return True
+		else:
+			return False
+
+	def __com_para(self, token, sigla):
+		if(token == "para"):
+			return True
+		else:
+			return False
+
+	def __se(self,token,sigla):
+		if(token == "se"):
+			return True
+		else:
+			return False
+
+	def __senao(self,token,sigla):
+		if(token == "senao"):
+			return True
+		else:
+			return False
+
+	def __function_parameters(self, token, sigla):
+		if(token == "(" ):
+			return True
+		else:
+			return False
+
+	def __function_parameters2(self, token, sigla):
+		if(self.__primitive_type(token, sigla) == True or sigla == "IDE"):
+			return True
+		else:
+			return False
+	
+	def __function_parameters5(self, token, sigla):
+		if(token == "," or token == ")" ):
+			return True
+		else:
+			return False
+
+	def  __varList2(self, token, sigla):
+		if(token == "," or sigla == ")" ):
+			return True
+		else:
+			return False
+
+	def  __functionCall(self, token, sigla):
+		if(sigla == "IDE"):
+			return True
+		else:
+			return False
+	
+	def  __atr(self, token, sigla):
+		if(token == "="):
+			return True
+		else:
+			return False
+
+	def  __var_atr(self, token, sigla):
+		if(sigla == "IDE"):
+			return True
+		else:
+			return False
+
+	def __var_atr_1(self,token,sigla):
+		if(token == "=" or token == "[" or token == "."):
+			return True
+		else:
+			return False
+
 	def __value_with_IDE(self,token,sigla):
 		if(self.__value(token,sigla) == True or sigla == "IDE"):
 			return True
@@ -320,12 +477,6 @@ class Auxiliary_Functions():
 		else:
 			return False
 
-	def __varList2(self, token, sigla):
-		if(token == ","):
-			return True
-		else:
-			return False
-
 	def __operatorSoma(self, token, sigla):
 		if(token == "+" or token == "-"):
 			return True
@@ -361,10 +512,9 @@ class Auxiliary_Functions():
 			return True
 		else:
 			return False
-
 	# == Fim dos Conjuntos Primeiro ==========================================================================
 
-
+	# ========================================================================================================
 	# == Conjuntos Seguinte ==================================================================================
 	def __follow_v_m_access(self,token,sigla):
 		if(token == "," or token == ";" or token == ")" or token == "+" or token == "++" or token == "." or token == "=" or token == "}"):
@@ -401,5 +551,4 @@ class Auxiliary_Functions():
 			return True
 		else:
 			return False
-
 	# == Fim dos Conjuntos Seguinte ==========================================================================
