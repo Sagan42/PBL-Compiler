@@ -4,13 +4,15 @@ from auxiliary_functions import Auxiliary_Functions
 # Somente pega o proximo token depois de um "match"
 class Syntatic_analyzer():
 	"""docstring for Syntatic_analyzer"""
-	def __init__(self, tokens):
+	def __init__(self, tokens, files):
 		# Atributo que armazena todos os tokens a serem analisados. Estrutura [{"linha":  , "sigla": , "token":}, {"linha":  , "sigla": , "token":}, ...]
 		# Consiste em um vetor de dicionarios.
-		self.__tokens       = tokens;
+		self.__tokens       = tokens
+		# Atributo utilizado para escrever as mensagens de erro nos arquivos de saida.
+		self.__files        = files
 		# Atributo que armazena o token atual.
 		# Estrutura: {"linha":  , "sigla": , "token":}
-		self.__currentToken = {};
+		self.__currentToken = {}
 		self.__functions_aux = Auxiliary_Functions()
 
 	# Metodo que retorna o proximo token a ser analisado.
@@ -71,10 +73,12 @@ class Syntatic_analyzer():
 				else:
 					if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 						print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '{'\n")
+						self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["{"])
 						self.__error1_reg()
 			else:
 				if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token identificador \n")
+					self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["IDE"])
 					if(self.match("{",1)):
 						self.__currentToken = self.next_token()
 						self.declaration_reg1()
@@ -95,6 +99,7 @@ class Syntatic_analyzer():
 			else:
 				if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token identificador." +"\n")
+					self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["IDE"])
 					self.__error1_reg()
 		elif(self.match("IDE", 2) == True):
 			self.__currentToken = self.next_token()
@@ -106,10 +111,12 @@ class Syntatic_analyzer():
 			else:
 				if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token identificador \n")
+					self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["IDE"])
 					self.__error1_reg()
 		else:
 			if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando tipo primitivo ou identificador.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["IDE", "inteiro","real","verdadeiro","falso","char","cadeia","vazio"])
 				self.__error2_reg()
 
 	# <declaration_reg2>   ::= ',' id <declaration_reg2> | ';' <declaration_reg5>
@@ -124,6 +131,7 @@ class Syntatic_analyzer():
 			else:
 				if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando identificador \n")
+					self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["IDE"])
 					self.__error3_reg()
 		elif(self.match(";", 1) == True):
 			self.__currentToken = self.next_token()
@@ -131,6 +139,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ',' ou ';' \n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], [",",";"])
 				self.__error2_reg()
 
 	# <declaration_reg3>   ::= '}' <declaration_reg>
@@ -141,6 +150,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '}'\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["}"])
 				self.__error1_reg()
 
 	# <declaracao_reg4>   ::= <v_m_access> |
@@ -160,6 +170,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando tipo primitivo ou identificador ou ',' ou ';'\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], [";",",","IDE", "inteiro","real","verdadeiro","falso","char","cadeia","vazio"])
 				self.__error1_reg()
 	# =========================================================================================
 	# =========================================================================================
@@ -177,9 +188,11 @@ class Syntatic_analyzer():
 			else:
 				if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token identificador.\n")
+					self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["IDE"])
 		else:
 			if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
-				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token.\n")
+				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '.' \n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["."])
 
 
 	# <nested_elem_registro>  ::= '.' id <nested_elem_registro1> | <v_m_access> <nested_elem_registro1> |
@@ -193,6 +206,7 @@ class Syntatic_analyzer():
 			else:
 				if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token identificador.\n")
+					self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["IDE"])
 		elif(self.__functions_aux.First("v_m_access",self.__currentToken['token'], self.__currentToken['sigla']) == True):
 			self.v_m_access()
 			self.nested_elem_registro1()
@@ -224,6 +238,7 @@ class Syntatic_analyzer():
 			else:
 				if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '{'\n")
+					self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["{"])
 					while(self.__currentToken["token"] != ""): # enquanto existem tokens para analise 
 						if(self.__currentToken["token"] == "variaveis"):
 							return
@@ -232,6 +247,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token 'constantes'\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["constantes"])
 				while(self.__currentToken["token"] != ""): # enquanto existem tokens para analise 
 					if(self.__currentToken["token"] == "variaveis"):
 						return
@@ -253,14 +269,17 @@ class Syntatic_analyzer():
 					else:
 						if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 							print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token para atribuição.\n")
+							self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["IDE","NRO","CAR","CAD","verdadeiro","falso"])
 							self.__error1_const()
 				else:
 					if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 						print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '='\n")
+						self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["="])
 						self.__error1_const()
 			else:
 				if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando identificador.\n")
+					self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["IDE"])
 					self.__error1_const()
 		elif(self.match("}", 1) == True):
 			self.__currentToken = self.next_token()
@@ -268,6 +287,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '}' ou tipo primitivo.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["}","inteiro", "real", "verdadeiro", "falso", "char", "cadeia", "vazio"])
 				self.__error1_const()
 
 	# <declaration_const2> ::= ',' id '=' <value> <declaration_const2> | ';' <declaration_const1>
@@ -285,14 +305,17 @@ class Syntatic_analyzer():
 					else:
 						if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 							print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando valor para atribuição.\n")
+							self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["IDE","NRO","CAR","CAD","verdadeiro","falso"])
 							self.__error1_const()
 				else:
 					if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 						print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '='\n")
+						self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["="])
 						self.__error1_const()
 			else:
 				if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando identificador\n")
+					self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["IDE"])
 					self.__error1_const()
 		elif(self.match(";", 1) == True):
 			self.__currentToken = self.next_token()
@@ -301,6 +324,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ',' , ';'\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], [",", ";"])
 				self.__error1_const()
 	# =========================================================================================
 	# =========================================================================================
@@ -319,6 +343,7 @@ class Syntatic_analyzer():
 			else:
 				if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '{'.\n")
+					self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["{"])
 					while(self.__currentToken["token"] != ""): # enquanto existem tokens para analise 
 						if(self.__currentToken["token"] == "funcao"):
 							return
@@ -327,6 +352,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token 'variaveis'.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["variaveis"])
 				while(self.__currentToken["token"] != ""): # enquanto existem tokens para analise 
 					if(self.__currentToken["token"] == "funcao"):
 						return
@@ -344,6 +370,7 @@ class Syntatic_analyzer():
 			else:
 				if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + " . Esperando token identificador.\n")
+					self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["IDE"])
 					self.__error1_var()
 		elif(self.match("}", 1) == True):
 			self.__currentToken = self.next_token()
@@ -351,6 +378,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + " . Esperando identificador ou token '}' or tipo primitivo.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["}", "inteiro", "real", "verdadeiro", "falso", "char", "cadeia", "vazio"])
 				self.__error1_var()
 
 	# <declaration_var2> ::= '=' <value> <declaration_var3> | <vector_matrix> | <declaration_var3>
@@ -363,6 +391,7 @@ class Syntatic_analyzer():
 			else:
 				if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + " . Esperando valor para atribuição.\n")
+					self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["IDE","NRO","CAR","CAD","verdadeiro","falso"])
 					self.__error1_var()
 		elif(self.__functions_aux.First("vector_matrix", self.__currentToken['token'], self.__currentToken['sigla']) == True):
 			self.vector_matrix()
@@ -371,6 +400,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + " . Esperando token '=', '[' , ',' , ';'\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["=", "[", ",", ";"])
 				self.__error1_var()
 
 
@@ -388,6 +418,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + " . Esperando token ',' , ';'\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], [",", ";"])
 				self.__error1_var()
 	# =========================================================================================
 	# =========================================================================================
@@ -406,15 +437,18 @@ class Syntatic_analyzer():
 					self.vector_matrix_1()
 				else:
 					if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
-						print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ']'.\n") 
+						print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ']'.\n")
+						self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["]"])
 						self.__error_vector_matrix()
 			else:
 				if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token numérico.\n")
+					self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["NRO"])
 					self.__error_vector_matrix() 
 		else:
 			if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '['.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["["])
 				self.__error_vector_matrix() 
 
 
@@ -431,10 +465,12 @@ class Syntatic_analyzer():
 				else:
 					if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 						print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ']'\n")
+						self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["]"])
 						self.__error_vector_matrix()
 			else:
 				if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token numérico.\n")
+					self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["NRO"])
 					self.__error_vector_matrix() 
 		elif(self.match("=", 1) == True):
 			self.__currentToken = self.next_token()
@@ -447,6 +483,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '[' , '=' , ',' , ';'\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["[", "=", ",", ";"])
 				self.__error_vector_matrix() 
 	
 	# <vector_matrix_2> ::= '=' <init_matrix> <declaration_var3> | <declaration_var3>
@@ -461,6 +498,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '='.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["="])
 				self.__error_vector_matrix() 
 	# =========================================================================================
 	# =========================================================================================
@@ -477,6 +515,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '['.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["["])
 				self.__error_vector_matrix()  
 
 	# <init_matrix_1>   ::=     <value_with_IDE> <init_matrix_2>
@@ -487,7 +526,8 @@ class Syntatic_analyzer():
 			return 
 		else:
 			if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
-				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando valor numérico ou identificador para inicialização.\n")
+				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando valor para inicialização.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["IDE","NRO","CAR","CAD","verdadeiro","falso"])
 				self.__error_vector_matrix() 
 
 	# <init_matrix_2>   ::= ',' <init_matrix_1> | ';' <init_matrix_1> | ']' 
@@ -502,6 +542,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ',' ou ']'.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["," , "]"])
 				self.__error_vector_matrix()  
 
 	# <init_vector>     ::= '[' <init_vector_1>
@@ -513,6 +554,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '['.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["["])
 				self.__error_vector_matrix()  
 
 	# <init_vector_1>   ::=     <value_with_IDE> <init_vector_2>
@@ -523,7 +565,8 @@ class Syntatic_analyzer():
 			return
 		else:
 			if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
-				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando valor numérico para inicialização.\n")
+				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando valor para inicialização.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["IDE","NRO","CAR","CAD","verdadeiro","falso"])
 				self.__error_vector_matrix() 
 
 	# <init_vector_2>   ::= ',' <init_vector_1> | ']'
@@ -537,6 +580,7 @@ class Syntatic_analyzer():
 			return
 		else:
 			print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ',' ou ']'.\n")
+			self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], [",", "]"])
 			self.__error_vector_matrix()
 	# =========================================================================================
 	# =========================================================================================
@@ -553,6 +597,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '['.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["["])
 				if(self.__functions_aux.First("v_m_access1") == True):
 					self.v_m_access1()
 					return
@@ -580,6 +625,7 @@ class Syntatic_analyzer():
 			else:
 				if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ']'.\n")
+					self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["]"])
 					while(self.__currentToken["token"] != ""): # enquanto existem tokens para analise 
 						if(self.__functions_aux.Follow("v_m_access",self.__currentToken["token"],self.__currentToken["sigla"]) == True):
 							return
@@ -588,6 +634,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando identificador ou numero.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["IDE","NRO"])
 				while(self.__currentToken["token"] != ""): # enquanto existem tokens para analise 
 					if(self.match("]",1) == True):
 						self.__currentToken = self.next_token()
@@ -609,6 +656,7 @@ class Syntatic_analyzer():
 			else:
 				if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ']' \n")
+					self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["]"])
 					while(self.__currentToken["token"] != ""): # enquanto existem tokens para analise 
 						if(self.__functions_aux.Follow("v_m_access",self.__currentToken["token"],self.__currentToken["sigla"]) == True):
 							return
@@ -621,6 +669,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '.' ou ']'.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], [".", "]"])
 				while(self.__currentToken["token"] != ""): # enquanto existem tokens para analise 
 					if(self.__functions_aux.Follow("v_m_access",self.__currentToken["token"],self.__currentToken["sigla"]) == True):
 						return
@@ -653,12 +702,15 @@ class Syntatic_analyzer():
 					else:
 						if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 							print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ';'.\n")
+							self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], [";"])
 				else:
 					if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 						print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ')'.\n")
+						self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], [")"])
 			else:
 				if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 						print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '('.\n")
+						self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["("])
 
 	# <write_value_list> ::= ',' <write_value> <write_value_list> |
 	def write_value_list(self):
@@ -680,7 +732,8 @@ class Syntatic_analyzer():
 			return
 		else:
 			if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
-				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando valor para escrita..\n")
+				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando valor identificador, número, cadeia ou caracteres.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["IDE", "NRO", "CAD", "CAR"])
 	
 	# <write_value_1>    ::= <v_m_access> | <elem_registro> |
 	def write_value_1(self):
@@ -711,12 +764,15 @@ class Syntatic_analyzer():
 					else:
 						if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 							print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ';'.\n")
+							self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], [";"])
 				else:
 					if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 						print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ')'.\n")
+						self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], [")"])
 			else:
 				if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 						print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '('.\n")
+						self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["("])
 
 	# <read_value_list> ::= ',' <read_value> <read_value_list> |
 	def read_value_list(self):
@@ -736,6 +792,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token identificador.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["IDE"])
 	
 	# <read_value_1>    ::= <v_m_access> | <elem_registro> |
 	def read_value_1(self):
@@ -761,6 +818,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0):
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token identificador.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["IDE"])
 				self.__error_var_atr()
 				return
 	
@@ -780,6 +838,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0):
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '=', '[' , '.'\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["=", "[", "."])
 				self.__error_var_atr()
 				return
 	
@@ -792,6 +851,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0):
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '='.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["="])
 				self.__error_var_atr()
 				return
 
@@ -810,7 +870,8 @@ class Syntatic_analyzer():
 				return
 		else:
 			if(self.number_of_tokens() > 0):
-				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando valo para atribuicao.\n")
+				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando valor para atribuicao.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["IDE","NRO","CAR","CAD","verdadeiro","falso"])
 				self.__error_var_atr()
 				return
 
@@ -826,6 +887,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0):
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ',' , ';' .\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], [",", ";"])
 				self.__error_var_atr()
 				return
 	# =========================================================================================
@@ -843,10 +905,12 @@ class Syntatic_analyzer():
 			else:
 				if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando tipo de retorno'.\n")
+					self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ['IDE','inteiro', 'real', 'verdadeiro', 'falso', 'char', 'cadeia', 'vazio'])
 					self.__error_function_declaration()
 		else:
 			if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token 'funcao'.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ['funcao'])
 				self.__error_function_declaration()
 
 	# <function_declaration1> ::= algoritmo <main_function> | <function_declaration2>
@@ -859,6 +923,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token identificador ou 'algoritmo'.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ['IDE', 'algoritmo'])
 				self.__error2_function_declaration()
 
 	# <function_declaration2> ::= id <function_parameters> '{' <function_body> '}' <function_declaration>
@@ -875,10 +940,12 @@ class Syntatic_analyzer():
 				else:
 					if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 						print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '}'.\n")
+						self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ['}'])
 						self.function_declaration()
 			else:
 				if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '{'.\n")
+					self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ['{'])
 					self.__error3_function_declaration()
 
 	# <function_parameters>   ::= '(' <function_parameters1>
@@ -889,6 +956,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '('.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ['('])
 				self.__error3_function_declaration()
 
 	# <function_parameters1>  ::= <function_parameters2> id <function_parameters3> | ')'
@@ -901,6 +969,7 @@ class Syntatic_analyzer():
 			else:
 				if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token identificador.\n")
+					self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ['IDE'])
 					self.__error3_function_declaration()
 		elif(self.match(")", 1) == True):
 			self.__currentToken = self.next_token()
@@ -908,6 +977,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando tipo primitivo, identificador ou token ')'.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], [')','IDE','inteiro', 'real', 'verdadeiro', 'falso', 'char', 'cadeia', 'vazio'])
 				self.__error3_function_declaration()
 
 	# <function_parameters2>  ::=      <primitive_type>        | id
@@ -919,6 +989,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0):
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando tipo primitivo ou identificador.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ['IDE','inteiro', 'real', 'verdadeiro', 'falso', 'char', 'cadeia', 'vazio'])
 				self.__error3_function_declaration()
 
 	# <function_parameters3>  ::= '['']' <function_parameters4>  | <function_parameters5>
@@ -931,12 +1002,14 @@ class Syntatic_analyzer():
 			else:
 				if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ']'.\n")
+					self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], [']'])
 					self.__error3_function_declaration()
 		elif(self.__functions_aux.First("function_parameters5", self.__currentToken['token'], self.__currentToken['sigla']) == True):
 			self.function_parameters5()
 		else:
 			if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '[', ',' , ')'.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ['[',',',')'])
 				self.__error3_function_declaration()
 
 	# <function_parameters4>  ::= '['']' <function_parameters5>  | <function_parameters5>
@@ -949,12 +1022,14 @@ class Syntatic_analyzer():
 			else:
 				if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ']'.\n")
+					self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], [']'])
 					self.__error3_function_declaration()
 		elif(self.__functions_aux.First("function_parameters5", self.__currentToken['token'], self.__currentToken['sigla']) == True):
 			self.function_parameters5()
 		else:
 			if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '[', ',' , ')'.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ['[',',',')'])
 				self.__error3_function_declaration()
 
 	# <function_parameters5>  ::= ','  <function_parameters1>  | ')'
@@ -968,6 +1043,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ',' ou ')'.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], [',',')'])
 				self.__error3_function_declaration()
 	# =======================================================================================
 	# =======================================================================================
@@ -983,6 +1059,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '('.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ['('])
 				self.__error_functionCall()
 
 	# <varList0>     ::= <value_without_IDE> <varList2> | id <varList1> | ')' ';'
@@ -1001,10 +1078,12 @@ class Syntatic_analyzer():
 			else:
 				if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando ';'\n")
+					self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], [';'])
 					self.__error_functionCall()
 		else:
 			if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando 'tipo primitivo', 'id' , ',' ou ')'\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], [',',')','IDE','inteiro', 'real', 'verdadeiro', 'falso', 'char', 'cadeia', 'vazio'])
 				self.__error_functionCall()
 
 	# <varList1>     ::= <varList2>     | <v_m_access> <varList2> | <elem_registro> <varList2>
@@ -1020,6 +1099,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ',' ou '[' ou '.'.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], [',','[','.'])
 				self.__error_functionCall()
 
 	# <varList2>     ::= ',' <varList0> | ')' ';'
@@ -1034,10 +1114,12 @@ class Syntatic_analyzer():
 			else:
 				if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ';'.\n")
+					self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], [';'])
 					self.__error_functionCall()
 		else:
 			if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ',' ou ')'.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], [',',')'])
 				self.__error_functionCall()
 	# =========================================================================================
 	# =========================================================================================
@@ -1054,12 +1136,15 @@ class Syntatic_analyzer():
 				else:
 					if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 						print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '}'.\n")
+						self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ['}'])
 			else:
 				if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '{'.\n")
+					self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ['{'])
 		else:
 			if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '('.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ['('])
 	# =========================================================================================
 	# =========================================================================================
 
@@ -1083,15 +1168,19 @@ class Syntatic_analyzer():
 						else:
 							if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 								print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '}'.\n")
+								self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ['}'])
 					else:
 						if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 							print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '{'.\n")
+							self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ['{'])
 				else:
 					if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 						print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ')'.\n")
+						self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], [')'])
 			else:
 				if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '('.\n")
+					self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ['('])
 
 	# <args> ::= <expressao> |
 	def args(self):
@@ -1127,18 +1216,23 @@ class Syntatic_analyzer():
 							else:
 								if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 									print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '}'.\n")
+									self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ['}'])
 						else:
 							if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 								print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '{'.\n")
+								self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ['{'])
 					else:
 						if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 							print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ')'.\n")
+							self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], [')'])
 				else:
 					if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 						print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ';'.\n")
+						self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], [';'])
 			else:
 				if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '('.\n")
+					self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ['('])
 
 	# <init> ::= <var_atr> | ';'
 	def init(self):
@@ -1149,7 +1243,8 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ';'ou identificador.\n")
-	
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ['IDE',';'])
+
 	# <stop> ::= <expressao> |
 	def stop(self):
 		if(self.__functions_aux.First("expressao", self.__currentToken["token"], self.__currentToken["sigla"]) == True):
@@ -1188,15 +1283,19 @@ class Syntatic_analyzer():
 						else:
 							if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 								print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '}'.\n")
+								self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ['}'])
 					else:
 						if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 							print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '{'.\n")
+							self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ['{'])
 				else:
 					if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 						print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ')'.\n")
+						self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], [')'])
 			else:
 				if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '('.\n")
+					self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ['('])
 
 	# <se_body>           ::= <senao> | <>
 	def se_body(self):
@@ -1214,6 +1313,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token 'senao'.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ['senao'])
 
 	# <se_senao>          ::= <se> | '{' <com_body> '}' 
 	def se_senao(self):
@@ -1228,9 +1328,11 @@ class Syntatic_analyzer():
 			else:
 				if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '}'.\n")
+					self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ['}'])
 		else:
 			if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token 'se' ou '{'.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ['{'])
 	# =========================================================================================
 	# =========================================================================================
 	
@@ -1270,9 +1372,10 @@ class Syntatic_analyzer():
 			self.var_atr_1()
 		else:
 			if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
-				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '(' ou '='.\n")			
+				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '(' ou '='.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ['(','='])			
 
-	# <com_retornar1> ::= <value_with_expressao> | <>
+	# <com_retornar> ::= retorno <com_retornar1> ';' | <>
 	def com_retornar(self):
 		if(self.match("retorno", 1) == True):
 			self.__currentToken = self.next_token()
@@ -1280,6 +1383,10 @@ class Syntatic_analyzer():
 			if(self.match(";", 1) == True):
 				self.__currentToken = self.next_token()
 				return
+			else:
+				if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
+					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ';'.\n")
+					self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], [';'])
 		else:
 			return # vazio
 
@@ -1307,6 +1414,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token 'constantes' ou 'variaveis' ou restante do corpo da funcao.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["constantes", "variaveis", "enquanto", "para", "se", "escreva", "leia", "IDE","retorno"])
 				self.__error_function_body()
 	
 	# <function_body1>        ::= <declaration_var>   <function_body2> | <function_body2>
@@ -1321,6 +1429,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token 'variaveis' ou restante do corpo da funcao.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["variaveis", "enquanto", "para", "se", "escreva", "leia", "IDE","retorno"])
 				self.__error_function_body()		
 	
 	# <function_body2>        ::= <com_enquanto> <function_body2>  | <com_para> <function_body2>   | <se> <function_body2>
@@ -1350,6 +1459,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token 'retorno' ou algum comando.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["enquanto", "para", "se", "escreva", "leia", "IDE","retorno"])
 				self.__error_function_body2()
 
 	# <retornar> ::= retorno <retornar1> ';'
@@ -1363,6 +1473,7 @@ class Syntatic_analyzer():
 			else:
 				if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ';'.\n")
+					self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], [";"])
 					self.__error_function_body()
 
 	# <retornar1> ::= cad | char | <expressao> | <>
@@ -1396,9 +1507,11 @@ class Syntatic_analyzer():
 			else:
 				if (self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ')'.\n")
+					self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], [")"])
 		else:
 			if (self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando um número ou token '(', '+', '-'.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["(","+","-"])
 
 	# <exprNumber1>  ::= <operatorSoma> <exprNumber> | <>
 	def exprNumber1(self):
@@ -1424,6 +1537,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando número ou identificador ou token '++', '--'.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["++", "--"])
 
 	# <exprMulti> ::= <operatorSoma> <exprValorMod> <exprMultiPos> | <exprValorMod> <exprMultiPos> | '(' <exprNumber>
 	def exprMulti(self):
@@ -1439,6 +1553,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando número ou identificador ou token '+', '-', '++', '--' .\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["+","-","++","--"])
 
 	# <exprArt>   ::= <exprMulti> <expr1>
 	def exprArt(self):
@@ -1472,6 +1587,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '+' ou '-'.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["+", "-"])
 
 	# <operatorMulti> ::= '*' | '/'
 	def operatorMulti(self):
@@ -1484,6 +1600,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '*' ou '/'.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["*", "/"])
 
 	# <operatorAuto0> ::= '++' | '--'
 	def operatorAuto0(self):
@@ -1496,6 +1613,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '+' ou '-'.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["+", "-"])
 
 	# <operatorAuto> ::= '++' | '--' | <>
 	def operatorAuto(self):
@@ -1521,9 +1639,11 @@ class Syntatic_analyzer():
 			else:
 				if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ')'.\n")
+					self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], [")"])
 		else:
 			if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando número, identificador ou token '+', '-', '++', '--', 'verdadeiro', 'falso' ou '('.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["+","-","++","--","verdadeiro","falso","("])
 
 	# <exprRel>   ::= <exprArt> <exprRel1> | boolean <exprRel1>
 	def exprRel(self):
@@ -1536,6 +1656,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando número ou identificador ou token '+', '-', '++', '--', 'verdadeiro', 'falso' .\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["+","-","++","--","verdadeiro","falso"])
 
 	# <exprRel1> ::= <operatorRel> <exprRel0> | <>
 	def exprRel1(self):
@@ -1562,6 +1683,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '==', '>=', '<=', '!=', '>' ou '<'.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ['==', '>=', '<=', '!=', '>','<'])
 
 	# =======================================================================================
 	# === Gramática para expressões lógicas =================================================
@@ -1582,6 +1704,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando número ou identificador ou token '(', ')', '!', '+', '-', '++', '--' 'verdadeiro', 'falso' .\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["(", ")", "!", "+","-","++","--","verdadeiro","falso"])
 
 	# <exprLog1> ::=  <operatorLog> <expressao> | <>
 	def exprLog1(self):
@@ -1617,6 +1740,7 @@ class Syntatic_analyzer():
 		else:
 			if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '&&' ou '||'.\n")
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["&&", "||"])
 
 	# =======================================================================================
 	# =======================================================================================

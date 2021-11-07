@@ -42,7 +42,7 @@ class Files():
 			return False
 		else:
 			# Seta o primeiro arquivo a ser lido
-			name                = self.__files[0]
+			name = self.__files[0]
 			name = name.replace(".txt","")
 			self.__inputFile_ID   = name[7:]
 			self.__nameOutputFile = "saida" + self.__inputFile_ID + ".txt" 
@@ -65,7 +65,7 @@ class Files():
 				self.__lines = f.readlines()
 			f.close()
 			# Atualiza o ID para o arquivo atual
-			name                = self.__files[self.__indexFile]
+			name = self.__files[self.__indexFile]
 			name = name.replace(".txt","")
 			self.__inputFile_ID = name[7:]
 			self.__nameOutputFile = "saida" + self.__inputFile_ID + ".txt"
