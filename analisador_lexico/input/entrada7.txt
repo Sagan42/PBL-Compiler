@@ -82,6 +82,98 @@ funcao inteiro teste(inteiro a, real b[], Pessoa p[], Carro car[][], booleano te
 	retorno 0;
 }
 % ===================================================================================
+
+% ============ Segunda funcao de teste =============================================
+funcao inteiro teste(inteiro a, real b[], Pessoa p[], Carro car[][], booleano teste){
+	constantes {
+		inteiro a = 2;
+		real b = 4;
+		real c = 2.3;
+	}
+
+	variaveis {
+		inteiro local_a = 0;
+		inteiro local_b = 1;
+		cadeia  local_c = 2;
+		real       c[5] = [0,1,2,3,4];
+	}
+	
+	enquan( local_a >= local_b ) {
+		local_a = local_a + 1;
+		local_b = local_b + 2;
+		local_c = ( (local_a + 2)*(local_b + 3) ) / 4.5;
+	}
+
+	par( i = 0; i < 10; i ++){
+		escreva("Funciona", local_a, local_b, local_c);
+	}
+	
+	para( i = 0; i < 10; i ++){
+		escreva("Funciona", local_a, local_b, local_c);
+	}
+
+	enquanto( local_a >= local_b ) {
+		local_a = local_a + 1;
+		local_b = local_b + 2;
+		local_c = ( (local_a + 2)*(local_b + 3) ) / 4.5;
+	}
+	
+	retorno 0;
+}
+
+% ============ Tesde de declaracao de funcao ========================================
+funcao inteiro (inteiro a, real b, char tr[]){ % ok
+
+	retorno 0;
+}
+
+funcao teste (inteiro a, real b, char tr[]){ % ok
+
+	retorno 0;
+}
+
+funcao inteiro t1(inteiro a, real b char tr[]){ % ok
+
+	retorno 0;
+}
+
+funcao inteiro t2(inteiro a, real b, char tr]){ % ok
+
+	retorno 0;
+}
+
+funcao inteiro t3(inteiro a real b, char tr[]){ % ok
+
+	retorno 0;
+}
+
+funcao inteiro t4(inteiro a, real b, char tr[]{
+
+	retorno 0;
+}
+
+funcao inteiro t5 inteiro a, real b, char tr[]){
+
+	retorno 0;
+}
+
+funcao inteiro t6(inteiro a, real b, tr[]){
+
+	retorno 0;
+}
+
+funcao inteiro t7(inteiro a, real b, char tr[])
+
+	retorno 0;
+}
+
+funcao inteiro t8(inteiro a, real b, char tr[]){
+
+	retorno 0;
+
+% ===================================================================================
+% ===================================================================================
+% == Funcao Principal ===============================================================
 funcao inteiro algoritmo(){
 	variaveis {
 		inteiro local_a = 0;
@@ -89,6 +181,29 @@ funcao inteiro algoritmo(){
 		cadeia  local_c = 2;
 		real       c[5] = [0,1,2,3,4];
 	}
+	
+	teste(a, b, p, car, teste);
+	teste();
+	
+	% === teste de erro para chamada de funcao
+	teste(a, b, p, car tr);
+	teste_2(, b, p, car, tr);    
+	teste_3 a, b, p, car, tr);
+	teste_4(a, b, p, car, tr;
+	teste(a, b, p, car, tr)
+	teste()
+	% =======================================
+	
+	% === teste de erro para atribuicao
+	a = 2
+	a 3;
+	a[0] = "cadeia_de_caracteres"
+	a.idade = ;
+	a.tamanho = teste()
+	a[0][0] = b
+	a[0][0] = b, b = teste();           % isso aqui e valido de acordo a gramatica
+	a       = b, b = (teste + 2) / 4.5; % isso aqui e valido de acordo a gramatica
+	% =======================================
 
 	enquanto( local_a >= local_b ) {
 		local_a = local_a + 1;

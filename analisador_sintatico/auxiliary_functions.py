@@ -23,7 +23,9 @@ class Auxiliary_Functions():
 
 	# Funcao que verifica se um símbolo terminal pertence ao conjunto primeiro de um nao-terminal da linguagem.
 	def First(self, non_terminal, token, sigla):
-		if(non_terminal == "function_body1"):
+		if(non_terminal == "function_body"):
+			return self.__function_body(token, sigla)
+		elif(non_terminal == "function_body1"):
 			return self.__function_body1(token, sigla)
 		elif(non_terminal == "function_body2"):
 			return self.__function_body2(token, sigla)
@@ -31,8 +33,6 @@ class Auxiliary_Functions():
 			return self.__expressao(token, sigla)
 		elif(non_terminal == "value_with_expressao"):
 			return self.__value_with_expressao(token, sigla)
-		elif(non_terminal == "functionCall_2"):
-			return self.__functionCall_2(token, sigla)
 		elif(non_terminal == "com_retornar"):
 			return self.__com_retornar(token,sigla)
 		elif(non_terminal == "read_cmd"):
@@ -47,6 +47,10 @@ class Auxiliary_Functions():
 			return self.__se(token,sigla)
 		elif(non_terminal == "senao"):
 			return self.__senao(token,sigla)
+		elif(non_terminal == "function_declaration1"):
+			return self.__function_declaration1(token, sigla)
+		elif(non_terminal == "function_declaration2"):
+			return self.__function_declaration2(token,sigla)
 		elif(non_terminal == "function_parameters"):
 			return self.__function_parameters(token, sigla)
 		elif(non_terminal == "function_parameters2"):
@@ -148,6 +152,24 @@ class Auxiliary_Functions():
 
 
 	# == Conjuntos Primeiro ===============================================================================
+	def __function_declaration1(self, token, sigla):
+		if(token == "algoritmo" or sigla == "IDE"):
+			return True
+		else:
+			return False
+
+	def __function_declaration2(self, token, sigla):
+		if(sigla == "IDE"):
+			return True
+		else:
+			return False
+
+	def __function_body(self, token, sigla):
+		if(self.__declaration_const(token, sigla) == True or self.__function_body1(token,sigla) == True):
+			return True
+		else:
+			return False
+
 	def __function_body1(self, token, sigla):
 		if(self.__declaration_var(token, sigla) == True or self.__function_body2(token,sigla) == True):
 			return True
@@ -168,12 +190,6 @@ class Auxiliary_Functions():
 
 	def __expressao(self,token,sigla):
 		if(self.__follow_exprRel(token, sigla) == True or token == "(" or token == "!"):
-			return True
-		else:
-			return False
-
-	def __functionCall_2(self,token,sigla):
-		if(token == "("):
 			return True
 		else:
 			return False
@@ -238,13 +254,13 @@ class Auxiliary_Functions():
 			return False
 
 	def  __varList2(self, token, sigla):
-		if(token == "," or sigla == ")" ):
+		if(token == "," or token == ")" ):
 			return True
 		else:
 			return False
 
 	def  __functionCall(self, token, sigla):
-		if(sigla == "IDE"):
+		if(token == "("):
 			return True
 		else:
 			return False
@@ -517,7 +533,7 @@ class Auxiliary_Functions():
 	# ========================================================================================================
 	# == Conjuntos Seguinte ==================================================================================
 	def __follow_v_m_access(self,token,sigla):
-		if(token == "," or token == ";" or token == ")" or token == "+" or token == "++" or token == "." or token == "=" or token == "}"):
+		if(token == "," or token == ";" or token == ")" or token == "." or token == "=" or token == "}"):
 			return True
 		else:
 			return False
