@@ -12,7 +12,7 @@ def main():
 	files.read()
 	my_tokens = files.get_tokens()
 	#print(my_tokens)
-	syntatic_analyzer = Syntatic_analyzer(my_tokens)
+	syntatic_analyzer = Syntatic_analyzer(my_tokens, files)
 	if( syntatic_analyzer.number_of_tokens() > 0):
 		print("[INFO] Análise Sintática Iniciada.")
 		syntatic_analyzer.Program()

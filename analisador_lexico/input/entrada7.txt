@@ -121,7 +121,7 @@ funcao inteiro teste(inteiro a, real b[], Pessoa p[], Carro car[][], booleano te
 	retorno 0;
 }
 
-% ============ Tesde de declaracao de funcao ========================================
+% ============ Teste de declaracao de funcao ========================================
 funcao inteiro (inteiro a, real b, char tr[]){ % ok
 
 	retorno 0;

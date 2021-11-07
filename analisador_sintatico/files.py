@@ -5,7 +5,8 @@ class Files():
         self.__tokens = []
         self.__absolute_Path = os.path.abspath("../")
         self.__inputPath = "/analisador_lexico/output"
-        self.__nameOutputFile = ""
+        self.__outputPath     = "/analisador_sintatico/output"
+        self.__nameOutputFile = "saida"
         self.__counterFile = 0
         self.__inputFile_ID = 0  # identificador do arquivo de entrada atual.
         self.__indexFile = 0  # Index atual do vetor de arquivos de entrada.
@@ -24,7 +25,7 @@ class Files():
             # Seta o primeiro arquivo a ser lido
             name = self.__files[0]
             name = name.replace(".txt", "")
-            self.__inputFile_ID = name[7:]
+            self.__inputFile_ID = name[5:]
             self.__nameOutputFile = "saida" + self.__inputFile_ID + ".txt"
             self.__indexFile += 1
             # Busca e ler o primeiro arquivo a ser analisado
@@ -46,14 +47,22 @@ class Files():
         if (self.__indexFile < size):
             # Busca e ler o proximo arquivo a ser analisado
             file_path = self.__absolute_Path + self.__inputPath + "/" + self.__files[self.__indexFile]
+            # Limpa o dicionario de tokens atuais.
+            self.__tokens.clear()
             with open(file_path, 'r') as f:
                 # Ler todas as linhas do arquivo
-                self.__lines = f.readlines()
+                for lines in f:
+                    line = lines.split(' ')
+                    token = line[2].replace("\n","")
+                    sigla = line[1].replace("\n","")
+                    linha = line[0].replace("\n","")
+                    dict = {"token": token, "sigla": sigla, "linha": linha}
+                    self.__tokens.append(dict)
             f.close()
             # Atualiza o ID para o arquivo atual
             name = self.__files[self.__indexFile]
             name = name.replace(".txt", "")
-            self.__inputFile_ID = name[7:]
+            self.__inputFile_ID = name[5:]
             self.__nameOutputFile = "saida" + self.__inputFile_ID + ".txt"
             # Atualiza o index para o proximo arquivo
             self.__indexFile += 1
@@ -84,3 +93,22 @@ class Files():
 
     def get_tokens(self):
         return self.__tokens
+
+    def write_in_file(self, linha, token_atual, waiting):
+        expected_tokens = ""
+        expected_tokens = "\"" + str(waiting[0]) + "\""
+        for x in range(1,len(waiting)):
+            expected_tokens = expected_tokens + ",\"" + str(waiting[x]) + "\""
+        out = "linha " + str(linha) + "[erro sintatico: token lido " + "\"" + str(token_atual) + "\"], tokens esperados [" + expected_tokens + "]\n"   
+        # Monta o caminho de escrita do arquivo de saída.
+        path = self.__absolute_Path + self.__outputPath + "/" + self.__nameOutputFile
+        # Verifica se o arquivo existe
+        if not os.path.exists(path):
+            """Creates the output file"""
+            with open(path, 'w') as f:
+                f.write(out)
+            f.close()
+        else:
+            with open(path, 'a') as f:
+                f.write(out)
+            f.close()
