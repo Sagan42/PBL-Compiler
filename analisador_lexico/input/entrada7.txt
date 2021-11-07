@@ -122,27 +122,27 @@ funcao inteiro teste(inteiro a, real b[], Pessoa p[], Carro car[][], booleano te
 }
 
 % ============ Tesde de declaracao de funcao ========================================
-funcao inteiro (inteiro a, real b, char tr[]){
+funcao inteiro (inteiro a, real b, char tr[]){ % ok
 
 	retorno 0;
 }
 
-funcao teste (inteiro a, real b, char tr[]){
+funcao teste (inteiro a, real b, char tr[]){ % ok
 
 	retorno 0;
 }
 
-funcao inteiro t1(inteiro a, real b char tr[]){
+funcao inteiro t1(inteiro a, real b char tr[]){ % ok
 
 	retorno 0;
 }
 
-funcao inteiro t2(inteiro a, real b, char tr]){
+funcao inteiro t2(inteiro a, real b, char tr]){ % ok
 
 	retorno 0;
 }
 
-funcao inteiro t3(inteiro a real b, char tr[]){
+funcao inteiro t3(inteiro a real b, char tr[]){ % ok
 
 	retorno 0;
 }

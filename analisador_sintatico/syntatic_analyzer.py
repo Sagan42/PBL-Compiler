@@ -935,7 +935,6 @@ class Syntatic_analyzer():
 		elif(self.__functions_aux.First("function_parameters5", self.__currentToken['token'], self.__currentToken['sigla']) == True):
 			self.function_parameters5()
 		else:
-			print(self.__currentToken)
 			if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '[', ',' , ')'.\n")
 				self.__error3_function_declaration()
@@ -1823,9 +1822,7 @@ class Syntatic_analyzer():
 			if(self.match(")",1) == True):
 				self.__currentToken = self.next_token()
 				return
-			elif(self.match("{", 1) == True):
-				self.__currentToken = self.next_token()
-				self.function_body()
+			elif(self.__currentToken["token"] == "{"):
 				return
 			elif(self.__functions_aux.First("com_enquanto",self.__currentToken['token'], self.__currentToken['sigla']) == True):
 				self.function_body2()
