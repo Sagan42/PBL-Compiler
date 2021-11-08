@@ -7,7 +7,9 @@ class Auxiliary_Functions():
 
 	# Funcao que verifica se um símbolo terminal pertence ao conjunto seguinte de um nao-terminal da linguagem.
 	def Follow(self, non_terminal, token, sigla):
-		if(non_terminal == "v_m_access"):
+		if(non_terminal == "elem_registro"):
+			return self.__follow_elem_registro(token, sigla)
+		elif(non_terminal == "v_m_access"):
 			return self.__follow_v_m_access(token, sigla)
 		elif(non_terminal == "vector_matrix"):
 			return self.__follow_vector_matrix(token, sigla)
@@ -564,6 +566,12 @@ class Auxiliary_Functions():
 
 	def __follow_exprNumber(self, token, sigla):
 		if (token == "("):
+			return True
+		else:
+			return False
+
+	def __follow_elem_registro(self, token, sigla):
+		if(token == "]" or token == "," or token == "=" or token == ")"):
 			return True
 		else:
 			return False

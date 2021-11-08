@@ -100,4 +100,19 @@ terminal esperado     |  token de sincronização
 ===================================================================================================================
 
 
+===================================================================================================================
+Seleção dos tokens de sincronização de cada possível erro na gramática de declaração de ACESSO A REGISTRO:
+
+terminal esperado     |  token de sincronização
+ (não-recebido)       |  
+                      | 
+Independente do token | Procura por algum símbolo do conjunto seguinte de <elem_registro>
+
+
+Conjunto Seguinte(<elem_registro>) = { "]" "," "=" ")"
+
+
+===================================================================================================================
+
+
 

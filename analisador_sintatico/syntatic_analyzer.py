@@ -204,11 +204,13 @@ class Syntatic_analyzer():
 					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token identificador.\n")
 					self.__erros += 1
 					self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["IDE"])
+					self.__error_elem_registro()
 		else:
 			if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '.' \n")
 				self.__erros += 1
 				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["."])
+				self.__error_elem_registro()
 
 
 	# <nested_elem_registro>  ::= '.' id <nested_elem_registro1> | <v_m_access> <nested_elem_registro1> |
@@ -224,6 +226,7 @@ class Syntatic_analyzer():
 					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token identificador.\n")
 					self.__erros += 1
 					self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["IDE"])
+					self.__error_elem_registro()
 		elif(self.__functions_aux.First("v_m_access",self.__currentToken['token'], self.__currentToken['sigla']) == True):
 			self.v_m_access()
 			self.nested_elem_registro1()
@@ -735,7 +738,7 @@ class Syntatic_analyzer():
 			self.v_m_access1()
 			return
 		else:
-			return
+			return # vazio
 
 	# =======================================================================================
 	# === Gramatica para o comando escreva ==================================================
@@ -2103,6 +2106,15 @@ class Syntatic_analyzer():
 				return
 			else:
 				self.__currentToken = self.next_token()
+
+
+	def __error_elem_registro(self):
+		while(self.__currentToken["token"] != ""): # enquanto existem tokens para analise
+			if(self.__functions_aux.Follow("elem_registro",self.__currentToken['token'], self.__currentToken['sigla']) == True):
+				return
+			else:
+				self.__currentToken = self.next_token()
+				
 
 
 
