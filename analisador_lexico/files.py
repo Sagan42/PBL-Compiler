@@ -12,6 +12,18 @@ class Files():
 		self.__files         = []    # Lista com os nomes de todos os arquivos de entrada.
 		self.__lines         = []    # Atributo com todas as linhas do arquivo que sera processador.  
 
+	def get_number_of_input(self):
+		return self.__inputFile_ID
+
+	def delete_out_files(self):
+		path = self.__absolute_Path + self.__outputPath
+		# Busca todos os nomes dos arquivos de saida.
+		out_files = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
+		while(len(out_files) > 0):
+			file_path = path + "/" + out_files.pop(0)
+			if(os.path.exists(file_path)):
+				os.remove(file_path)
+
 	def __sort_file(self):
 		"""Algoritmo de ordenacao por selecao"""
 		for j in range(1,len(self.__files)):
@@ -35,7 +47,7 @@ class Files():
 	def set_inputFiles(self):
 		path = self.__absolute_Path + self.__inputPath
 		# Busca todos os nomes dos arquivos de entrada.
-		self.__files = name_files = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
+		self.__files = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
 		self.__sort_file()
 		if( len(self.__files) == 0):
 			# Não existem arquivos de entrada
