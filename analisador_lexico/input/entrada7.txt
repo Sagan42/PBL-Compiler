@@ -1,11 +1,12 @@
 registro Carro {
 	Pneu p1
 	Pneu p2;
-	Pneu ;
 	Pneu p4;
-	inteiro ;
 	Janelas a[Janelas.qtd];
-	Bancos  frente[Bancos.frente.qtd];
+	Bancos  frente[Bancos.frente.];
+	Bancos  frente[Bancos.];
+	Pneu ;
+	inteiro ;
 }
 
 registro {
