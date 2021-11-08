@@ -13,7 +13,17 @@ class Files():
         self.__files = []  # Lista com os nomes de todos os arquivos de entrada.
         self.__lines = []  # Atributo com todas as linhas do arquivo que sera processador.
 
-    def read(self):
+
+    def delete_out_files(self):
+        path = self.__absolute_Path + self.__outputPath
+        # Busca todos os nomes dos arquivos de saida.
+        out_files = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
+        while(len(out_files) > 0):
+            file_path = path + "/" + out_files.pop(0)
+            if(os.path.exists(file_path)):
+                os.remove(file_path)
+
+    def set_inputFiles(self):
         path = self.__absolute_Path + self.__inputPath
         # Busca todos os nomes dos arquivos de entrada.
         self.__files = name_files = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
@@ -44,11 +54,11 @@ class Files():
 
     def set_nextFile(self):
         size = len(self.__files)
+        # Limpa o dicionario de tokens atuais.
+        self.__tokens.clear()
         if (self.__indexFile < size):
             # Busca e ler o proximo arquivo a ser analisado
             file_path = self.__absolute_Path + self.__inputPath + "/" + self.__files[self.__indexFile]
-            # Limpa o dicionario de tokens atuais.
-            self.__tokens.clear()
             with open(file_path, 'r') as f:
                 # Ler todas as linhas do arquivo
                 for lines in f:
@@ -93,6 +103,9 @@ class Files():
 
     def get_tokens(self):
         return self.__tokens
+
+    def get_number_of_input(self):
+        return self.__inputFile_ID
 
     def write_in_file(self, linha, token_atual, waiting):
         expected_tokens = ""
