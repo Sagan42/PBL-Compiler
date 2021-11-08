@@ -119,6 +119,23 @@ funcao inteiro teste(inteiro a, real b[], Pessoa p[], Carro car[][], booleano te
 		local_c = ( (local_a + 2)*(local_b + 3) ) / 4.5;
 	}
 	
+	enquanto( local_a >= local_b  {
+		local_a = local_a + 1;
+		local_b = local_b + 2;
+		local_c = ( (local_a + 2)*(local_b + 3) ) / 4.5;
+	}
+	
+	para( i = 0; i < 10 i ++){
+		escreva("Funciona", local_a, local_b, local_c);
+	}
+	
+	para i = 0; i < 10 i ++){
+		escreva("Funciona", local_a, local_b, local_c);
+	}
+	
+	se(a == 2){
+	}
+	
 	retorno 0;
 }
 
