@@ -1657,11 +1657,13 @@ class Syntatic_analyzer():
 					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ')'.\n")
 					self.__erros += 1
 					self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], [")"])
+					self.__erro1expr()
 		else:
 			if (self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando um número ou token '(', '+', '-'.\n")
 				self.__erros += 1
 				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["(","+","-"])
+				self.__erro1expr()
 
 	# <exprNumber1>  ::= <operatorSoma> <exprNumber> | <>
 	def exprNumber1(self):
@@ -1689,6 +1691,7 @@ class Syntatic_analyzer():
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando número ou identificador ou token '++', '--'.\n")
 				self.__erros += 1
 				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["++", "--"])
+				self.__erro1expr()
 
 	# <exprMulti> ::= <operatorSoma> <exprValorMod> <exprMultiPos> | <exprValorMod> <exprMultiPos> | '(' <exprNumber>
 	def exprMulti(self):
@@ -1706,6 +1709,7 @@ class Syntatic_analyzer():
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando número ou identificador ou token '+', '-', '++', '--' .\n")
 				self.__erros += 1
 				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["+","-","++","--"])
+				self.__erro1expr()
 
 	# <exprArt>   ::= <exprMulti> <expr1>
 	def exprArt(self):
@@ -1741,6 +1745,7 @@ class Syntatic_analyzer():
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '+' ou '-'.\n")
 				self.__erros += 1
 				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["+", "-"])
+				self.__erro1expr()
 
 	# <operatorMulti> ::= '*' | '/'
 	def operatorMulti(self):
@@ -1755,6 +1760,7 @@ class Syntatic_analyzer():
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '*' ou '/'.\n")
 				self.__erros += 1
 				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["*", "/"])
+				self.__erro1expr()
 
 	# <operatorAuto0> ::= '++' | '--'
 	def operatorAuto0(self):
@@ -1769,6 +1775,7 @@ class Syntatic_analyzer():
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '+' ou '-'.\n")
 				self.__erros += 1
 				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["+", "-"])
+				self.__erro1expr()
 
 	# <operatorAuto> ::= '++' | '--' | <>
 	def operatorAuto(self):
@@ -1796,11 +1803,13 @@ class Syntatic_analyzer():
 					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ')'.\n")
 					self.__erros += 1
 					self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], [")"])
+					self.__erro1expr()
 		else:
 			if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando número, identificador ou token '+', '-', '++', '--', 'verdadeiro', 'falso' ou '('.\n")
 				self.__erros += 1
 				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["+","-","++","--","verdadeiro","falso","("])
+				self.__erro1expr()
 
 	# <exprRel>   ::= <exprArt> <exprRel1> | boolean <exprRel1>
 	def exprRel(self):
@@ -1815,6 +1824,7 @@ class Syntatic_analyzer():
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando número ou identificador ou token '+', '-', '++', '--', 'verdadeiro', 'falso' .\n")
 				self.__erros += 1
 				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["+","-","++","--","verdadeiro","falso"])
+				self.__erro1expr()
 
 	# <exprRel1> ::= <operatorRel> <exprRel0> | <>
 	def exprRel1(self):
@@ -1843,6 +1853,7 @@ class Syntatic_analyzer():
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '==', '>=', '<=', '!=', '>' ou '<'.\n")
 				self.__erros += 1
 				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ['==', '>=', '<=', '!=', '>','<'])
+				self.__erro1expr()
 
 	# =======================================================================================
 	# === Gramática para expressões lógicas =================================================
@@ -1862,9 +1873,10 @@ class Syntatic_analyzer():
 			self.expressao()
 		else:
 			if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
-				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando número ou identificador ou token '(', ')', '!', '+', '-', '++', '--' 'verdadeiro', 'falso' .\n")
+				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando número ou identificador ou token '(', '!', , 'verdadeiro', 'falso' .\n")
 				self.__erros += 1
-				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["(", ")", "!", "+","-","++","--","verdadeiro","falso"])
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["IDE","(", "!", "verdadeiro","falso"])
+				self.__erro1expr()
 
 	# <exprLog1> ::=  <operatorLog> <expressao> | <>
 	def exprLog1(self):
@@ -1902,6 +1914,7 @@ class Syntatic_analyzer():
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '&&' ou '||'.\n")
 				self.__erros += 1
 				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["&&", "||"])
+				self.__erro1expr()
 
 	# =======================================================================================
 	# =======================================================================================
@@ -2054,6 +2067,18 @@ class Syntatic_analyzer():
 			elif(self.__currentToken["token"] == "retorno"):
 				self.retornar()
 				return
+			elif(self.__currentToken["token"] == "constantes"):
+				self.declaration_const()
+				self.function_body2()
+				return
+			elif(self.__currentToken["token"] == "variaveis"):
+				self.declaration_var()
+				self.function_body2()
+				return
+			elif(self.__currentToken["token"] == "funcao"):
+				self.function_declaration()
+				self.function_body2()
+				return
 			else:
 				self.__currentToken = self.next_token()
 
@@ -2160,7 +2185,7 @@ class Syntatic_analyzer():
 	# ERROR para a gramatica comando leia
 	def __error1leia(self):
 		while (self.__currentToken["token"] != ""):  # enquanto existem tokens para analise
-			if (self.match("IDE", 2) == True):
+			if (self.__currentToken["sigla"] == "IDE"):
 				self.read_value()
 				return
 			else:
@@ -2188,13 +2213,13 @@ class Syntatic_analyzer():
 	# ERROR para a gramatica do comando escreva
 	def __error1escreva(self):
 		while (self.__currentToken["token"] != ""):  # enquanto existem tokens para analise
-			if (self.match("IDE", 2) == True):
+			if (self.__currentToken["sigla"] == "IDE"):
 				self.write_value()
 				return
-			elif (self.match("NRO", 2) == True):
+			elif (self.__currentToken["sigla"] == "NRO"):
 				self.write_value()
 				return
-			elif (self.match(",", 1) == True):
+			elif (self.__currentToken["token"] == ","):
 				self.write_value_list()
 				return
 			else:
@@ -2225,10 +2250,10 @@ class Syntatic_analyzer():
 			if (self.__functions_aux.Follow("exprRel", self.__currentToken["token"], self.__currentToken["sigla"]) == True):
 				self.expressao()
 				return
-			elif (self.match("(", 1) == True):
+			elif (self.__currentToken["token"] == "("):
 				self.expressao()
 				return
-			elif (self.match("!", 1) == True):
+			elif (self.__currentToken["token"] == "!"):
 				self.expressao()
 				return
 			else:
@@ -2239,6 +2264,7 @@ class Syntatic_analyzer():
 			if (self.match("{", 1) == True):
 				self.__currentToken = self.next_token()
 				self.com_body()
+				return
 			else:
 				self.__currentToken = self.next_token()
 
@@ -2259,7 +2285,7 @@ class Syntatic_analyzer():
 			elif(self.__functions_aux.First("read_cmd", self.__currentToken["token"], self.__currentToken["sigla"]) == True):
 				self.com_body()
 				return
-			elif(self.match("IDE", 2) == True):
+			elif(self.__currentToken["sigla"] == "IDE"):
 				self.com_body()
 				return
 			elif(self.__functions_aux.First("com_retornar", self.__currentToken["token"], self.__currentToken["sigla"]) == True):
@@ -2281,7 +2307,7 @@ class Syntatic_analyzer():
 			if (self.__functions_aux.First("se", self.__currentToken["token"], self.__currentToken["sigla"]) == True):
 				self.se_senao()
 				return
-			elif (self.match("{", 1) == True):
+			elif (self.__currentToken["token"] == "{"):
 				self.se_senao()
 				return
 			else:
@@ -2290,17 +2316,26 @@ class Syntatic_analyzer():
 	# ERROR para a gramatica de expressões
 	def __erro1expr(self):
 		while (self.__currentToken["token"] != ""):  # enquanto existem tokens para analise
-			if (self.match("enquanto", 1) == True):
-				self.com_enquanto()
+			if (self.__currentToken["token"] == "enquanto"):
+				self.com_body()
 				return
-			elif (self.match("para", 1) == True):
-				self.com_para()
+			elif (self.__currentToken["token"] == "para"):
+				self.com_body()
 				return
-			elif (self.match("leia", 1) == True):
-				self.read_cmd()
+			elif (self.__currentToken["token"] == "leia"):
+				self.com_body()
 				return
-			elif (self.match("escreva", 1) == True):
-				self.write_cmd()
+			elif (self.__currentToken["token"] == "escreva"):
+				self.com_body()
+				return
+			elif(self.__currentToken["token"] == "se"):
+				self.com_body()
+				return
+			elif(self.__currentToken["token"] == "senao"):
+				self.com_body()
+				return
+			elif(self.__currentToken["token"] == "retorno"): 
+				self.com_body()
 				return
 			else:
 				self.__currentToken = self.next_token()
