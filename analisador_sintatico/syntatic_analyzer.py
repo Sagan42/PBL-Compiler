@@ -764,11 +764,13 @@ class Syntatic_analyzer():
 						print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ')'.\n")
 						self.__erros += 1
 						self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], [")"])
+						self.__error2escreva()
 			else:
 				if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '('.\n")
 					self.__erros += 1
 					self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["("])
+					self.__error1escreva()
 
 	# <write_value_list> ::= ',' <write_value> <write_value_list> |
 	def write_value_list(self):
@@ -793,6 +795,7 @@ class Syntatic_analyzer():
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando valor identificador, número, cadeia ou caracteres.\n")
 				self.__erros += 1
 				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["IDE", "NRO", "CAD", "CAR"])
+				self.__error3escreva()
 	
 	# <write_value_1>    ::= <v_m_access> | <elem_registro> |
 	def write_value_1(self):
@@ -830,11 +833,13 @@ class Syntatic_analyzer():
 						print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ')'.\n")
 						self.__erros += 1
 						self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], [")"])
+						self.__error2leia()
 			else:
 				if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '('.\n")
 					self.__erros += 1
 					self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["("])
+					self.__error1leia()
 
 	# <read_value_list> ::= ',' <read_value> <read_value_list> |
 	def read_value_list(self):
@@ -856,6 +861,7 @@ class Syntatic_analyzer():
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token identificador.\n")
 				self.__erros += 1
 				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["IDE"])
+				self.__error3leia()
 	
 	# <read_value_1>    ::= <v_m_access> | <elem_registro> |
 	def read_value_1(self):
@@ -1396,21 +1402,25 @@ class Syntatic_analyzer():
 								print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '}'.\n")
 								self.__erros += 1
 								self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ['}'])
+								self.__error4sesenao()
 					else:
 						if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 							print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '{'.\n")
 							self.__erros += 1
 							self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ['{'])
+							self.__error3sesenao()
 				else:
 					if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 						print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ')'.\n")
 						self.__erros += 1
 						self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], [')'])
+						self.__error2sesenao()
 			else:
 				if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 					print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '('.\n")
 					self.__erros += 1
 					self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ['('])
+					self.__error1sesenao()
 
 	# <se_body>           ::= <senao> | <>
 	def se_body(self):
@@ -1430,6 +1440,7 @@ class Syntatic_analyzer():
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token 'senao'.\n")
 				self.__erros += 1
 				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ['senao'])
+				self.__error5sesenao()
 
 	# <se_senao>          ::= <se> | '{' <com_body> '}' 
 	def se_senao(self):
@@ -1451,6 +1462,7 @@ class Syntatic_analyzer():
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token 'se' ou '{'.\n")
 				self.__erros += 1
 				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ['{'])
+				self.__error3sesenao()
 	# =========================================================================================
 	# =========================================================================================
 	
@@ -1492,7 +1504,8 @@ class Syntatic_analyzer():
 			if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '(' ou '='.\n")
 				self.__erros += 1
-				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ['(','='])			
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ['(','='])
+				self.__error_function_body2()
 
 	# <com_retornar> ::= retorno <com_retornar1> ';' | <>
 	def com_retornar(self):
@@ -2144,7 +2157,151 @@ class Syntatic_analyzer():
 			else:
 				self.__currentToken = self.next_token()
 
+	# ERROR para a gramatica comando leia
+	def __error1leia(self):
+		while (self.__currentToken["token"] != ""):  # enquanto existem tokens para analise
+			if (self.match("IDE", 2) == True):
+				self.read_value()
+				return
+			else:
+				self.__currentToken = self.next_token()
 
+	def __error2leia(self):
+		while (self.__currentToken["token"] != ""):  # enquanto existem tokens para analise
+			if (self.match(";", 1) == True):
+				self.__currentToken = self.next_token()
+				return
+			else:
+				self.__currentToken = self.next_token()
 
+	def __error3leia(self):
+		while (self.__currentToken["token"] != ""):  # enquanto existem tokens para analise
+			if(self.__functions_aux.First("v_m_access", self.__currentToken["token"], self.__currentToken["sigla"] ) == True):
+				self.read_value_1()
+				return
+			elif(self.__functions_aux.First("elem_registro", self.__currentToken["token"], self.__currentToken["sigla"] ) == True):
+				self.read_value_1()
+				return
+			else:
+				self.__currentToken = self.next_token()
 
+	# ERROR para a gramatica do comando escreva
+	def __error1escreva(self):
+		while (self.__currentToken["token"] != ""):  # enquanto existem tokens para analise
+			if (self.match("IDE", 2) == True):
+				self.write_value()
+				return
+			elif (self.match("NRO", 2) == True):
+				self.write_value()
+				return
+			elif (self.match(",", 1) == True):
+				self.write_value_list()
+				return
+			else:
+				self.__currentToken = self.next_token()
+
+	def __error2escreva(self):
+		while (self.__currentToken["token"] != ""):  # enquanto existem tokens para analise
+			if (self.match(";", 1) == True):
+				self.__currentToken = self.next_token()
+				return
+			else:
+				self.__currentToken = self.next_token()
+
+	def __error3escreva(self):
+		while (self.__currentToken["token"] != ""):  # enquanto existem tokens para analise
+			if (self.__functions_aux.First("v_m_access", self.__currentToken["token"], self.__currentToken["sigla"]) == True):
+				self.write_value_1()
+				return
+			elif (self.__functions_aux.First("elem_registro", self.__currentToken["token"], self.__currentToken["sigla"]) == True):
+				self.write_value_1()
+				return
+			else:
+				self.__currentToken = self.next_token()
+
+	# ERROR para a gramatica do se e se não
+	def __error1sesenao(self):
+		while (self.__currentToken["token"] != ""):  # enquanto existem tokens para analise
+			if (self.__functions_aux.Follow("exprRel", self.__currentToken["token"], self.__currentToken["sigla"]) == True):
+				self.expressao()
+				return
+			elif (self.match("(", 1) == True):
+				self.expressao()
+				return
+			elif (self.match("!", 1) == True):
+				self.expressao()
+				return
+			else:
+				self.__currentToken = self.next_token()
+
+	def __error2sesenao(self):
+		while (self.__currentToken["token"] != ""):  # enquanto existem tokens para analise
+			if (self.match("{", 1) == True):
+				self.__currentToken = self.next_token()
+				self.com_body()
+			else:
+				self.__currentToken = self.next_token()
+
+	def __error3sesenao(self):
+		while (self.__currentToken["token"] != ""):  # enquanto existem tokens para analise
+			if(self.__functions_aux.First("com_enquanto", self.__currentToken["token"], self.__currentToken["sigla"]) == True):
+				self.com_body()
+				return
+			elif(self.__functions_aux.First("com_para", self.__currentToken["token"], self.__currentToken["sigla"]) == True):
+				self.com_body()
+				return
+			elif(self.__functions_aux.First("se", self.__currentToken["token"], self.__currentToken["sigla"]) == True):
+				self.com_body()
+				return
+			elif(self.__functions_aux.First("write_cmd", self.__currentToken["token"], self.__currentToken["sigla"]) == True):
+				self.com_body()
+				return
+			elif(self.__functions_aux.First("read_cmd", self.__currentToken["token"], self.__currentToken["sigla"]) == True):
+				self.com_body()
+				return
+			elif(self.match("IDE", 2) == True):
+				self.com_body()
+				return
+			elif(self.__functions_aux.First("com_retornar", self.__currentToken["token"], self.__currentToken["sigla"]) == True):
+				self.com_body()
+				return
+			else:
+				self.__currentToken = self.next_token()
+
+	def __error4sesenao(self):
+		while (self.__currentToken["token"] != ""):  # enquanto existem tokens para analise
+			if (self.__functions_aux.First("senao", self.__currentToken["token"], self.__currentToken["sigla"]) == True):
+				self.se_body()
+				return
+			else:
+				self.__currentToken = self.next_token()
+
+	def __error5sesenao(self):
+		while (self.__currentToken["token"] != ""):  # enquanto existem tokens para analise
+			if (self.__functions_aux.First("se", self.__currentToken["token"], self.__currentToken["sigla"]) == True):
+				self.se_senao()
+				return
+			elif (self.match("{", 1) == True):
+				self.se_senao()
+				return
+			else:
+				self.__currentToken = self.next_token()
+
+	# ERROR para a gramatica de expressões
+	def __erro1expr(self):
+		while (self.__currentToken["token"] != ""):  # enquanto existem tokens para analise
+			if (self.match("enquanto", 1) == True):
+				self.com_enquanto()
+				return
+			elif (self.match("para", 1) == True):
+				self.com_para()
+				return
+			elif (self.match("leia", 1) == True):
+				self.read_cmd()
+				return
+			elif (self.match("escreva", 1) == True):
+				self.write_cmd()
+				return
+			else:
+				self.__currentToken = self.next_token()
 
