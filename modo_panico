@@ -1,0 +1,118 @@
+Modo Pânico:
+1. Relata-se o erro.
+2. Pulam-se tokens até que um token de sincronização seja encontrado.
+
+Tokens de sincronização: pontos do programa (palavras-chave, delimitadores, etc) em que é possível se retomar a análise sintática com certa segurança. Esses token precisam ser determinados pelo projetista do compilador.
+
+Nos ASD recursivos, a busca por tokens de sincronização é feita sempre que um token esperado não é encontrado. Ou seja, no ponto de erro dos procedimentos recursivos.
+
+Os tokens de sincronização podem ser o conjunto Follow ou First de um símbolo não-terminal.
+
+=================================================================================================================
+Seleção dos tokens de sincronização de cada possível erro na gramática de declaração de constantes:
+
+terminal esperado |  token de sincronização
+ (não-recebido)   |
+-------------------------------------------
+ "constantes"     |  "variaveis"
+    "{"           |  "variaveis"
+tipos primitivos  |  ";" ou "," ou "}" ou "variaveis"
+     "="          |  ";" ou "," ou "}" ou "variaveis"
+   valor da       |  ";" ou "," ou "}" ou "variaveis"
+ inicialização    |
+     ","          |  "," ou ";" ou "}" ou "variaveis"
+	 ";"          |  tipos primitivos ou "}" ou "variaveis"
+	 "}"          |  "variaveis"
+===================================================================================================================
+
+===================================================================================================================
+Seleção dos tokens de sincronização de cada possível erro na gramática de declaração de CHAMADA DE FUNÇÃO:
+
+terminal esperado     |  token de sincronização
+ (não-recebido)       |  
+    <varList0>        |  algum símbolo do conjunto primeiro de <function_body2> ou <com_body>
+ não pode expandir    | 
+                      |
+    <varList1>        |  algum símbolo do conjunto primeiro de <function_body2> ou <com_body>
+ não pode expandir    |
+                      |
+    <varList2>        |  algum símbolo do conjunto primeiro de <function_body2> ou <com_body>
+ não pode expandir
+
+
+algum símbolo do conjunto primeiro de <function_body2> ou <com_body>: exceto identificador. Para isso é feito uma verificação a mais.
+===================================================================================================================
+
+===================================================================================================================
+Seleção dos tokens de sincronização de cada possível erro na gramática de declaração de ATRIBUIÇÃO DE VARIÁVEIS:
+
+terminal esperado     |  token de sincronização
+ (não-recebido)       |  
+                      |
+     <var_atr>        |  algum símbolo do conjunto primeiro de <function_body2> ou <com_body>
+  não pode expandir   |
+                      |
+     <var_atr_1>      |  algum símbolo do conjunto primeiro de <function_body2> ou <com_body>
+  não pode expandir   |
+                      |
+     <atr_1>          |  algum símbolo do conjunto primeiro de <function_body2> ou <com_body
+  não pode expandir   |
+
+     <atr_2>          |  algum símbolo do conjunto primeiro de <function_body2> ou <com_body>
+  não pode expandir   |
+===================================================================================================================
+
+===================================================================================================================
+Seleção dos tokens de sincronização de cada possível erro na gramática de declaração de CORPO DE FUNÇÃO:
+
+terminal esperado     |  token de sincronização
+ (não-recebido)       |  
+  <function_body>     |  procura por outra 'funcao'. 
+ não pode expandir    | 
+                      |
+  <function_body1>    |  procura por outra 'funcao'.
+ não pode expandir    |
+                      |
+  <function_body2>    |  procura por algum comando exceto os que começam com um 'identificador.'
+ não pode expandir    |
+                      |
+  Em <retornar> não   | procura por outra 'funcao'.
+    encontre o ';'    |
+===================================================================================================================
+
+===================================================================================================================
+Seleção dos tokens de sincronização de cada possível erro na gramática de declaração de DECLARAÇÃO DE FUNÇÃO:
+
+terminal esperado     |  token de sincronização
+ (não-recebido)       |  
+ 	  'funcao'		  |  algum símbolo do conjunto primeiro de <function_declaration1> ou '(' para <function_parameters>.
+					  | 	
+ 	  <type>		  |  algum símbolo do conjunto primeiro de <function_declaration1> ou '(' para <function_parameters>.
+ não pode expandir    |
+                      |
+ 'algoritmo' ou 'id'  |  '(' para <function_parameters> ou '{' para iniciar o <function_body> ou algum símbolo do conjunto primeiro de <function_body>
+                      |
+ 	   '('            |  ')' para finalizar ou '{' para iniciar o <function_body> ou algum símbolo do conjunto primeiro de <function_body>
+                      |
+  qualquer outro de   |  ')' para finalizar ou '{' para iniciar o <function_body> ou algum símbolo do conjunto primeiro de <function_body>
+<function_parameters> |  
+
+===================================================================================================================
+
+
+===================================================================================================================
+Seleção dos tokens de sincronização de cada possível erro na gramática de declaração de ACESSO A REGISTRO:
+
+terminal esperado     |  token de sincronização
+ (não-recebido)       |  
+                      | 
+Independente do token | Procura por algum símbolo do conjunto seguinte de <elem_registro>
+
+
+Conjunto Seguinte(<elem_registro>) = { "]" "," "=" ")"
+
+
+===================================================================================================================
+
+
+

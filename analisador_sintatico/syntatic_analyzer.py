@@ -1,5 +1,5 @@
 from auxiliary_functions import Auxiliary_Functions
-
+from semantic_analyzer   import Semantic_Analyzer
 # <v_m_acess> encerra suas producoes com "vazio", logo, depois dele nao é necessario pegar um proximo token.
 # Somente pega o proximo token depois de um "match"
 class Syntatic_analyzer():
@@ -16,6 +16,12 @@ class Syntatic_analyzer():
 		self.__functions_aux = Auxiliary_Functions()
 		# Atributo que armazena a quantidade de erros detectados.
 		self.__erros         = 0;
+		self.__semantic_analyzer = Semantic_Analyzer()
+		# Tabela de simbolos para constantes e variaveis
+		self.__VC_Table      = {}
+		# Atributo que armazena um dicionario de tokens especificos para auxiliar a analise semantica
+		self.__lexema        = {}
+		self.__currentScope  = ""
 
 	def get_erros(self):
 		return self.__erros
@@ -60,8 +66,12 @@ class Syntatic_analyzer():
 		self.__currentToken = self.next_token()
 		if(self.__functions_aux.First("declaration_reg",self.__currentToken['token'], self.__currentToken['sigla']) == True):
 			self.declaration_reg()
+		# Comeca a analise de constantes
+		self.__currentScope       = "global"
 		self.declaration_const()
 		self.declaration_var()
+		# Comeca a analise de funcoes
+		self.__currentScope       = "local"
 		self.function_declaration()
 	# ============================================================================================
 	# === Gramatica para declaracao de elementos do tipo registro ================================
@@ -279,13 +289,27 @@ class Syntatic_analyzer():
 	# <declaration_const1> ::= <primitive_type> id '=' <value> <declaration_const2> | '}'
 	def declaration_const1(self):
 		if(self.__functions_aux.First("primitive_type",self.__currentToken['token'], self.__currentToken['sigla']) == True):
+			print("[INFO] Token aceito [" + self.__currentToken["sigla"] + "]  : \"" + self.__currentToken["token"] + "\" Linha: " + self.__currentToken["linha"])
+			# Armazena a categoria que esta sendo analisada, constante ou variavel
+			self.__VC_Table["categoria"] = "constante"
+			# Armazena o tipo utilizado na declaracao
+			self.__VC_Table["tipo"] = self.__currentToken["token"]
+			self.__lexema["tipo"]   = self.__currentToken
 			self.__currentToken = self.next_token()
 			if(self.match("IDE", 2) == True):
+				# Armazena nome da constante
+				self.__VC_Table["nome"]     = self.__currentToken["token"]
+				# Como nao e vetor ou matriz, nao tem dimensao
+				self.__VC_Table["dimensao"] = None
 				self.__currentToken = self.next_token()
 				if(self.match("=", 1) == True):
 					self.__currentToken = self.next_token()
 					if(self.__functions_aux.First("value",self.__currentToken['token'], self.__currentToken['sigla']) == True):
-						self.__currentToken = self.next_token()
+						print("[INFO] Token aceito [" + self.__currentToken["sigla"] + "]  : \"" + self.__currentToken["token"] + "\" Linha: " + self.__currentToken["linha"])
+						# Armazena o valor recebido para inicializacao
+						self.__VC_Table["init"]  = True
+						self.__lexema["valor"]   = self.__currentToken
+						self.__currentToken      = self.next_token()
 						self.declaration_const2()
 						return
 					else:
@@ -318,14 +342,27 @@ class Syntatic_analyzer():
 
 	# <declaration_const2> ::= ',' id '=' <value> <declaration_const2> | ';' <declaration_const1>
 	def declaration_const2(self):
+		self.__VC_Table["escopo"] = self.__currentScope
+		# Realiza analise semantica da constante declarada
+		self.__semantic_analyzer.analyzer_var_const(self.__lexema,  self.__VC_Table)
 		if(self.match(",", 1) == True):
+			# Limpa o dicionario de tokens
+			self.__lexema["valor"]  = {}
+			self.__VC_Table["nome"] = ""
+			self.__VC_Table["init"] = None
 			self.__currentToken = self.next_token()
 			if(self.match("IDE", 2) == True):
+				# Armazena nome da constante
+				self.__VC_Table["nome"]  = self.__currentToken["token"]
 				self.__currentToken = self.next_token()
 				if(self.match("=", 1) == True):
 					self.__currentToken = self.next_token()
 					if(self.__functions_aux.First("value",self.__currentToken['token'], self.__currentToken['sigla']) == True):
-						self.__currentToken = self.next_token()
+						print("[INFO] Token aceito [" + self.__currentToken["sigla"] + "]  : \"" + self.__currentToken["token"] + "\" Linha: " + self.__currentToken["linha"])
+						# Armazena o valor recebido para inicializacao
+						self.__VC_Table["init"]  = True
+						self.__lexema["tipo"]    = self.__currentToken
+						self.__currentToken      = self.next_token()
 						self.declaration_const2()
 						return
 					else:
@@ -347,6 +384,8 @@ class Syntatic_analyzer():
 					self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["IDE"])
 					self.__error1_const()
 		elif(self.match(";", 1) == True):
+			self.__lexema   = {}
+			self.__VC_Table = {}
 			self.__currentToken = self.next_token()
 			self.declaration_const1()
 			return

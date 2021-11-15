@@ -1,25 +1,11 @@
-registro teste_registro {
-    inteiro a;
-    inteiro d[a];
-    inteiro d[2][2];
-    Pessoa  teste[1][1];
-    Pessoa  teste_1[2];
-    real    b;
-    cadeia  c;
-}
-registro teste_registro_1 {
-    inteiro a,d,e,f;
-    real    b;
-    cadeia  c;
-}
-registro teste_registro_2 {
-    inteiro a,d,e,f;
-    real    b;
-    cadeia  c;
-}
 constantes {
     inteiro a = 2;
-    real    b = 2.23,c = 23.40;
+    real    b = 2.23, c = 23.40;
+    inteiro c      = 2.2;
+    cadeia teste   = 'c';                    % erro de inicializacao
+    char   teste_2 = "cadeia_de_caracteres"; % erro de inicializacao
+    real    a      = 2.2;                    % erro de variavel duplicada
+    inteiro b      = 'a';                    % erro de variavel duplicada e inicializacao.
 }
 
 variaveis {
@@ -43,6 +29,10 @@ funcao inteiro funcao_teste_2 ( Pessoa nova_pessoa, inteiro local_1, real local_
     constantes {
         inteiro local_a = 2;
         real    local_b = 2.23,c = 23.40;
+        cadeia  local_c = 'a';
+        vazio   teste_vazio = "";
+        inteiro       a = 0;
+        real          b = 5.0;
     }
 
     variaveis {
