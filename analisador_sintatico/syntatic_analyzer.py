@@ -63,16 +63,21 @@ class Syntatic_analyzer():
 				return False
 
 	def Program(self):
+		# Pega o primeiro token
 		self.__currentToken = self.next_token()
+		self.__currentScope = "global"
 		if(self.__functions_aux.First("declaration_reg",self.__currentToken['token'], self.__currentToken['sigla']) == True):
 			self.declaration_reg()
 		# Comeca a analise de constantes
-		self.__currentScope       = "global"
 		self.declaration_const()
+		# Limpa o lexema e a tabela de simbolos auxiliar para iniciar a analise de variaveis
+		self.__lexema   = {}
+		self.__VC_Table = {}
 		self.declaration_var()
 		# Comeca a analise de funcoes
 		self.__currentScope       = "local"
 		self.function_declaration()
+		self.__semantic_analyzer.Print_st_var_const()
 	# ============================================================================================
 	# === Gramatica para declaracao de elementos do tipo registro ================================
 	# <declaration_reg>    ::= registro id '{' <declaration_reg1> |
@@ -344,7 +349,7 @@ class Syntatic_analyzer():
 	def declaration_const2(self):
 		self.__VC_Table["escopo"] = self.__currentScope
 		# Realiza analise semantica da constante declarada
-		self.__semantic_analyzer.analyzer_var_const(self.__lexema,  self.__VC_Table)
+		self.__semantic_analyzer.analyzer_var_const(self.__currentToken["linha"], self.__lexema, self.__VC_Table)
 		if(self.match(",", 1) == True):
 			# Limpa o dicionario de tokens
 			self.__lexema["valor"]  = {}
@@ -361,7 +366,7 @@ class Syntatic_analyzer():
 						print("[INFO] Token aceito [" + self.__currentToken["sigla"] + "]  : \"" + self.__currentToken["token"] + "\" Linha: " + self.__currentToken["linha"])
 						# Armazena o valor recebido para inicializacao
 						self.__VC_Table["init"]  = True
-						self.__lexema["tipo"]    = self.__currentToken
+						self.__lexema["valor"]   = self.__currentToken
 						self.__currentToken      = self.next_token()
 						self.declaration_const2()
 						return
@@ -434,8 +439,16 @@ class Syntatic_analyzer():
 	# <declaration_var1> ::= <type> id <declaration_var2> | '}' 
 	def declaration_var1(self):
 		if(self.__functions_aux.First("type",self.__currentToken['token'], self.__currentToken['sigla']) == True):
-			self.__currentToken = self.next_token()
+			print("[INFO] Token aceito [" + self.__currentToken["sigla"] + "]  : \"" + self.__currentToken["token"] + "\" Linha: " + self.__currentToken["linha"])
+			# Armazena a categoria que esta sendo analisada, constante ou variavel
+			self.__VC_Table["categoria"] = "variavel"
+			# Armazena o tipo utilizado na declaracao
+			self.__VC_Table["tipo"] = self.__currentToken["token"]
+			self.__lexema["tipo"]   = self.__currentToken
+			self.__currentToken     = self.next_token()
 			if(self.match("IDE", 2) == True):
+				# Armazena nome da constante
+				self.__VC_Table["nome"]     = self.__currentToken["token"]
 				self.__currentToken = self.next_token()
 				self.declaration_var2()
 			else:
@@ -457,9 +470,15 @@ class Syntatic_analyzer():
 	# <declaration_var2> ::= '=' <value> <declaration_var3> | <vector_matrix> | <declaration_var3>
 	def declaration_var2(self):
 		if(self.match("=", 1) == True):
+			# Como nao e vetor ou matriz, nao tem dimensao
+			self.__VC_Table["dimensao"] = None
 			self.__currentToken = self.next_token()
 			if(self.__functions_aux.First("value",self.__currentToken['token'], self.__currentToken['sigla']) == True):
-				self.__currentToken = self.next_token()
+				print("[INFO] Token aceito [" + self.__currentToken["sigla"] + "]  : \"" + self.__currentToken["token"] + "\" Linha: " + self.__currentToken["linha"])
+				# Armazena o valor recebido para inicializacao
+				self.__VC_Table["init"]  = True
+				self.__lexema["valor"]   = self.__currentToken
+				self.__currentToken      = self.next_token()
 				self.declaration_var3()
 			else:
 				if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
@@ -470,6 +489,9 @@ class Syntatic_analyzer():
 		elif(self.__functions_aux.First("vector_matrix", self.__currentToken['token'], self.__currentToken['sigla']) == True):
 			self.vector_matrix()
 		elif(self.__functions_aux.First("declaration_var3", self.__currentToken['token'], self.__currentToken['sigla']) == True):
+			# Como nao e vetor ou matriz, nao tem dimensao
+			self.__VC_Table["dimensao"] = None
+			self.__VC_Table["init"]     = False
 			self.declaration_var3()
 		else:
 			if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
@@ -481,12 +503,24 @@ class Syntatic_analyzer():
 
 	# <declaration_var3> ::= ',' id <declaration_var2>  | ';' <declaration_var1> 
 	def declaration_var3(self):
+		self.__VC_Table["escopo"] = self.__currentScope
+		# Realiza analise semantica da variavel declarada
+		self.__semantic_analyzer.analyzer_var_const(self.__currentToken["linha"], self.__lexema,  self.__VC_Table)
 		if(self.match(",", 1) == True):
+			# Limpa o dicionario de tokens
+			self.__VC_Table["nome"]     = ""
+			self.__VC_Table["dimensao"] = ""
+			self.__VC_Table["init"]     = None
+			self.__lexema["valor"]      = {}
 			self.__currentToken = self.next_token()
 			if(self.match("IDE", 2) == True):
+				# Armazena nome da variavel
+				self.__VC_Table["nome"]  = self.__currentToken["token"]
 				self.__currentToken = self.next_token()
 				self.declaration_var2()
 		elif(self.match(";", 1) == True):
+			self.__lexema       = {}
+			self.__VC_Table     = {}
 			self.__currentToken = self.next_token()
 			self.declaration_var1()
 			return
