@@ -1,13 +1,14 @@
 constantes {
-    inteiro a = 2;
-    real    b = 2.23, c = 23.40;
-    inteiro c      = 2.2;
-    cadeia teste   = 'c';                    % erro de inicializacao
-    char   teste_2 = "cadeia_de_caracteres"; % erro de inicializacao
+    inteiro a = 2;                           % Ok
+    real    b = 2.23, c = 23.40;             % Ok
+    inteiro c      = 2.2;                    % erro de variavel duplicada e inicializacao.
+    cadeia teste   = 'c';                    % Ok (erro de inicializacao)
+    char   teste_2 = "cadeia_de_caracteres"; % Ok (erro de inicializacao)
     real    a      = 2.2;                    % erro de variavel duplicada
     inteiro b      = 'a';                    % erro de variavel duplicada e inicializacao.
 }
 
+{#
 variaveis {
     Pessoa  teste[0];
     Pessoa  teste[2];
@@ -20,6 +21,16 @@ variaveis {
     real    c[2][2];
     real    d[2][2] = [0.1, 0.2, 0.3; 1.1, 1.2, 1.3; 2.1, 2.2, 2.3];
 }
+#}
+
+variaveis {
+	inteiro global_a = 0;                               % Ok
+	inteiro global_b = 2.2;                             % Ok
+	real    global_a = "cadeia_de_caracteres";          % erro de variavel duplicada e inicializacao.
+	char    c        = "teste";                         % erro de variavel duplicada e inicializacao.
+	vazio   hello    = "";                              % Ok. Tem erro de vazio
+	booleano ok      = verdadeiro;                      % Ok
+}
 
 funcao inteiro funcao_teste_1 ( ){
     retorno;
@@ -27,19 +38,20 @@ funcao inteiro funcao_teste_1 ( ){
 
 funcao inteiro funcao_teste_2 ( Pessoa nova_pessoa, inteiro local_1, real local_2, cadeia a[], inteiro b[][]){
     constantes {
-        inteiro local_a = 2;
-        real    local_b = 2.23,c = 23.40;
-        cadeia  local_c = 'a';
-        vazio   teste_vazio = "";
-        inteiro       a = 0;
-        real          b = 5.0;
+        inteiro local_a = 2;                  % Ok
+        real    local_b = 2.23,c = 23.40;     % Ok para local_b. c = erro de variavel duplicada
+        cadeia  local_c = 'a';                % Ok. Tem erro de inicializacao
+        vazio   teste_vazio = "";             % Ok. Tem erro de vazio
+        inteiro       a = 0;                  % erro de variavel duplicada
+        real          b = 5.0;                % erro de variavel duplicada
     }
 
     variaveis {
-        inteiro  local_teste   = 2;
-        real     locao_teste_2 = 2.23,c = 23.40;
-        cadeia   local_c;
-        booleano local_d      = verdadeiro; 
+        inteiro  local_a       = 2;                   % erro de variavel duplicada
+        real     locao_teste_2 = 2.23,c = 23.40;      % erro de variavel duplicada para variavel c
+        cadeia   local_c      = 2;                    % erro de variavel duplicada e inicializacao
+        booleano local_d;                             % Ok
+        real          b;                              % erro de variavel duplicada
     }
     se ( a == b ) {
         escreva( local_c, 45, local_a );
@@ -58,8 +70,8 @@ funcao inteiro funcao_teste_2 ( Pessoa nova_pessoa, inteiro local_1, real local_
 
 funcao vazio algoritmo () {
     variaveis {
-        inteiro local = 1;
-        char    teste;    
+        inteiro local = 1;      % Ok
+        char    teste;          % erro de variavel duplicada
     }
     a = 2;
     a = Pessoa.idade;
