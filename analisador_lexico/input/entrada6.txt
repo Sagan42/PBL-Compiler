@@ -1,3 +1,35 @@
+registro teste_registro {
+    inteiro  a;
+    real     b;
+    cadeia   c;
+    booleano bool[2];
+    booleano bool_m[2][2];
+    cadeia   cad[a][2];
+    booleano bool_m2[b];
+    inteiro  bool_2[teste][teste];
+    real     b2[10][10];
+    Pessoa   teste_1;
+    vazio    teste_1[2][2];
+    inteiro  a[2];
+    real     r1,r2,d[2], e[2][a];
+}
+registro teste_registro {
+    inteiro a,d,e,f;
+    real    b;
+    cadeia  c;
+}
+registro teste_registro_2 {
+    inteiro a,d,e,f;
+    real    e;
+    cadeia  f;
+}
+
+registro teste_registro_2 {
+    inteiro a,d,e,f;
+    real    b;
+    cadeia  c;
+}
+
 constantes {
     inteiro a = 2;                           % Ok
     real    b = 2.23, c = 23.40;             % Ok
@@ -8,21 +40,31 @@ constantes {
     inteiro b      = 'a';                    % erro de variavel duplicada e inicializacao.
 }
 
-{#
 variaveis {
-    Pessoa  teste[0];
-    Pessoa  teste[2];
-    inteiro teste   = 2;
-    real    teste_2 = 2.23,c = 23.40;
-    cadeia  c;
-    booleano d      = verdadeiro;
-    inteiro a[2], teste[3], teste_a = 2, teste_b = 200;
-    inteiro b[2] = [0,1,2], m[1][1] = [1,2; 3,4];
-    real    c[2][2];
-    real    d[2][2] = [0.1, 0.2, 0.3; 1.1, 1.2, 1.3; 2.1, 2.2, 2.3];
+	inteiro   a_var_global      = 0;
+	real      a_var_global_2    = 1.0;
+	inteiro   a_var_global_3;
+    inteiro   a_teste[2]    = [a, 2.1, 5];
+    booleano  a_teste_2[2]  = [verdadeiro, falso, "teste"];
+    inteiro a1[2], a2[3];
+    inteiro a3[2]    = [0,1];
+    real    a4[4]    = [2.1,5.0, 3, verdadeiro,1];
+    inteiro a5[2]    = [a_var_global, a_var_global_2, a_var_global_3];
+    real    a6[1][1] = [1,2; var_not_dlc];
+    char    a_c[4]   = ['a', 'b', a];
+    real    a7[2][2];
+    real    a8[2][2] = [a_var_global_2, 0, 0.3; a_var_global_3, 1.2; 1.3, 2.1, 2.2];
+  booleano  a9[2][2] = [a_var_global_2, falso; verdadeiro];
+  cadeia   a10[3][3] = ["linha_0"; "linha_1","teste_1", "teste_1","teste_1"; "linha_2"; "linha_3", "teste_3", "teste_3"];
 }
-#}
 
+% Linha x esta ultrapassando o numero de colunas que foi definido.
+% Preencha todas as colunas da linha x.
+% Numero de linhas utrapassou o limite definido na declaracao.
+% Preencha todas as linhas da matriz.
+
+
+{#
 variaveis {
 	inteiro global_a = 0;                               % Ok
 	inteiro global_b = 2.2;                             % Ok
@@ -31,6 +73,7 @@ variaveis {
 	vazio   hello    = "";                              % Ok. Tem erro de vazio
 	booleano ok      = verdadeiro;                      % Ok
 }
+#}
 
 funcao inteiro funcao_teste_1 ( ){
     retorno;
