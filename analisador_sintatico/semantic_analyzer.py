@@ -354,8 +354,8 @@ class Semantic_Analyzer(object):
 						except Exception as e:
 							print("[ERROR: linha " + line + "] Erro semantico: atributo \"" + atr_name["token"] + "\" do registro \"" +  name["token"] + "\" esta usando um tipo incorreto para dimensionamento.")
 							print("Esperado um valor numerico do tipo: \"inteiro\".")
-
-
+	# =========================================================================
+	# =========================================================================
 	# Metodo para analizar semanticamente o lado esquerdo de uma atribuicao
 	def left_Assignment(self, linha, lexema):
 		# Nome da variavel de atribuicao
@@ -368,36 +368,43 @@ class Semantic_Analyzer(object):
 				print("[ERROR: linha " + linha + "] Erro semantico: Atribuicao Invalida - \"" + nome + "\" e uma constante.")
 				return False
 			elif(check["categoria"] == "matriz" or check["categoria"] == "array"):
-				if(lexema["dimensao"] == "composto"):
-					print("[ERROR: linha " + linha + "] Erro semantico: Acesso Invalido - \"" + nome + "\". Elementos compostos nao sao permitidos como index de vetor ou matriz.")
-					return False
-				# Verifica se foi passados os index de acesso
-				if(lexema["dimensao"] == None):
-					# Nenhum index foi informado.
-					print("[ERROR: linha " + linha + "] Erro semantico: Acesso Invalido - \"" + nome + "\". Nenhum index foi informado.")
-					return False
-				else:
-					# Pode ser um vetor ou uma matriz
-					# Nesta parte, "dimensao" corresponde ao index de acesso informado na atribuicao. Ex: a[2] = ...
-					size = lexema["dimensao"]
-					if(len(size) == 1): # VETOR =================================================================
-						if(check["categoria"] == "array"):
-							return self.__analysis_Vector(nome, size[0], linha)
-						else:
-							print("[ERROR: linha " + linha + "] Erro semantico: Acesso Invalido - \"" + nome + "\" nao e um vetor.")
-							return False
-					elif(len(size) == 2): # MATRIZ ===============================================================
-						if(check["categoria"] == "matriz"):
-							return self.__analysis_Matrix(nome, size[0], size[1], linha)
-						else:
-							print("[ERROR: linha " + linha + "] Erro semantico: Acesso Invalido - \"" + nome + "\" nao e uma matriz.")
-							return False
+				return self.__access_vector_matrix(nome, check, lexema, linha)
 			else:
 				return True # Consiste em uma variavel simples.
 		else:
 			print("[ERROR: linha " + linha + "] Erro semantico: Atribuicao Invalida - \"" + nome + "\" nao foi declarado.")
 			return False
 
+	# =========================================================================
+	# Metodo que realiza a analise semantica de acesso a vetores e matrizes
+	def __access_vector_matrix(self, nome, data, lexema, linha):
+		if(lexema["dimensao"] == "composto"):
+			print("[ERROR: linha " + linha + "] Erro semantico: Acesso Invalido - \"" + nome + "\". Elementos compostos nao sao permitidos como index de vetor ou matriz.")
+			return False
+		elif(lexema["dimensao"] == None): # Verifica se foi passados os index de acesso
+			# Nenhum index foi informado.
+			print("[ERROR: linha " + linha + "] Erro semantico: Acesso Invalido - \"" + nome + "\". Nenhum index foi informado.")
+			return False
+		else:
+			# Pode ser um vetor ou uma matriz
+			# Nesta parte, "dimensao" corresponde ao index de acesso informado na atribuicao. Ex: a[2] = ...
+			size = lexema["dimensao"]
+			if(len(size) == 1): # VETOR =================================================================
+				if(data["categoria"] == "array"):
+					# Realiza analise do index do vetor
+					return self.__analysis_Vector(nome, size[0], linha)
+				else:
+					print("[ERROR: linha " + linha + "] Erro semantico: Acesso Invalido - \"" + nome + "\" nao e um vetor.")
+					return False
+			elif(len(size) == 2): # MATRIZ ===============================================================
+				if(data["categoria"] == "matriz"):
+					# Realiza analise dos index da matriz
+					return self.__analysis_Matrix(nome, size[0], size[1], linha)
+				else:
+					print("[ERROR: linha " + linha + "] Erro semantico: Acesso Invalido - \"" + nome + "\" nao e uma matriz.")
+					return False
+		return False
+	# =========================================================================
 	# =========================================================================
 	# Metodo que realiza a analise do index de acesso de uma matriz
 	def __analysis_Matrix(self, nome, coluna, linha, assignment_line ):
