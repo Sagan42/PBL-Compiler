@@ -478,17 +478,17 @@ class Syntatic_analyzer():
 	def declaration_var1(self):
 		if(self.__functions_aux.First("type",self.__currentToken['token'], self.__currentToken['sigla']) == True):
 			print("[INFO] Token aceito [" + self.__currentToken["sigla"] + "]  : \"" + self.__currentToken["token"] + "\" Linha: " + self.__currentToken["linha"])
-			# Armazena a categoria que esta sendo analisada, constante ou variavel
-			self.__Table["categoria"] = "variavel"
 			# Armazena o tipo utilizado na declaracao
-			self.__Table["tipo"] = self.__currentToken["token"]
-			self.__lexema["tipo"]   = self.__currentToken
+			self.__Table["tipo"]     = self.__currentToken["token"]
+			self.__lexema["tipo"]    = self.__currentToken
 			self.__Table["dimensao"] = None
-			self.__currentToken         = self.next_token()
+			# Armazena a categoria que esta sendo analisada, constante ou variavel ou matriz ou array
+			self.__Table["categoria"] = "variavel"
+			self.__currentToken       = self.next_token()
 			if(self.match("IDE", 2) == True):
 				# Armazena nome da constante
 				self.__Table["nome"]     = self.__currentToken["token"]
-				self.__currentToken         = self.next_token()
+				self.__currentToken      = self.next_token()
 				self.declaration_var2()
 			else:
 				if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
@@ -513,7 +513,7 @@ class Syntatic_analyzer():
 			if(self.__functions_aux.First("value",self.__currentToken['token'], self.__currentToken['sigla']) == True):
 				print("[INFO] Token aceito [" + self.__currentToken["sigla"] + "]  : \"" + self.__currentToken["token"] + "\" Linha: " + self.__currentToken["linha"])
 				# Armazena o valor recebido para inicializacao
-				self.__Table["init"]  = True
+				self.__Table["init"]     = True
 				self.__lexema["valor"]   = self.__currentToken
 				self.__currentToken      = self.next_token()
 				self.declaration_var3()
@@ -584,6 +584,8 @@ class Syntatic_analyzer():
 			if(self.match("NRO", 2) == True):
 				# Pega a quantidade de linhas. (Caso seja um vetor, corresponde a quantidade de posicoes)
 				self.__Table["dimensao"] = str(self.__currentToken["token"])
+				# Armazena a categoria que esta sendo analisada, constante ou variavel ou matriz ou array
+				self.__Table["categoria"]   = "array"
 				self.__currentToken         = self.next_token()
 				if(self.match("]", 1) == True):
 					self.__currentToken = self.next_token()
@@ -614,7 +616,9 @@ class Syntatic_analyzer():
 			self.__currentToken = self.next_token()
 			if(self.match("NRO", 2) == True):
 				# Pega a quantidade de colunas. (Corresponde a uma matriz)
-				self.__Table["dimensao"] = self.__Table["dimensao"] + "x" + str(self.__currentToken["token"]) 
+				self.__Table["dimensao"] = self.__Table["dimensao"] + "x" + str(self.__currentToken["token"])
+				# Armazena a categoria que esta sendo analisada, constante ou variavel ou matriz ou array
+				self.__Table["categoria"]   = "matriz" 
 				self.__currentToken         = self.next_token()
 				if(self.match("]",1) == True):
 					self.__currentToken = self.next_token()
@@ -781,7 +785,7 @@ class Syntatic_analyzer():
 	def v_m_access(self):
 		if(self.match("[", 1) == True):
 			self.__currentToken = self.next_token()
-			self.__lexema["dimensao"] = ""
+			self.__lexema["dimensao"] = []
 			self.v_m_access1()
 			return
 		else:
@@ -804,6 +808,9 @@ class Syntatic_analyzer():
 	# <v_m_access1>  ::= id  <v_m_access2>                    | number ']' <v_m_access3> 
 	def v_m_access1(self):
 		if(self.match("IDE", 2) == True):
+			if(self.__currentElement == "atribuicao"):
+				# adiciona o primeiro index de acesso ao elemento.
+				self.__lexema["dimensao"].append(self.__currentToken) 
 			self.__currentToken = self.next_token()
 			self.v_m_access2()
 			return
@@ -812,6 +819,9 @@ class Syntatic_analyzer():
 			if(self.__currentElement == "registro"):
 				# Armazena o numero de linhas caso seja matriz, ou tamanho do vetor
 				self.__lexema["dimensao"] = self.__lexema["dimensao"] + str(self.__currentToken["token"])
+			elif(self.__currentElement == "atribuicao"):
+				# adiciona o primeiro index de acesso ao elemento.
+				self.__lexema["dimensao"].append(self.__currentToken) 
 			self.__currentToken = self.next_token()
 			if(self.match("]", 1) == True):
 				self.__currentToken = self.next_token()
@@ -845,6 +855,10 @@ class Syntatic_analyzer():
 	# <v_m_access2>  ::= <elem_registro> ']' <v_m_access3>    | ']'        <v_m_access3>
 	def v_m_access2(self):
 		if(self.__functions_aux.First("elem_registro", self.__currentToken['token'], self.__currentToken['sigla']) == True):
+			if(self.__currentElement == "atribuicao"):
+				# Informa que esta sendo feita a tentativa de acesso a um vetor ou matriz atraves de um elemento composto.
+				# E nao e permitido
+				self.__lexema["dimensao"] = "composto"
 			self.elem_registro()
 			if(self.match("]", 1) == True):
 				self.__currentToken = self.next_token()
@@ -878,7 +892,9 @@ class Syntatic_analyzer():
 	# <v_m_access3>   ::= '[' <v_m_access1>
 	def v_m_access3(self):
 		if(self.match("[", 1) == True):
-			self.__lexema["dimensao"] = self.__lexema["dimensao"] + "x"
+			# Verifica se o elemento atual sendo analisado e um registro
+			if(self.__currentElement == "registro"):
+				self.__lexema["dimensao"] = self.__lexema["dimensao"] + "x"
 			self.__currentToken = self.next_token()
 			self.v_m_access1()
 			return
@@ -1026,7 +1042,11 @@ class Syntatic_analyzer():
 	# <var_atr>   ::= id <var_atr_1> 
 	def var_atr(self):
 		if(self.match("IDE", 2) == True):
-			self.__currentToken = self.next_token()
+			self.__currentElement     = "atribuicao"
+			# Armazena o nome da variavel que estara recebendo um valor por meio da atribuicao.
+			self.__lexema["name"]     = self.__currentToken["token"]
+			self.__lexema["dimensao"] = None
+			self.__currentToken   = self.next_token()
 			self.var_atr_1()
 			return
 		else:
@@ -1039,6 +1059,7 @@ class Syntatic_analyzer():
 	
 	# <var_atr_1> ::= <atr> | <v_m_access> <atr> | <elem_registro> <atr> 
 	def var_atr_1(self):
+		self.__currentElement = "atribuicao"
 		if(self.__functions_aux.First("atr", self.__currentToken["token"], self.__currentToken["sigla"] ) == True):
 			self.atr()
 			return
@@ -1061,8 +1082,13 @@ class Syntatic_analyzer():
 	# <atr>       ::= '=' <atr_1>
 	def atr(self):
 		if(self.match("=", 1) == True):
+			# Realiza a analise semantica do lador esquerdo da atribuicao
+			# Retorna True caso a analise tenha sido feito com sucesso.
+			result = self.__semantic_analyzer.left_Assignment(self.__currentToken["linha"],self.__lexema)
+			# Limpa o dicionario
+			self.__lexema = {}
 			self.__currentToken = self.next_token()
-			self.atr_1()
+			self.atr_1(result)
 			return
 		else:
 			if(self.number_of_tokens() > 0):
@@ -1073,7 +1099,7 @@ class Syntatic_analyzer():
 				return
 
 	# <atr_1>     ::= number <atr_2> | boolean <atr_2> | cad <atr_2> | char <atr_2> | <expressao> <atr_2> | id <functionCall>
-	def atr_1(self):
+	def atr_1(self, do_analysis):
 		if(self.match("NRO", 2) == True or self.match("verdadeiro", 1) == True or self.match("falso", 1) == True or self.match("CAD", 2) == True or self.match("CAR", 2) == True):
 			self.__currentToken = self.next_token()
 			self.atr_2()
@@ -1615,6 +1641,8 @@ class Syntatic_analyzer():
 	# == Gramatica para o corpo de comandos ===================================================
 	# <com_body>        ::= <com_enquanto> <com_body> | <com_para> <com_body> | <se> <com_body> | <write_cmd> <com_body> | <read_cmd> <com_body> | 'id' <com_body_1> <com_body> | <com_retornar>
 	def com_body(self):
+		# Limpa o dicionario para uma nova analise
+		self.__lexema = {}
 		if(self.__functions_aux.First("com_enquanto", self.__currentToken["token"], self.__currentToken["sigla"]) == True):
 			self.com_enquanto()
 			self.com_body()
@@ -1631,6 +1659,9 @@ class Syntatic_analyzer():
 			self.read_cmd()
 			self.com_body()
 		elif(self.match("IDE", 2) == True):
+			# Caso seja uma atribuicao, armazena o nome da variavel que estara recebendo um valor por meio da atribuicao.
+			self.__lexema["name"]     = self.__currentToken["token"]
+			self.__lexema["dimensao"] = None
 			self.__currentToken = self.next_token()
 			self.com_body_1()
 			self.com_body()
@@ -1644,6 +1675,7 @@ class Syntatic_analyzer():
 		if(self.__functions_aux.First("functionCall", self.__currentToken["token"], self.__currentToken["sigla"]) == True):
 			self.functionCall()
 		elif(self.__functions_aux.First("var_atr_1", self.__currentToken["token"], self.__currentToken["sigla"]) == True):
+			self.__currentElement = "atribuicao"
 			self.var_atr_1()
 		else:
 			if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
@@ -1726,6 +1758,8 @@ class Syntatic_analyzer():
 	# <function_body2>        ::= <com_enquanto> <function_body2>  | <com_para> <function_body2>   | <se> <function_body2>
     # | <write_cmd> <function_body2> | <read_cmd> <function_body2> | <com_body_1> <function_body2> | <retornar>
 	def function_body2(self):
+		# Limpa o dicionario para uma nova analise
+		self.__lexema = {}
 		if(self.__functions_aux.First("com_enquanto", self.__currentToken["token"], self.__currentToken["sigla"]) == True):
 			self.com_enquanto()
 			self.function_body2()
@@ -1742,6 +1776,9 @@ class Syntatic_analyzer():
 			self.read_cmd()
 			self.function_body2()
 		elif(self.match("IDE", 2) == True):
+			# Caso seja uma atribuicao, armazena o nome da variavel que estara recebendo um valor por meio da atribuicao.
+			self.__lexema["name"]     = self.__currentToken["token"]
+			self.__lexema["dimensao"] = None
 			self.__currentToken = self.next_token()
 			self.com_body_1()
 			self.function_body2()
@@ -2141,8 +2178,11 @@ class Syntatic_analyzer():
 				return
 			elif(self.match("}",1) == True):
 				self.__currentToken = self.next_token()
-				self.function_declaration()
-				return
+				if(self.__functions_aux.First("function_body2", self.__currentToken["token"], self.__currentToken["sigla"]) == True):
+					return
+				elif(self.__currentToken["token"] == "funcao"):
+					self.function_declaration()
+					return
 			elif(self.__currentToken["token"] == "funcao"):
 				return
 			else:

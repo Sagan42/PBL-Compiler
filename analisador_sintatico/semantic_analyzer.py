@@ -328,21 +328,144 @@ class Semantic_Analyzer(object):
 					if(len(size) == 1): # E vetor
 						try:
 							linha = int(size[0])
-							# Armazena na tabela o novo atributo
-							registry[atr_name["token"]]		  = {"type": atr_type["token"], "dimensao": linha}
-							self.__st_registry[name["token"]] = registry
-							print(self.__st_registry)
+							if(len(linha.split(".")) > 1):  # Verifica se o valor e um inteiro
+								print("[ERROR: linha " + line + "] Erro semantico: atributo \"" + atr_name["token"] + "\" do registro \"" +  name["token"] + "\" esta usando um tipo incorreto para dimensionamento.")
+								print("Esperado um valor numerico do tipo: \"inteiro\".")								
+							else:
+								# Armazena na tabela o novo atributo
+								registry[atr_name["token"]]		  = {"type": atr_type["token"], "dimensao": linha}
+								self.__st_registry[name["token"]] = registry
+								print(self.__st_registry)
 						except Exception as e:
 							print("[ERROR: linha " + line + "] Erro semantico: atributo \"" + atr_name["token"] + "\" do registro \"" +  name["token"] + "\" esta usando um tipo incorreto para dimensionamento.")
 							print("Esperado um valor numerico do tipo: \"inteiro\".")
 					elif(len(size) == 2): # E matriz
 						try:
 							linha  = int(size[0])
-							coluna = int(size[1]) 
-							# Armazena na tabela o novo atributo
-							registry[atr_name["token"]]       = {"type": atr_type["token"], "dimensao": size}
-							self.__st_registry[name["token"]] = registry
-							print(self.__st_registry)
+							coluna = int(size[1])
+							if(len(linha.split(".")) > 1 or len(coluna.split(".")) > 1):  # Verifica se os valores sao inteiros
+								print("[ERROR: linha " + line + "] Erro semantico: atributo \"" + atr_name["token"] + "\" do registro \"" +  name["token"] + "\" esta usando um tipo incorreto para dimensionamento.")
+								print("Esperado um valor numerico do tipo: \"inteiro\".")								
+							else: 
+								# Armazena na tabela o novo atributo
+								registry[atr_name["token"]]       = {"type": atr_type["token"], "dimensao": size}
+								self.__st_registry[name["token"]] = registry
+								print(self.__st_registry)
 						except Exception as e:
 							print("[ERROR: linha " + line + "] Erro semantico: atributo \"" + atr_name["token"] + "\" do registro \"" +  name["token"] + "\" esta usando um tipo incorreto para dimensionamento.")
 							print("Esperado um valor numerico do tipo: \"inteiro\".")
+	# =========================================================================
+	# =========================================================================
+	# Metodo para analizar semanticamente o lado esquerdo de uma atribuicao
+	def left_Assignment(self, linha, lexema):
+		# Nome da variavel de atribuicao
+		nome = lexema["name"]
+		# Busca através do nome na tabela de simbolos para variaveis e constantes.
+		check = self.__get_var_const(nome)
+		if(check != ""): 
+			# Verifica se o identificador pertecente a uma constante
+			if(check["categoria"] == "constante"):
+				print("[ERROR: linha " + linha + "] Erro semantico: Atribuicao Invalida - \"" + nome + "\" e uma constante.")
+				return False
+			elif(check["categoria"] == "matriz" or check["categoria"] == "array"):
+				return self.__access_vector_matrix(nome, check, lexema, linha)
+			else:
+				return True # Consiste em uma variavel simples.
+		else:
+			print("[ERROR: linha " + linha + "] Erro semantico: Atribuicao Invalida - \"" + nome + "\" nao foi declarado.")
+			return False
+
+	# =========================================================================
+	# Metodo que realiza a analise semantica de acesso a vetores e matrizes
+	def __access_vector_matrix(self, nome, data, lexema, linha):
+		if(lexema["dimensao"] == "composto"):
+			print("[ERROR: linha " + linha + "] Erro semantico: Acesso Invalido - \"" + nome + "\". Elementos compostos nao sao permitidos como index de vetor ou matriz.")
+			return False
+		elif(lexema["dimensao"] == None): # Verifica se foi passados os index de acesso
+			# Nenhum index foi informado.
+			print("[ERROR: linha " + linha + "] Erro semantico: Acesso Invalido - \"" + nome + "\". Nenhum index foi informado.")
+			return False
+		else:
+			# Pode ser um vetor ou uma matriz
+			# Nesta parte, "dimensao" corresponde ao index de acesso informado na atribuicao. Ex: a[2] = ...
+			size = lexema["dimensao"]
+			if(len(size) == 1): # VETOR =================================================================
+				if(data["categoria"] == "array"):
+					# Realiza analise do index do vetor
+					return self.__analysis_Vector(nome, size[0], linha)
+				else:
+					print("[ERROR: linha " + linha + "] Erro semantico: Acesso Invalido - \"" + nome + "\" nao e um vetor.")
+					return False
+			elif(len(size) == 2): # MATRIZ ===============================================================
+				if(data["categoria"] == "matriz"):
+					# Realiza analise dos index da matriz
+					return self.__analysis_Matrix(nome, size[0], size[1], linha)
+				else:
+					print("[ERROR: linha " + linha + "] Erro semantico: Acesso Invalido - \"" + nome + "\" nao e uma matriz.")
+					return False
+		return False
+	# =========================================================================
+	# =========================================================================
+	# Metodo que realiza a analise do index de acesso de uma matriz
+	def __analysis_Matrix(self, nome, coluna, linha, assignment_line ):
+		x      = [coluna, linha]
+		result = True
+		for i in range(len(x)):
+			index = x[i]
+			if(index["sigla"] == "IDE"):
+				# Verificar se esse identificador foi declarado.
+				test = self.__get_var_const(index["token"])
+				if(test != ""):
+					if(test["categoria"] == "variavel" or test["categoria"] == "constante"):
+						if(test["tipo"] != "inteiro"):
+							print("[ERROR: linha " + assignment_line + "] Erro semantico: Acesso invalido na matriz - \"" + nome + "\". Esperando constante ou variavel do tipo \"inteiro\".")
+							result = False
+					else:
+						print("[ERROR: linha " + assignment_line + "] Erro semantico: Acesso invalido na matriz - \"" + nome + "\". Esperando constante ou variavel do tipo \"inteiro\".") 
+						result = False
+				else:
+					print("[ERROR: linha " + assignment_line + "] Erro semantico: Acesso invalido - \"" + test["token"] + " nao foi declarado.") 
+					result = False
+			elif(index["sigla"] == "NRO"):
+				number = coluna["token"]
+				# Verifica se o index recebido e um inteiro
+				if(len(number.split(".")) > 1):
+					print("[ERROR: linha " + assignment_line + "] Erro semantico: Acesso Invalido - na matriz \"" + nome + "\". Esperando index do tipo \"inteiro\".")
+					result = False
+		return result
+	# =========================================================================
+	# =========================================================================
+	# Metodo que realiza a analise do index de acesso de um vetor
+	def __analysis_Vector(self, nome, coluna, assignment_line ):
+		if(coluna["sigla"] == "IDE"):
+			# Verificar se esse identificador foi declarado.
+			test = self.__get_var_const(coluna["token"])
+			if(test != ""):
+				if(test["categoria"] == "variavel" or test["categoria"] == "constante"):
+					if(test["tipo"] == "inteiro"):
+						return True
+					else:
+						print("[ERROR: linha " + assignment_line + "] Erro semantico: Acesso invalido no vetor - \"" + nome + "\". Esperando constante ou variavel do tipo \"inteiro\".")
+						return False
+				else:
+					print("[ERROR: linha " + assignment_line + "] Erro semantico: Acesso invalido no vetor - \"" + nome + "\". Esperando constante ou variavel do tipo \"inteiro\".") 
+					return False
+			else:
+				print("[ERROR: linha " + assignment_line + "] Erro semantico: Acesso invalido - \"" + test["token"] + " nao foi declarado.") 
+				return False
+		elif(coluna["sigla"] == "NRO"):
+			number = coluna["token"]
+			# Verifica se o index recebido e um inteiro
+			if(len(number.split(".")) > 1):
+				print("[ERROR: linha " + assignment_line + "] Erro semantico: Acesso Invalido - no vetor \"" + nome + "\". Esperando index do tipo \"inteiro\".")
+				return False
+			else:
+				return True
+	# =========================================================================
+	# =========================================================================
+	# Metodo para buscar um valor na tabela de simbolos para variaveis e constantes 
+	def __get_var_const(self, entrada):
+		try:
+			return self.__st_var_const[entrada]
+		except Exception as e:
+			return ""
