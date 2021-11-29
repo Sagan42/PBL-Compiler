@@ -1,2 +1,2 @@
-linha 108[erro sintatico: token lido "a"], tokens esperados ["NRO"]
-linha 117[erro sintatico: token lido "array"], tokens esperados [",",";"]
+linha 100[erro sintatico: token lido "a"], tokens esperados ["NRO"]
+linha 122[erro sintatico: token lido "array"], tokens esperados [",",";"]

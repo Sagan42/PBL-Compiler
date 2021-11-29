@@ -247,8 +247,14 @@ class Syntatic_analyzer():
 	# <elem_registro>         ::= '.' id <nested_elem_registro>
 	def elem_registro(self):
 		if(self.match(".", 1) == True):
+			# Armazena o lexema que esta compondo a estrutura de acesso ao registro
+			if(self.__currentElement == "atribuicao"):
+				self.__lexema["name"] += self.__currentToken["token"]
 			self.__currentToken = self.next_token()
 			if(self.match("IDE", 2) == True):
+				# Armazena o lexema que esta compondo a estrutura de acesso ao registro
+				if(self.__currentElement == "atribuicao"):
+					self.__lexema["name"] += self.__currentToken["token"]
 				self.__currentToken = self.next_token()
 				self.nested_elem_registro()
 				return
@@ -269,8 +275,14 @@ class Syntatic_analyzer():
 	# <nested_elem_registro>  ::= '.' id <nested_elem_registro1> | <v_m_access> <nested_elem_registro1> |
 	def nested_elem_registro(self):
 		if(self.match(".", 1) == True):
+			# Armazena o lexema que esta compondo a estrutura de acesso ao registro
+			if(self.__currentElement == "atribuicao"):
+				self.__lexema["name"] += self.__currentToken["token"]
 			self.__currentToken = self.next_token()
 			if(self.match("IDE", 2) == True):
+				# Armazena o lexema que esta compondo a estrutura de acesso ao registro
+				if(self.__currentElement == "atribuicao"):
+					self.__lexema["name"] += self.__currentToken["token"]
 				self.__currentToken = self.next_token()
 				self.nested_elem_registro1()
 				return
@@ -337,7 +349,9 @@ class Syntatic_analyzer():
 			self.__Table["categoria"] = "constante"
 			# Armazena o tipo utilizado na declaracao
 			self.__Table["tipo"] = self.__currentToken["token"]
-			self.__lexema["tipo"]   = self.__currentToken
+			# Nao sao declarados elementos compostos como Contantes
+			self.__lexema["composto"] = False
+			self.__lexema["tipo"]     = self.__currentToken
 			self.__currentToken = self.next_token()
 			if(self.match("IDE", 2) == True):
 				# Armazena nome da constante
@@ -480,10 +494,15 @@ class Syntatic_analyzer():
 			print("[INFO] Token aceito [" + self.__currentToken["sigla"] + "]  : \"" + self.__currentToken["token"] + "\" Linha: " + self.__currentToken["linha"])
 			# Armazena o tipo utilizado na declaracao
 			self.__Table["tipo"]     = self.__currentToken["token"]
-			self.__lexema["tipo"]    = self.__currentToken
-			self.__Table["dimensao"] = None
+			# Variavel pode ser um elemento composto
+			if(self.__currentToken["sigla"] == "IDE"):
+				self.__lexema["composto"] = True
+			else:
+				self.__lexema["composto"] = False
+			self.__lexema["tipo"]     = self.__currentToken
 			# Armazena a categoria que esta sendo analisada, constante ou variavel ou matriz ou array
-			self.__Table["categoria"] = "variavel"
+			self.__Table["categoria"] = "variavel" 
+			self.__Table["dimensao"]  = None
 			self.__currentToken       = self.next_token()
 			if(self.match("IDE", 2) == True):
 				# Armazena nome da constante
@@ -785,7 +804,10 @@ class Syntatic_analyzer():
 	def v_m_access(self):
 		if(self.match("[", 1) == True):
 			self.__currentToken = self.next_token()
-			self.__lexema["dimensao"] = []
+			if(self.__currentElement == "atribuicao"):
+				self.__lexema["dimensao"] = []
+			elif(self.__currentElement == "registro"):
+				self.__lexema["dimensao"] = ""
 			self.v_m_access1()
 			return
 		else:

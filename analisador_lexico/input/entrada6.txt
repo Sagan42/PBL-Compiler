@@ -16,23 +16,15 @@ registro teste_registro {
     char     r4[2][1.5];
     char     r5[3.0];
 }
-registro teste_registro {
-    inteiro a,d,e,f;
-    real    b;
-    cadeia  c;
-}
-registro teste_registro_2 {
-    inteiro a,d,e,f;
-    real    e;
-    cadeia  f;
+#}
+registro Pessoa {
+	cadeia  nome;
+    inteiro idade;
+    real    altura;
+    inteiro carros[2];
+    cadeia  roupas[10][10];
 }
 
-registro teste_registro_2 {
-    inteiro a,d,e,f;
-    real    b;
-    cadeia  c;
-}
-#}
 constantes {
     inteiro a = 2;                           % Ok
     real    b = 2.23, c = 23.40;             % Ok
@@ -108,7 +100,20 @@ funcao vazio algoritmo () {
         real    array_2[a];
         real    array_3[3];
         real    matriz[3][3];
+        Pessoa  Joao = 0;
+        Pessoa  Gabriel;
     }
+    
+    Joao.idade = 0;
+    Joao.altura = 2.5;
+    Joao.carros[0]    = 0;
+    Joao.carros[a]    = 0;
+    Joao.carros[b]    = 0;
+    Joao.carros[Joao.idade] = 0;
+    Joao.carros[0][0]       = a;
+    Joao.roupas[0][local]   = a;
+    Joao.roupas[0][b]       = a;
+    Joao.roupas[0]          = a;
     
     global_a  = 2;  % OK
     a         = 2;  % Erro de atribuicao em constante
