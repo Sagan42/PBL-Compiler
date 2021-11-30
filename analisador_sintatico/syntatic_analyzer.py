@@ -1105,10 +1105,12 @@ class Syntatic_analyzer():
 	def atr(self):
 		if(self.match("=", 1) == True):
 			# Realiza a analise semantica do lador esquerdo da atribuicao
-			# Retorna True caso a analise tenha sido feito com sucesso.
+			# Retorna True caso a analise tenha sido feito com sucesso. Dando seguimento a analise semantica
+			# do lado direito da atribuicao.
 			result = self.__semantic_analyzer.left_Assignment(self.__currentToken["linha"],self.__lexema)
-			# Limpa o dicionario
-			self.__lexema = {}
+			if(result == False):
+				# Limpa o dicionario
+				self.__lexema = {}
 			self.__currentToken = self.next_token()
 			self.atr_1(result)
 			return
@@ -1120,9 +1122,17 @@ class Syntatic_analyzer():
 				self.__error_var_atr()
 				return
 
-	# <atr_1>     ::= number <atr_2> | boolean <atr_2> | cad <atr_2> | char <atr_2> | <expressao> <atr_2> | id <functionCall>
+	# versao 1:  <atr_1>     ::= number <atr_2> | boolean <atr_2> | cad <atr_2> | char <atr_2> | <expressao> <atr_2> | id <functionCall>
+	# versao 2:  <atr_1>     ::= cad <atr_2> | char <atr_2> | <expressao> <functionCall> <atr_2>
 	def atr_1(self, do_analysis):
-		if(self.match("NRO", 2) == True or self.match("verdadeiro", 1) == True or self.match("falso", 1) == True or self.match("CAD", 2) == True or self.match("CAR", 2) == True):
+		if(self.match("CAD", 2) == True or self.match("CAR", 2) == True):
+			# Verifica se o lado direito da atribuicao sera analisada
+			if(do_analysis == True):
+				if(self.__currentToken["sigla"] == "CAD"):
+					self.__lexema["entry"] = "cadeia"
+				elif(self.__currentToken["sigla"] == "CAR"):
+					self.__lexema["entry"] = "char"
+				self.__semantic_analyzer.right_Assignment(False, self.__currentToken["linha"], self.__lexema)
 			self.__currentToken = self.next_token()
 			self.atr_2()
 		elif(self.__functions_aux.First("expressao", self.__currentToken["token"], self.__currentToken["sigla"] ) == True):
@@ -1144,6 +1154,8 @@ class Syntatic_analyzer():
 	# <atr_2> ::= ',' <var_atr> | ';'
 	def atr_2(self):
 		if(self.match(",", 1) == True):
+			# Limpa o dicionarioa para uma nova analise
+			self.__lexema = {}
 			self.__currentToken = self.next_token()
 			self.var_atr()
 			return
