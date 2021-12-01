@@ -6,6 +6,8 @@ class Semantic_Analyzer(object):
 		self.__st_var_const = {}
 		# Tabela de simbolos para registros
 		self.__st_registry  = {}
+		# Atributo que armazena o tipo esperado no retorno de uma atribuicao
+		self.__expected_type = ""
 
 	def Print_st_var_const(self):
 		print("===================================================================================")
@@ -15,7 +17,20 @@ class Semantic_Analyzer(object):
 			print(a[x])
 			print("\n")
 		print("===================================================================================")
-
+	# ========================================================================================
+	# ========================================================================================
+	# Metodo para armazenar dados na tabela de varaveis e constantes.
+	def add_var_const(self, name, data):
+		new_entry = { "tipo": data["tipo"], "categoria": data["categoria"], "dimensao": data["dimensao"], "escopo": data["escopo"], "init": data["init"] }
+		# Adiciona um novo elemento
+		self.__st_var_const[ name ] = new_entry
+	# ========================================================================================
+	# ========================================================================================
+	# Metodo que armazena qual o tipo esperado em uma atribuicao.
+	def set_atr_return_type(self, value):
+		self.__expected_type = value
+	# ========================================================================================
+	# ========================================================================================
 	# Funcao para realizar a analise semantica da declaracao de variaveis e constantes.
 	def analyzer_var_const(self,isVM, linha, lexema, table):
 		# == Primeira verificacao: analise dos nomes. ========================================
@@ -25,49 +40,55 @@ class Semantic_Analyzer(object):
 				if(check["escopo"] == "local" and table["escopo"] == "local"):
 					# erro de declaracao de variaveis locais redeclaracadas.
 					print("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(local) " + " \"" + table["nome"] + "\" está sendo declarada mais de uma vez.")
+					return
 				elif(check["escopo"] == "global"):
 					if(table["escopo"] == "local"):
 						# erro de declaracao de variaveis locais com o mesmo nome de uma global.
 						print("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(local) " + " \"" + table["nome"] + "\" com o mesmo nome de uma " + check["categoria"] + " global.")
+						return
 					elif(table["escopo"] == "global"):
 						# erro de declaracao de variaveis globais redeclaracadas.
 						print("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(global) " + " \"" + table["nome"] + "\" está sendo declarada mais de uma vez.")
+						return
 			if( (check["categoria"] == "variavel" and table["categoria"] == "constante") ):
 				if(check["escopo"] == "global"):
 					if(table["escopo"] == "local"):
 						# erro de variavel global com o mesmo nome de uma constante local
 						print("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(global) " + " \"" + table["nome"] + "\" com o mesmo nome de uma constante (local).")
+						return
 			if( (check["categoria"] == "constante" and table["categoria"] == "variavel") ):
 				if(check["escopo"] == "global"):
 					if(table["escopo"] == "local"):
 						# erro de variavel local com o mesmo nome de uma constante global.
 						print("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(local) " + " \"" + table["nome"] + "\" com o mesmo nome de uma constante (global).")
+						return
 					elif(table["escopo"] == "global"):
 						# erro de variavel global com o mesmo nome de uma constante global.
 						print("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(global) " + " \"" + table["nome"] + "\" com o mesmo nome de uma constante (global).")				
+						return
 				elif(check["escopo"] == "local"):
 					if(table["escopo"] == "local"):
 						# erro de variavel local com o mesmo nome de uma constante local.
 						print("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(local) " + " \"" + table["nome"] + "\" com o mesmo nome de uma constante (local).")
+						return
 		except Exception as e:
 			# Nao existe variavel ou constante armazenadas com este nome.
 			# Insere um novo dado
-			data = { "tipo": table["tipo"],
-					"categoria": table["categoria"],
-					"dimensao": table["dimensao"],
-					"escopo": table["escopo"],
-					"init": table["init"] }
+			data = { "tipo": table["tipo"],"categoria": table["categoria"], "dimensao": table["dimensao"], "escopo": table["escopo"], "init": table["init"] }
 			# Adiciona um novo elemento
-			self.__st_var_const[ table["nome"] ] = data
+			self.add_var_const(table["nome"],data)
 		# == FIM da Primeira verificacao =========================================
 		# == Segunda Verificacao: analise da inicializacao =======================
 		if(table["init"] == True):
-			if(isVM): # verifica se e vetor ou matriz
-				self.__check_init_VM(linha, lexema, table)
-				return
+			if(lexema["composto"] == False):
+				if(isVM): # verifica se e vetor ou matriz
+					self.__check_init_VM(linha, lexema, table)
+					return
+				else:
+					self.__check_init_var_const(linha, lexema, table)
+					return
 			else:
-				self.__check_init_var_const(linha, lexema, table)
-				return
+				print("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(local) " + " \"" + table["nome"] + "\" nao e permitido inicializacao em tipos compostos.")
 		# == Fim da Segunda Verificacao ==========================================
 		
 	def __check_init_VM(self, linha, lexema, table):
@@ -327,7 +348,10 @@ class Semantic_Analyzer(object):
 					size = lexema["dimensao"].split("x")
 					if(len(size) == 1): # E vetor
 						try:
+							# Tenta converter o valor para int
 							linha = int(size[0])
+							# Caso nao de execessao, continua...
+							linha = size[0]
 							if(len(linha.split(".")) > 1):  # Verifica se o valor e um inteiro
 								print("[ERROR: linha " + line + "] Erro semantico: atributo \"" + atr_name["token"] + "\" do registro \"" +  name["token"] + "\" esta usando um tipo incorreto para dimensionamento.")
 								print("Esperado um valor numerico do tipo: \"inteiro\".")								
@@ -341,8 +365,12 @@ class Semantic_Analyzer(object):
 							print("Esperado um valor numerico do tipo: \"inteiro\".")
 					elif(len(size) == 2): # E matriz
 						try:
+							# Tenta converter os valores para int
 							linha  = int(size[0])
 							coluna = int(size[1])
+							# Caso nao de execessao, continua...
+							linha  = size[0]
+							coluna = size[1]
 							if(len(linha.split(".")) > 1 or len(coluna.split(".")) > 1):  # Verifica se os valores sao inteiros
 								print("[ERROR: linha " + line + "] Erro semantico: atributo \"" + atr_name["token"] + "\" do registro \"" +  name["token"] + "\" esta usando um tipo incorreto para dimensionamento.")
 								print("Esperado um valor numerico do tipo: \"inteiro\".")								
@@ -356,24 +384,72 @@ class Semantic_Analyzer(object):
 							print("Esperado um valor numerico do tipo: \"inteiro\".")
 	# =========================================================================
 	# =========================================================================
+	# Metodo para analisar o lado direito de um atribuicao
+	def right_Assignment(self, isExpr, linha, lexema):
+		if(isExpr == False):
+			# Nao e uma expressao (aritmetica, logica ou relacional).
+			# Busca a sigla do tipo de dado esperado.
+			# Verifica se o valor recebido e igual ao esperado.
+			if(self.__expected_type == lexema["entry"]):
+				# Atribuicao feita com sucesso
+				# Armazena na tabela de variaveis e constantes os dados referentes a ela.
+				categoria = ""
+				dim = []
+				if(lexema["dimensao"] == None): # E uma variavel simples
+					categoria = "variavel"
+				elif(len(lexema["dimensao"]) == 1): # E vetor
+					categoria = "array"
+				elif(len(lexema["dimensao"]) == 2): # E matriz
+					categoria = "matriz"
+				# Caso seja um elemento composto, ja separada, com o intuito de pegar o nome da variavel.
+				name = lexema["name"].split(".")
+				search = self.__get_var_const(name[0])
+				data   = { "tipo": self.__expected_type, "categoria": categoria, "dimensao": None, "escopo": search["escopo"], "init": True }
+				self.add_var_const(self.__left_atr,data)
+			else:
+				print("[ERROR: linha " + linha + "] Erro semantico: Atribuicao Invalida em \"" + lexema["name"] + ". Esperando um valor do tipo: \"" + self.__expected_type + "\"")
+				self.__expected_type = ""
+	# =========================================================================
+	# =========================================================================
 	# Metodo para analizar semanticamente o lado esquerdo de uma atribuicao
 	def left_Assignment(self, linha, lexema):
-		# Nome da variavel de atribuicao
-		nome = lexema["name"]
-		# Busca através do nome na tabela de simbolos para variaveis e constantes.
-		check = self.__get_var_const(nome)
-		if(check != ""): 
-			# Verifica se o identificador pertecente a uma constante
-			if(check["categoria"] == "constante"):
-				print("[ERROR: linha " + linha + "] Erro semantico: Atribuicao Invalida - \"" + nome + "\" e uma constante.")
-				return False
-			elif(check["categoria"] == "matriz" or check["categoria"] == "array"):
-				return self.__access_vector_matrix(nome, check, lexema, linha)
-			else:
-				return True # Consiste em uma variavel simples.
+		# Verifica se o elemento corresponde ao acesso a um registro
+		if( len( lexema["name"].split(".")) > 1 ):
+			# Analise do acesso a um registro
+			result =  self.__registry_access(lexema, linha, True)
+			# Verifica se a analise ocorreu com sucesso
+			if(result == True):
+				# Armazena temporariamente o lexema recebido
+				self.__left_atr = ""
+				self.__left_atr = lexema["name"]
+				if(lexema["dimensao"] != None):
+					if(len(lexema["dimensao"]) == 1): # E um vetor
+						dim    = lexema["dimensao"]
+						coluna = dim[0]
+						self.__left_atr += "[" + str(coluna["token"]) + "]"
+					elif(len(lexema["dimensao"]) == 2): # E uma matriz
+						dim    = lexema["dimensao"]
+						linha  = dim[0]
+						coluna = dim[1]
+						self.__left_atr += "[" + str(linha["token"]) + "]" + "[" + str(coluna["token"]) + "]"
+			return result
 		else:
-			print("[ERROR: linha " + linha + "] Erro semantico: Atribuicao Invalida - \"" + nome + "\" nao foi declarado.")
-			return False
+			# Nome da variavel de atribuicao
+			nome = lexema["name"]
+			# Busca através do nome na tabela de simbolos para variaveis e constantes.
+			check = self.__get_var_const(nome)
+			if(check != ""): 
+				# Verifica se o identificador pertecente a uma constante
+				if(check["categoria"] == "constante"):
+					print("[ERROR: linha " + linha + "] Erro semantico: Atribuicao Invalida - \"" + nome + "\" e uma constante.")
+					return False
+				elif(check["categoria"] == "matriz" or check["categoria"] == "array"):
+					return self.__access_vector_matrix(nome, check, lexema, linha)
+				else:
+					return True # Consiste em uma variavel simples.
+			else:
+				print("[ERROR: linha " + linha + "] Erro semantico: Atribuicao Invalida - \"" + nome + "\" nao foi declarado.")
+				return False
 
 	# =========================================================================
 	# Metodo que realiza a analise semantica de acesso a vetores e matrizes
@@ -413,7 +489,7 @@ class Semantic_Analyzer(object):
 		for i in range(len(x)):
 			index = x[i]
 			if(index["sigla"] == "IDE"):
-				# Verificar se esse identificador foi declarado.
+				# Verifica se esse identificador foi declarado.
 				test = self.__get_var_const(index["token"])
 				if(test != ""):
 					if(test["categoria"] == "variavel" or test["categoria"] == "constante"):
@@ -469,3 +545,79 @@ class Semantic_Analyzer(object):
 			return self.__st_var_const[entrada]
 		except Exception as e:
 			return ""
+	# =========================================================================
+	# =========================================================================
+	# Metodo para buscar um valor na tabela de simbolos para registros.
+	# Retorna a tabela com os atribuitos de um determinado registro. 
+	def __get_registry(self, entrada):
+		try:
+			return self.__st_registry[entrada]
+		except Exception as e:
+			return ""
+	# =========================================================================
+	# =========================================================================
+	# Metodo para verificar se um tipo passado como parametro e um tipo primitivo.
+	def __check_primitive_Type(self, tipo):
+		if(tipo == "inteiro" or tipo == "real" or tipo == "cadeia" or tipo == "booleano" or tipo == "char"):
+			return True
+		else:
+			return False
+	# =========================================================================
+	# Metodo que busca uma entrada dentro de uma tabela qualquer passada como parametro
+	def __get_TableData(self, table, entrada):
+		try:
+			return table[entrada]
+		except Exception as e:
+			return ""
+	# =========================================================================
+	# =========================================================================
+	# Metodo que realiza a analise semantica do acesso a registros.
+	# O parametro "isAtr" consiste em um booleano que informa se esse acesso e para uma atribuicao ou nao
+	def __registry_access(self, lexema, linha, isAtr):
+		campos    = lexema["name"].split(".")
+		# Verifica se a variavel foi declarada.
+		var = self.__get_var_const(campos[0])
+		if(var != ""):
+			# Veririca se a variavel e realmente um elemento composto
+			if(self.__check_primitive_Type(var["tipo"]) == False):
+				# Busca os atributos desse tipo composto encontrado.
+				registry  = self.__get_registry(var["tipo"])
+				# Como nao e permitido registro de registro, so existira um nivel de acesso.
+				# Ex: Joao.idade, Joao.carros[0]
+				if(lexema["dimensao"] != None):
+					# O atributo acessado e um vetor ou matriz
+					check = campos[1].split("[")
+					# Verifica se o atributo acessado existe no registro.
+					atr = self.__get_TableData(registry, check[0])
+					if(atr != ""):
+						if(isAtr == True):
+							# Armazena o tipo de dados que o atributo acessado recebe.
+							self.__expected_type = atr["type"]
+						if(lexema["dimensao"] == "composto"):
+							categoria = "variavel"
+						elif(len(atr["dimensao"]) == 1):
+							categoria = "array"
+						elif(len(atr["dimensao"]) == 2):
+							categoria = "matriz"
+						# Realiza a analise do acesso ao vetor/matriz
+						return self.__access_vector_matrix(check[0], {"categoria": categoria}, lexema, linha)
+					else:
+						print("[ERROR: linha " + linha + "] Erro semantico: Atributo \"" + check[0] + "\" nao foi declarado.")
+						return False
+				else:
+					# O atributo e uma variavel simples.
+					# Verifica se o atributo acessado existe no registro.
+					atr = self.__get_TableData(registry, campos[1])
+					if(atr != ""):
+						if(isAtr == True):
+							# Armazena o tipo de dados que o atributo acessado recebe.
+							self.__expected_type = atr["type"]
+						return True
+					else:
+						print("[ERROR: linha " + linha + "] Erro semantico: Atributo \"" + campos[1] + "\" nao foi declarado.")
+						return False
+			else:
+				print("[ERROR: linha " + linha + "] Erro semantico: \"" + campos[0] + "\" nao e um elemento composto.")
+		else:
+			print("[ERROR: linha " + linha + "] Erro semantico: \"" + campos[0] + "\" nao foi declarado.")
+		return False
