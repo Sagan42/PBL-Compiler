@@ -104,7 +104,7 @@ funcao vazio algoritmo () {
         Pessoa  Joao = 0;
         Pessoa  Gabriel;
     }
-    
+    Joao.idade = ( (a + b) / (c[1] + d[a][b] + 2 + Joao.idade + Joao.carros[b] + Joao.carros[Joao.idade] ) ) * 3;
     Joao.idade = 0;
     Joao.altura = 2.5;
     Joao.carros[0]    = 1.5;
