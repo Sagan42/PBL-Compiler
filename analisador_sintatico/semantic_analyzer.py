@@ -621,3 +621,46 @@ class Semantic_Analyzer(object):
 		else:
 			print("[ERROR: linha " + linha + "] Erro semantico: \"" + campos[0] + "\" nao foi declarado.")
 		return False
+
+	# =========================================================================
+	# =========================================================================
+	# Metodo para analizar as variaveis e constantes utilizadas em uma expressao
+	def analyzer_param(self, linha, lexema):
+		# Verifica se o elemento corresponde ao acesso a um registro
+		if( len( lexema["name"].split(".")) > 1 ):
+			# Analise do acesso a um registro
+			result =  self.__registry_access(lexema, linha, True)
+			# Verifica se a analise ocorreu com sucesso
+			if(result == True):
+				# Armazena temporariamente o lexema recebido
+				self.__left_atr = ""
+				self.__left_atr = lexema["name"]
+				if(lexema["dimensao"] != None):
+					if(len(lexema["dimensao"]) == 1): # E um vetor
+						dim    = lexema["dimensao"]
+						coluna = dim[0]
+						self.__left_atr += "[" + str(coluna["token"]) + "]"
+					elif(len(lexema["dimensao"]) == 2): # E uma matriz
+						dim    = lexema["dimensao"]
+						linha  = dim[0]
+						coluna = dim[1]
+						self.__left_atr += "[" + str(linha["token"]) + "]" + "[" + str(coluna["token"]) + "]"
+			return result
+		else:
+			# Nome da variavel de atribuicao
+			nome = lexema["name"]
+			# Busca através do nome na tabela de simbolos para variaveis e constantes.
+			check = self.__get_var_const(nome)
+			if(check != ""): 
+				# Verifica se e um vetor ou matriz
+				if(check["categoria"] == "matriz" or check["categoria"] == "array"):
+					return self.__access_vector_matrix(nome, check, lexema, linha)
+				else:
+					if(lexema["dimensao"] == None):
+						return True # Consiste em uma variavel simples.
+					elif(len(lexema["dimensao"]) >= 1):
+						print("[ERROR: linha " + linha + "] Erro semantico: \"" + nome + "\" nao e nem vetor nem matriz.")		
+						return False
+			else:
+				print("[ERROR: linha " + linha + "] Erro semantico: \"" + nome + "\" nao foi declarado.")
+				return False
