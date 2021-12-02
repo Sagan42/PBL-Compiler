@@ -21,9 +21,12 @@ class Syntatic_analyzer():
 		self.__Table      = {}
 		# Atributo que armazena um dicionario de tokens especificos para auxiliar a analise semantica
 		self.__lexema        = {}
-		# Atributo que armazena um array de tokens especificos para auxiliar a analise semantica das expressoes
+		# Atributo que armazena um array contendo todos os tokens utilizados em uma expressao.
 		self.__expr_lexema   = []
+		# Atributo que armazena os tokens referentes as variaveis utilizadas nas expressoes.
 		self.__expr_var      = {}
+		# Atributo que armazena os tipos de cada variavel/constante e numero utilizada em um expressao (na ordem em que aparecem)
+		self.__expr_type     = []
 		self.__currentScope  = ""
 		# Array para armazenar os valores usados na inicializacao de vetores e matrizes. Cada posicao consiste
 		# em um token. Tais valores são armazenados na ordem em que são lidos da cadeia de entrada.
@@ -1226,7 +1229,7 @@ class Syntatic_analyzer():
 					self.__lexema["entry"] = "cadeia"
 				elif(self.__currentToken["sigla"] == "CAR"):
 					self.__lexema["entry"] = "char"
-				self.__semantic_analyzer.right_Assignment(False, self.__currentToken["linha"], self.__lexema)
+				self.__semantic_analyzer.right_Assignment(False, self.__currentToken["linha"], self.__lexema, None, self.__lexema["dimensao"], self.__lexema["name"])
 			self.__currentToken = self.next_token()
 			self.atr_2()
 		elif(self.__functions_aux.First("expressao", self.__currentToken["token"], self.__currentToken["sigla"] ) == True):			
@@ -1239,7 +1242,10 @@ class Syntatic_analyzer():
 				# e realizada.
 				if(result_expr == True and do_analysis == True):
 					print("FAZ ANALISE DA EXPRESSAO!!!!")
-					#self.__semantic_analyzer.analyzer_expression(self.__currentToken["linha"], self.__expr_lexema)
+					print(self.__expr_type)
+					self.__semantic_analyzer.right_Assignment(True, self.__currentToken["linha"], self.__expr_lexema, self.__expr_type,self.__lexema["dimensao"], self.__lexema["name"])
+					self.__expr_type = []
+					#self.__semantic_analyzer.atr_expression_analyzer(self.__currentToken["linha"], self.__expr_lexema, self.__expr_type)
 					self.__expr_lexema = []
 				else:
 					self.__expr_lexema = []
@@ -2020,6 +2026,11 @@ class Syntatic_analyzer():
 	# <exprValorMod> ::=  number | <operatorAuto0> <read_value> | <read_value> <operatorAuto>
 	def exprValorMod(self):
 		if(self.match("NRO", 2) == True):
+			# Verifica o tipo numerico utilizado na expressao (se e real ou inteiro)
+			if( len(self.__currentToken["token"].split(".") ) > 1):
+				self.__expr_type.append("real")
+			else:
+				self.__expr_type.append("inteiro")
 			# Adiciona o token ao vetor lexema, para analise semantica.
 			self.__expr_lexema.append(self.__currentToken)
 			self.__currentToken = self.next_token()
@@ -2032,6 +2043,7 @@ class Syntatic_analyzer():
 			if(result):
 				# Faz a análise da variavel/constante utilizada na expressao
 				self.__semantic_analyzer.analyzer_param(self.__currentToken["linha"], self.__expr_var)
+				self.__expr_type.append(self.__semantic_analyzer.return_var_type())
 				return True
 			else:
 				return False
@@ -2040,6 +2052,7 @@ class Syntatic_analyzer():
 			if(result):
 				# Faz a análise da variavel/constante utilizada na expressao
 				self.__semantic_analyzer.analyzer_param(self.__currentToken["linha"], self.__expr_var)
+				self.__expr_type.append(self.__semantic_analyzer.return_var_type())
 				result = self.operatorAuto()
 				if(result):
 					return True
@@ -2259,6 +2272,7 @@ class Syntatic_analyzer():
 		elif(self.match("verdadeiro", 1) == True or self.match("falso", 1) == True):
 			# Adiciona o token ao vetor lexema, para analise semantica.
 			self.__expr_lexema.append(self.__currentToken)
+			self.__expr_type.append("booleano")
 			self.__currentToken = self.next_token()
 			result = self.exprRel1()
 			if(result):

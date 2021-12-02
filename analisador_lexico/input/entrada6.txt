@@ -34,6 +34,7 @@ constantes {
     char   teste_2 = "cadeia_de_caracteres"; % Ok (erro de inicializacao)
     real    a      = 2.2;                    % erro de variavel duplicada
     inteiro b      = 'a';                    % erro de variavel duplicada e inicializacao.
+    inteiro constante_atr = 0;
 }
 {#
 variaveis {
@@ -66,6 +67,7 @@ variaveis {
 	char    c        = "teste";                         % erro de variavel duplicada e inicializacao.
 	vazio   hello    = "";                              % Ok. Tem erro de vazio
 	booleano ok      = verdadeiro;                      % Ok
+	inteiro global_atr;
 }
 
 
@@ -103,9 +105,27 @@ funcao vazio algoritmo () {
         real    matriz[3][3];
         Pessoa  Joao = 0;
         Pessoa  Gabriel;
+        cadeia  cadeia_atr;
+        char    char_atr;
+        booleano bool_atr;
     }
+    constante_atr = 2;
+    global_atr = 0;
+    global_atr = 1.4;
+    bool_atr   = 0;
+    bool_atr   = "cadeia";
+    bool_atr   = verdadeiro;
+    char_atr   = 1;
+    char_atr   = 1 + 2;
+    char_atr   = 'a';
+    cadeia_atr = 1;
+    cadeia_atr = 1.4;
+    cadeia_atr = verdadeiro;
+    cadeia_atr = 1 + 2;
+    cadeia_atr = "valor_valido" 
     Joao.idade = ( (a + b) / (c[1] + d[a][b] + 2 + Joao.idade + Joao.carros[b] + Joao.carros[Joao.idade] ) ) * 3;
-    Joao.idade = 0;
+    Joao.idade = 1 + 2;
+    Joao.idade = 1 + 3.5;
     Joao.altura = 2.5;
     Joao.carros[0]    = 1.5;
     Joao.carros[a]    = "error";
