@@ -1,1 +1,2 @@
-linha 101[erro sintatico: token lido "a"], tokens esperados ["NRO"]
+linha 103[erro sintatico: token lido "a"], tokens esperados ["NRO"]
+linha 126[erro sintatico: token lido "Joao"], tokens esperados [",",";"]
