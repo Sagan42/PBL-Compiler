@@ -18,7 +18,7 @@ class Semantic_Analyzer(object):
 		return self.__erros
 
 	# Metodo para escrever os erros no arquivo de saida
-	def __error(self, error_text):
+	def error(self, error_text):
 		self.__erros += 1
 		self.__files.write_semantic_error(error_text)
 		print(error_text)
@@ -53,37 +53,37 @@ class Semantic_Analyzer(object):
 			if((check["categoria"] == "variavel" and table["categoria"] == "variavel") or (check["categoria"] == "constante" and table["categoria"] == "constante")):
 				if(check["escopo"] == "local" and table["escopo"] == "local"):
 					# erro de declaracao de variaveis locais redeclaracadas.
-					self.__error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(local) " + " \"" + table["nome"] + "\" está sendo declarada mais de uma vez.")
+					self.error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(local) " + " \"" + table["nome"] + "\" está sendo declarada mais de uma vez.")
 					return
 				elif(check["escopo"] == "global"):
 					if(table["escopo"] == "local"):
 						# erro de declaracao de variaveis locais com o mesmo nome de uma global.
-						self.__error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(local) " + " \"" + table["nome"] + "\" com o mesmo nome de uma " + check["categoria"] + " global.")
+						self.error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(local) " + " \"" + table["nome"] + "\" com o mesmo nome de uma " + check["categoria"] + " global.")
 						return
 					elif(table["escopo"] == "global"):
 						# erro de declaracao de variaveis globais redeclaracadas.
-						self.__error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(global) " + " \"" + table["nome"] + "\" está sendo declarada mais de uma vez.")
+						self.error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(global) " + " \"" + table["nome"] + "\" está sendo declarada mais de uma vez.")
 						return
 			if( (check["categoria"] == "variavel" and table["categoria"] == "constante") ):
 				if(check["escopo"] == "global"):
 					if(table["escopo"] == "local"):
 						# erro de variavel global com o mesmo nome de uma constante local
-						self.__error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(global) " + " \"" + table["nome"] + "\" com o mesmo nome de uma constante (local).")
+						self.error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(global) " + " \"" + table["nome"] + "\" com o mesmo nome de uma constante (local).")
 						return
 			if( (check["categoria"] == "constante" and table["categoria"] == "variavel") ):
 				if(check["escopo"] == "global"):
 					if(table["escopo"] == "local"):
 						# erro de variavel local com o mesmo nome de uma constante global.
-						self.__error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(local) " + " \"" + table["nome"] + "\" com o mesmo nome de uma constante (global).")
+						self.error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(local) " + " \"" + table["nome"] + "\" com o mesmo nome de uma constante (global).")
 						return
 					elif(table["escopo"] == "global"):
 						# erro de variavel global com o mesmo nome de uma constante global.
-						self.__error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(global) " + " \"" + table["nome"] + "\" com o mesmo nome de uma constante (global).")				
+						self.error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(global) " + " \"" + table["nome"] + "\" com o mesmo nome de uma constante (global).")				
 						return
 				elif(check["escopo"] == "local"):
 					if(table["escopo"] == "local"):
 						# erro de variavel local com o mesmo nome de uma constante local.
-						self.__error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(local) " + " \"" + table["nome"] + "\" com o mesmo nome de uma constante (local).")
+						self.error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(local) " + " \"" + table["nome"] + "\" com o mesmo nome de uma constante (local).")
 						return
 		except Exception as e:
 			# Nao existe variavel ou constante armazenadas com este nome.
@@ -102,7 +102,7 @@ class Semantic_Analyzer(object):
 					self.__check_init_var_const(linha, lexema, table)
 					return
 			else:
-				self.__error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(local) " + " \"" + table["nome"] + "\" nao e permitido inicializacao em tipos compostos.")
+				self.error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(local) " + " \"" + table["nome"] + "\" nao e permitido inicializacao em tipos compostos.")
 		# == Fim da Segunda Verificacao ==========================================
 		
 	def __check_init_VM(self, linha, lexema, table):
@@ -115,9 +115,9 @@ class Semantic_Analyzer(object):
 			size        = int(size[0])
 			# Verifica se todas as posicoes foram inicializadas
 			if((len(values)-1) > (size)):
-				self.__error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\" usando espaço de inicializacao alem do que foi declarado.")
+				self.error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\" usando espaço de inicializacao alem do que foi declarado.")
 			elif((len(values)-1) < size):
-				self.__error("[ERROR: linha " + linha + "] Erro semantico: Inicialize todas as posicoes da " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\" .")
+				self.error("[ERROR: linha " + linha + "] Erro semantico: Inicialize todas as posicoes da " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\" .")
 			# Verifica se as posicoes foram inicializadas corretamente. 
 			if(vector_type == "inteiro" or vector_type == "real"):
 				for x in range(len(values)):  
@@ -126,23 +126,23 @@ class Semantic_Analyzer(object):
 						v = str(token["token"])     # converte para string
 						if(vector_type == "inteiro"):
 							if(len(v.split(".")) > 1):  # Verifica se o valor e um inteiro
-								self.__error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\" usando tipo incorreto para inicializacao. Esperado um valor do tipo: \"" + vector_type + "\" na posicao " + str(x) + " do vetor.\n")
+								self.error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\" usando tipo incorreto para inicializacao. Esperado um valor do tipo: \"" + vector_type + "\" na posicao " + str(x) + " do vetor.\n")
 						elif(vector_type == "real"):
 							if(len(v.split(".")) == 1):  # Verifica se o valor e um real
-								self.__error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\" usando tipo incorreto para inicializacao. Esperado um valor do tipo: \"" + vector_type + "\" na posicao " + str(x) + " do vetor.\n")
+								self.error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\" usando tipo incorreto para inicializacao. Esperado um valor do tipo: \"" + vector_type + "\" na posicao " + str(x) + " do vetor.\n")
 					elif(token["sigla"] == "IDE"):                     # Verifica se foi utilizado um identificador
 						try:
 							IDE = self.__st_var_const[token["token"]]  # Busca na tabela de simbolos para variaveis e constantes o identificador usado
 							if(IDE["tipo"] == vector_type):
 								if(IDE["init"] == False):
-									self.__error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\". Variavel \"" + token["token"] + "\" nao foi inicializada.")
+									self.error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\". Variavel \"" + token["token"] + "\" nao foi inicializada.")
 							else:
-								self.__error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\" usando tipo incorreto para inicializacao. Esperado um valor do tipo: \"" + vector_type + "\" na posicao " + str(x) + " do vetor.\n")
+								self.error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\" usando tipo incorreto para inicializacao. Esperado um valor do tipo: \"" + vector_type + "\" na posicao " + str(x) + " do vetor.\n")
 						except Exception as e:
 							# identificador utilizado ainda nao foi declarado.
-							self.__error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\". Variavel " + token["token"] + " nao foi declarada.")
+							self.error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\". Variavel " + token["token"] + " nao foi declarada.")
 					else:
-						self.__error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\" usando tipo incorreto para inicializacao. Esperado um valor do tipo: \"" + vector_type + "\" na posicao " + str(x) + " do vetor.\n")
+						self.error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\" usando tipo incorreto para inicializacao. Esperado um valor do tipo: \"" + vector_type + "\" na posicao " + str(x) + " do vetor.\n")
 			if(vector_type == "char" or vector_type == "cadeia" or vector_type == "booleano"):
 				for x in range(len(values)):  
 					token = values[x]
@@ -150,7 +150,7 @@ class Semantic_Analyzer(object):
 						if(token["token"] == "verdadeiro" or token["token"] == "falso"):
 							pass
 						else:
-							self.__error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\" usando tipo incorreto para inicializacao. Esperado um valor do tipo: \"" + vector_type + "\" na posicao " + str(x) + " do vetor.\n")
+							self.error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\" usando tipo incorreto para inicializacao. Esperado um valor do tipo: \"" + vector_type + "\" na posicao " + str(x) + " do vetor.\n")
 					elif(token["sigla"] == "CAR" or token["sigla"] == "CAD"):
 						pass # Tudo ok
 					elif(token["sigla"] == "IDE"):                       # Verifica se foi utilizado um identificador
@@ -158,14 +158,14 @@ class Semantic_Analyzer(object):
 							IDE = self.__st_var_const[ token["token"] ]  # Busca na tabela de simbolos para variaveis e constantes o identificador usado
 							if(IDE["tipo"] == vector_type):
 								if(IDE["init"] == False):
-									self.__error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\". Variavel \"" + token["token"] + "\" nao foi inicializada.")
+									self.error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\". Variavel \"" + token["token"] + "\" nao foi inicializada.")
 							else:
-								self.__error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\" usando tipo incorreto para inicializacao. Esperado um valor do tipo: \"" + vector_type + "\" na posicao " + str(x) + " do vetor.\n")
+								self.error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\" usando tipo incorreto para inicializacao. Esperado um valor do tipo: \"" + vector_type + "\" na posicao " + str(x) + " do vetor.\n")
 						except Exception as e:
 							# identificador utilizado ainda nao foi declarado.
-							self.__error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\". Variavel " + token["token"] + " nao foi declarada.")
+							self.error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\". Variavel " + token["token"] + " nao foi declarada.")
 					else:
-						self.__error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\" usando tipo incorreto para inicializacao. Esperado um valor do tipo: \"" + vector_type + "\" na posicao " + str(x) + " do vetor.\n")
+						self.error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\" usando tipo incorreto para inicializacao. Esperado um valor do tipo: \"" + vector_type + "\" na posicao " + str(x) + " do vetor.\n")
 		elif(len(size) == 2): # E uma Matriz
 			# Primeiramente verifica se todos os valores estao sendo utilizados corretamente.
 			values      = table["valor"]      # table["valor"] contem a lista de token utilizados na inicializacao
@@ -184,37 +184,37 @@ class Semantic_Analyzer(object):
 						matrix_columns += 1
 					if(token["token"] == ";" or (x == (len(values)-1)) ):        # Finalizei a analise de uma linha da matriz
 						if(matrix_columns > columns):
-							self.__error("[ERROR: linha " + linha + "] Erro semantico: Linha " + str(matrix_lines) + " da matriz esta ultrapassando o numero de colunas que foi definido." )
+							self.error("[ERROR: linha " + linha + "] Erro semantico: Linha " + str(matrix_lines) + " da matriz esta ultrapassando o numero de colunas que foi definido." )
 						elif(matrix_columns < columns):
-							self.__error("[ERROR: linha " + linha + "] Erro semantico: Preencha todas as colunas da linha " + str(matrix_lines) + " da matriz.")
+							self.error("[ERROR: linha " + linha + "] Erro semantico: Preencha todas as colunas da linha " + str(matrix_lines) + " da matriz.")
 						matrix_columns = 0            # Reinicia a contagem para a analise da proxima linha
 						matrix_lines  += 1            # Aumenta a contagem das linhas em 1
 					elif(token["sigla"] == "NRO"):    # Verifica se o valor de inicializacao e um numero
 						v = str(token["token"])       # converte para string
 						if(matrix_type == "inteiro"):
 							if(len(v.split(".")) > 1):  # Verifica se o valor e um inteiro
-								self.__error("[ERROR: linha " + linha + "] Erro semantico: Matriz " + table["nome"] + "\" usando tipo incorreto para inicializacao na linha " + str(matrix_lines) + ". Esperado um valor do tipo: \"" + matrix_type + "\".\n")
+								self.error("[ERROR: linha " + linha + "] Erro semantico: Matriz " + table["nome"] + "\" usando tipo incorreto para inicializacao na linha " + str(matrix_lines) + ". Esperado um valor do tipo: \"" + matrix_type + "\".\n")
 						elif(matrix_type == "real"):
 							if(len(v.split(".")) == 1):  # Verifica se o valor e um real
-								self.__error("[ERROR: linha " + linha + "] Erro semantico: Matriz " + table["nome"] + "\" usando tipo incorreto para inicializacao na linha " + str(matrix_lines) + ". Esperado um valor do tipo: \"" + matrix_type + "\".\n")
+								self.error("[ERROR: linha " + linha + "] Erro semantico: Matriz " + table["nome"] + "\" usando tipo incorreto para inicializacao na linha " + str(matrix_lines) + ". Esperado um valor do tipo: \"" + matrix_type + "\".\n")
 					elif(token["sigla"] == "IDE"):                     # Verifica se foi utilizado um identificador
 						try:
 							IDE = self.__st_var_const[token["token"]]  # Busca na tabela de simbolos para variaveis e constantes o identificador usado
 							if(IDE["tipo"] == matrix_type):
 								if(IDE["init"] == False):
-									self.__error("[ERROR: linha " + linha + "] Erro semantico: Variavel \"" + token["token"] + "\" nao foi inicializada.")
+									self.error("[ERROR: linha " + linha + "] Erro semantico: Variavel \"" + token["token"] + "\" nao foi inicializada.")
 							else:
-								self.__error("[ERROR: linha " + linha + "] Erro semantico: Matriz " + table["nome"] + "\" usando tipo incorreto para inicializacao na linha " + str(matrix_lines) + ". Esperado um valor do tipo: \"" + matrix_type + "\".\n")
+								self.error("[ERROR: linha " + linha + "] Erro semantico: Matriz " + table["nome"] + "\" usando tipo incorreto para inicializacao na linha " + str(matrix_lines) + ". Esperado um valor do tipo: \"" + matrix_type + "\".\n")
 						except Exception as e:
 							# identificador utilizado ainda nao foi declarado.
-							self.__error("[ERROR: linha " + linha + "] Erro semantico: Variavel \"" + token["token"] + "\" nao foi declarada.")
+							self.error("[ERROR: linha " + linha + "] Erro semantico: Variavel \"" + token["token"] + "\" nao foi declarada.")
 					else:
-						self.__error("[ERROR: linha " + linha + "] Erro semantico: Matriz " + table["nome"] + "\" usando tipo incorreto para inicializacao na linha " + str(matrix_lines) + ". Esperado um valor do tipo: \"" + matrix_type + "\".\n")
+						self.error("[ERROR: linha " + linha + "] Erro semantico: Matriz " + table["nome"] + "\" usando tipo incorreto para inicializacao na linha " + str(matrix_lines) + ". Esperado um valor do tipo: \"" + matrix_type + "\".\n")
 				# Fim da declaracao da matrix
 				if(matrix_lines > lines):
-					self.__error("[ERROR: linha " + linha + "] Erro semantico: Numero de linhas na inicializacao esta ultrapassando o limite definido na declaracao." )
+					self.error("[ERROR: linha " + linha + "] Erro semantico: Numero de linhas na inicializacao esta ultrapassando o limite definido na declaracao." )
 				elif(matrix_lines  < lines):
-					self.__error("[ERROR: linha " + linha + "] Erro semantico: Preencha todas as linhas da matriz.")
+					self.error("[ERROR: linha " + linha + "] Erro semantico: Preencha todas as linhas da matriz.")
 			elif(matrix_type == "char" or matrix_type == "cadeia" or matrix_type == "booleano"):
 				for x in range(len(values)):  
 					token = values[x]
@@ -222,16 +222,16 @@ class Semantic_Analyzer(object):
 						matrix_columns += 1
 					if(token["token"] == ";" or (x == (len(values)-1))):        # Finalizei a analise de uma linha da matriz
 						if(matrix_columns > columns):
-							self.__error("[ERROR: linha " + linha + "] Erro semantico: Linha " + str(matrix_lines) + " da matriz esta ultrapassando o numero de colunas que foi definido." )
+							self.error("[ERROR: linha " + linha + "] Erro semantico: Linha " + str(matrix_lines) + " da matriz esta ultrapassando o numero de colunas que foi definido." )
 						elif(matrix_columns < columns):
-							self.__error("[ERROR: linha " + linha + "] Erro semantico: Preencha todas as colunas da linha " + str(matrix_lines) + " da matriz.")
+							self.error("[ERROR: linha " + linha + "] Erro semantico: Preencha todas as colunas da linha " + str(matrix_lines) + " da matriz.")
 						matrix_columns = 0            # Reinicia a contagem para a analise da proxima linha
 						matrix_lines  += 1            # Aumenta a contagem das linhas em 1
 					elif(token["sigla"] == "PRE"):    # Verifica se o valor recebido e uma palavra reservada            
 						if(token["token"] == "verdadeiro" or token["token"] == "falso"):
 							pass
 						else:
-							self.__error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\" usando tipo incorreto para inicializacao. Esperado um valor do tipo: \"" + matrix_type + "\".\n")
+							self.error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\" usando tipo incorreto para inicializacao. Esperado um valor do tipo: \"" + matrix_type + "\".\n")
 					elif(token["sigla"] == "CAR" or token["sigla"] == "CAD"):
 						pass # Tudo ok
 					elif(token["sigla"] == "IDE"):                       # Verifica se foi utilizado um identificador
@@ -239,24 +239,24 @@ class Semantic_Analyzer(object):
 							IDE = self.__st_var_const[ token["token"] ]  # Busca na tabela de simbolos para variaveis e constantes o identificador usado
 							if(IDE["tipo"] == matrix_type):
 								if(IDE["init"] == False):
-									self.__error("[ERROR: linha " + linha + "] Erro semantico: Variavel \"" + token["token"] + "\" nao foi inicializada.")
+									self.error("[ERROR: linha " + linha + "] Erro semantico: Variavel \"" + token["token"] + "\" nao foi inicializada.")
 							else:
-								self.__error("[ERROR: linha " + linha + "] Erro semantico: Matriz " + table["nome"] + "\" usando tipo incorreto para inicializacao na linha " + str(matrix_lines) + ". Esperado um valor do tipo: \"" + matrix_type + "\".\n")
+								self.error("[ERROR: linha " + linha + "] Erro semantico: Matriz " + table["nome"] + "\" usando tipo incorreto para inicializacao na linha " + str(matrix_lines) + ". Esperado um valor do tipo: \"" + matrix_type + "\".\n")
 						except Exception as e:
 							# identificador utilizado ainda nao foi declarado.
-							self.__error("[ERROR: linha " + linha + "] Erro semantico: Variavel \"" + token["token"] + "\" nao foi declarada.")
+							self.error("[ERROR: linha " + linha + "] Erro semantico: Variavel \"" + token["token"] + "\" nao foi declarada.")
 					else:
-						self.__error("[ERROR: linha " + linha + "] Erro semantico: Matriz " + table["nome"] + "\" usando tipo incorreto para inicializacao na linha " + str(matrix_lines) + ". Esperado um valor do tipo: \"" + matrix_type + "\".\n")
+						self.error("[ERROR: linha " + linha + "] Erro semantico: Matriz " + table["nome"] + "\" usando tipo incorreto para inicializacao na linha " + str(matrix_lines) + ". Esperado um valor do tipo: \"" + matrix_type + "\".\n")
 				# Fim da declaracao da matrix
 				if(matrix_lines > lines):
-					self.__error("[ERROR: linha " + linha + "] Erro semantico: Numero de linhas na inicializacao esta ultrapassando o limite definido na declaracao." )
+					self.error("[ERROR: linha " + linha + "] Erro semantico: Numero de linhas na inicializacao esta ultrapassando o limite definido na declaracao." )
 				elif(matrix_lines  < lines):
-					self.__error("[ERROR: linha " + linha + "] Erro semantico: Preencha todas as linhas da matriz.")
+					self.error("[ERROR: linha " + linha + "] Erro semantico: Preencha todas as linhas da matriz.")
 	
 	def __check_init_var_const(self, linha, lexema, table):
 		if(table["tipo"] == "vazio"):
-			self.__error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\" está usando vazio como tipo.")
-			self.__error("Esperado tipo: inteiro, real, char, cadeia, booleano.\n")
+			self.error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\" está usando vazio como tipo.")
+			self.error("Esperado tipo: inteiro, real, char, cadeia, booleano.\n")
 		else:
 			valor = lexema["valor"]             # Pega o token utilizado na inicializacao
 			tipo  = lexema["tipo"]              # Pega o token utilizado no tipo da constante/variavel
@@ -266,10 +266,10 @@ class Semantic_Analyzer(object):
 					if(len(v.split(".")) == 1): # Verifica se o valor e um inteiro
 						return
 					else:
-						self.__error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\" usando tipo incorreto para inicializacao. Esperado um valor do tipo: " + tipo["token"] + "\n")
+						self.error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\" usando tipo incorreto para inicializacao. Esperado um valor do tipo: " + tipo["token"] + "\n")
 						return
 				else:
-					self.__error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\" usando tipo incorreto para inicializacao. Esperado um valor do tipo: " + tipo["token"] + "\n")
+					self.error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\" usando tipo incorreto para inicializacao. Esperado um valor do tipo: " + tipo["token"] + "\n")
 					return
 			if(tipo["token"] == "real"):
 				if(valor["sigla"] == "NRO"):    # Verifica se o valor de inicializacao e um numero
@@ -277,28 +277,28 @@ class Semantic_Analyzer(object):
 					if(len(v.split(".")) == 2): # Verifica se o valor e um real
 						return
 					else:
-						self.__error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\" usando tipo incorreto para inicializacao. Esperado um valor do tipo: " + tipo["token"] + "\n")
+						self.error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\" usando tipo incorreto para inicializacao. Esperado um valor do tipo: " + tipo["token"] + "\n")
 						return
 				else:
-					self.__error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\" usando tipo incorreto para inicializacao. Esperado um valor do tipo: " + tipo["token"] + "\n")
+					self.error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\" usando tipo incorreto para inicializacao. Esperado um valor do tipo: " + tipo["token"] + "\n")
 					return
 			if(tipo["token"] == "booleano"):
 				if(valor["token"] == "verdadeiro" or valor["token"] == "falso"):  # Verifica se o valor de inicializacao e um booleano.
 					return
 				else:
-					self.__error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\" usando tipo incorreto para inicializacao. Esperado um valor do tipo: " + tipo["token"] + "\n")
+					self.error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\" usando tipo incorreto para inicializacao. Esperado um valor do tipo: " + tipo["token"] + "\n")
 					return
 			if(tipo["token"] == "char"):
 				if(valor["sigla"] == "CAR"):  # Verifica se o valor de inicializacao e um char.
 					return
 				else:
-					self.__error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\" usando tipo incorreto para inicializacao. Esperado um valor do tipo: " + tipo["token"] + "\n")
+					self.error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\" usando tipo incorreto para inicializacao. Esperado um valor do tipo: " + tipo["token"] + "\n")
 					return
 			if(tipo["token"] == "cadeia"):
 				if(valor["sigla"] == "CAD"): # Verifica se o valor de inicializacao e uma cadeia de caracteres.
 					return
 				else:
-					self.__error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\" usando tipo incorreto para inicializacao. Esperado um valor do tipo: " + tipo["token"] + "\n")
+					self.error("[ERROR: linha " + linha + "] Erro semantico: " + table["categoria"] + "(" + table["escopo"] + ") \"" + table["nome"] + "\" usando tipo incorreto para inicializacao. Esperado um valor do tipo: " + tipo["token"] + "\n")
 					return
 
 	# Metodo que armazena na tabela de registro, um novo registro declarado caso ele ainda nao exista
@@ -306,7 +306,7 @@ class Semantic_Analyzer(object):
 		try:
 			# Verifica o novo registro ja existe
 			check = self.__st_registry[ name_token["token"] ]
-			self.__error("[ERROR: linha " + name_token["linha"] + "] Erro semantico: registro \"" + name_token["token"] + "\" ja existe.")
+			self.error("[ERROR: linha " + name_token["linha"] + "] Erro semantico: registro \"" + name_token["token"] + "\" ja existe.")
 			return False
 		except Exception as e:
 			# Nao existe registro com esse nome, logo, armarzena
@@ -324,11 +324,11 @@ class Semantic_Analyzer(object):
 			# Verificar se novo atributo ja foi declarado antes atraves do token recebido.
 			check_atribute = registry[atr_name["token"]]
 			# Se nao der excessao, e porque o atributo ja existe
-			self.__error("[ERROR: linha " + line + "] Erro semantico: atributo \"" + atr_name["token"] + "\" do registro \"" +  name["token"] + "\" esta sendo declarado mais de uma vez.")
+			self.error("[ERROR: linha " + line + "] Erro semantico: atributo \"" + atr_name["token"] + "\" do registro \"" +  name["token"] + "\" esta sendo declarado mais de uma vez.")
 			return
 		except Exception as e:
 			if(atr_type["token"] == "vazio" or atr_type["sigla"] == "IDE"):
-				self.__error("[ERROR: linha " + line + "] Erro semantico: atributo \"" + atr_name["token"] + "\" do registro \"" +  name["token"] + "\" esta usando um tipo invalido para atributos em elementos compostos. Esperado tipo: \"inteiro\", \"real\", \"booleano\", \"cadeia\", \"char\".")
+				self.error("[ERROR: linha " + line + "] Erro semantico: atributo \"" + atr_name["token"] + "\" do registro \"" +  name["token"] + "\" esta usando um tipo invalido para atributos em elementos compostos. Esperado tipo: \"inteiro\", \"real\", \"booleano\", \"cadeia\", \"char\".")
 			else:
 				# Caso nao exista, dá seguimento à analise
 				if(isVM == False): # Nao e vetor ou matriz
@@ -344,13 +344,13 @@ class Semantic_Analyzer(object):
 							# Caso nao de execessao, continua...
 							linha = size[0]
 							if(len(linha.split(".")) > 1):  # Verifica se o valor e um inteiro
-								self.__error("[ERROR: linha " + line + "] Erro semantico: atributo \"" + atr_name["token"] + "\" do registro \"" +  name["token"] + "\" esta usando um tipo incorreto para dimensionamento. Esperado um valor numerico do tipo: \"inteiro\".")							
+								self.error("[ERROR: linha " + line + "] Erro semantico: atributo \"" + atr_name["token"] + "\" do registro \"" +  name["token"] + "\" esta usando um tipo incorreto para dimensionamento. Esperado um valor numerico do tipo: \"inteiro\".")							
 							else:
 								# Armazena na tabela o novo atributo
 								registry[atr_name["token"]]		  = {"type": atr_type["token"], "dimensao": linha}
 								self.__st_registry[name["token"]] = registry
 						except Exception as e:
-							self.__error("[ERROR: linha " + line + "] Erro semantico: atributo \"" + atr_name["token"] + "\" do registro \"" +  name["token"] + "\" esta usando um tipo incorreto para dimensionamento. Esperado um valor numerico do tipo: \"inteiro\".")
+							self.error("[ERROR: linha " + line + "] Erro semantico: atributo \"" + atr_name["token"] + "\" do registro \"" +  name["token"] + "\" esta usando um tipo incorreto para dimensionamento. Esperado um valor numerico do tipo: \"inteiro\".")
 					elif(len(size) == 2): # E matriz
 						try:
 							# Tenta converter os valores para int
@@ -360,13 +360,13 @@ class Semantic_Analyzer(object):
 							linha  = size[0]
 							coluna = size[1]
 							if(len(linha.split(".")) > 1 or len(coluna.split(".")) > 1):  # Verifica se os valores sao inteiros
-								self.__error("[ERROR: linha " + line + "] Erro semantico: atributo \"" + atr_name["token"] + "\" do registro \"" +  name["token"] + "\" esta usando um tipo incorreto para dimensionamento. Esperado um valor numerico do tipo: \"inteiro\".")								
+								self.error("[ERROR: linha " + line + "] Erro semantico: atributo \"" + atr_name["token"] + "\" do registro \"" +  name["token"] + "\" esta usando um tipo incorreto para dimensionamento. Esperado um valor numerico do tipo: \"inteiro\".")								
 							else: 
 								# Armazena na tabela o novo atributo
 								registry[atr_name["token"]]       = {"type": atr_type["token"], "dimensao": size}
 								self.__st_registry[name["token"]] = registry
 						except Exception as e:
-							self.__error("[ERROR: linha " + line + "] Erro semantico: atributo \"" + atr_name["token"] + "\" do registro \"" +  name["token"] + "\" esta usando um tipo incorreto para dimensionamento. Esperado um valor numerico do tipo: \"inteiro\".")
+							self.error("[ERROR: linha " + line + "] Erro semantico: atributo \"" + atr_name["token"] + "\" do registro \"" +  name["token"] + "\" esta usando um tipo incorreto para dimensionamento. Esperado um valor numerico do tipo: \"inteiro\".")
 	# =========================================================================
 	# =========================================================================
 	# Metodo para analisar o lado direito de um atribuicao
@@ -380,7 +380,7 @@ class Semantic_Analyzer(object):
 			# Verifica se o valor recebido e igual ao esperado.
 			if(self.__atr_expected_type != lexema["entry"]):
 				result = False
-				self.__error("[ERROR: linha " + linha + "] Erro semantico: Atribuicao Invalida em \"" + lexema["name"] + ". Esperando um valor do tipo: \"" + self.__atr_expected_type + "\"")
+				self.error("[ERROR: linha " + linha + "] Erro semantico: Atribuicao Invalida em \"" + lexema["name"] + ". Esperando um valor do tipo: \"" + self.__atr_expected_type + "\"")
 				self.__atr_expected_type = ""
 		elif(isExpr == True):
 			if(self.__atr_expected_type == "inteiro"):
@@ -388,56 +388,61 @@ class Semantic_Analyzer(object):
 				for x in range(len(tipos)):
 					if(tipos[x] != "inteiro"):
 						result = False
-						self.__error("[ERROR: linha " + linha + "] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo inteiro.")
+						self.error("[ERROR: linha " + linha + "] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo inteiro.")
 						break
 				# Verifica se esta sendo utilizado alguma operacao logica na expressao
 				for x in range(len(lexema)):
 					token = lexema[x]
 					if(self.check_log_rel("logico", token["token"]) == True or self.check_log_rel("relacional", token["token"]) == True):
 						result = False
-						self.__error("[ERROR: linha " + linha + "] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo inteiro. Nao utilize operacoes logicas ou relacionais.")
+						self.error("[ERROR: linha " + linha + "] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo inteiro. Nao utilize operacoes logicas ou relacionais.")
 						break
 			elif(self.__atr_expected_type == "real"):
 				# Verifica se existe pelo menos um valor do tipo real para que o resultado gerado seja real.
 				# Os demais podem ser do tipo inteiro
 				search = False
-				for x in range(len(tipos)):
-					if(tipos[x] == "real"):
-						search = True
-					elif(tipos[x] == "booleano" or tipos[x] == "cadeia" or tipos[x] == "char"):
+				if(len(tipos) == 1):
+					if(tipos[0] != "real"):
+						self.error("[ERROR: linha " + linha + "] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo real.")
 						search = False
-						break
-				if(search == False):
-					result = False
-					self.__error("[ERROR: linha " + linha + "] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo real. Utilize variaveis inteiras junto com reais, ou somente reais.")
+				else:
+					for x in range(len(tipos)):
+						if(tipos[x] == "real"):
+							search = True
+						elif(tipos[x] == "booleano" or tipos[x] == "cadeia" or tipos[x] == "char"):
+							search = False
+							break
+					if(search == False):
+						result = False
+						self.error("[ERROR: linha " + linha + "] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo real. Utilize variaveis inteiras junto com reais, ou somente reais.")
 				# Verifica se esta sendo utilizado alguma operacao logica na expressao
 				for x in range(len(lexema)):
 					token = lexema[x]
 					if(self.check_log_rel("logico", token["token"]) == True or self.check_log_rel("relacional", token["token"]) == True):
 						result = False
-						self.__error("[ERROR: linha " + linha + "] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo real. Nao utilize operacoes logicas ou relacionais.")
+						self.error("[ERROR: linha " + linha + "] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo real. Nao utilize operacoes logicas ou relacionais.")
 						break
 			elif(self.__atr_expected_type == "cadeia"):
 				if(len(tipos) == 1):
 					if(tipos[0] != "cadeia"):
 						result = False
-						self.__error("[ERROR: linha " + linha + "] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo cadeia.")
+						self.error("[ERROR: linha " + linha + "] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo cadeia.")
 				else:
 					result = False
-					self.__error("[ERROR: linha " + linha + "] Erro semantico: Atribuicao Invalida - Nao e permitido operacoes com variaveis do tipo cadeia.")
+					self.error("[ERROR: linha " + linha + "] Erro semantico: Atribuicao Invalida - Nao e permitido operacoes com variaveis do tipo cadeia.")
 			elif(self.__atr_expected_type == "char"):
 				if(len(tipos) == 1):
 					if(tipos[0] != "cadeia"):
 						result = False
-						self.__error("[ERROR: linha " + linha + "] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo char.")
+						self.error("[ERROR: linha " + linha + "] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo char.")
 				else:
 					result = False
-					self.__error("[ERROR: linha " + linha + "] Erro semantico: Atribuicao Invalida - Nao e permitido operacoes com variaveis do tipo char.")
+					self.error("[ERROR: linha " + linha + "] Erro semantico: Atribuicao Invalida - Nao e permitido operacoes com variaveis do tipo char.")
 			elif(self.__atr_expected_type == "booleano"):
 				if(len(tipos) == 1):
 					if(tipos[0] != "booleano"):
 						result = False
-						self.__error("[ERROR: linha " + linha + "] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo booleano.")
+						self.error("[ERROR: linha " + linha + "] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo booleano.")
 		# Verifica se ocorreu tudo certo com o processo de atribuicao
 		if(result == True):
 			# Caso seja um elemento composto, ja separada, com o intuito de pegar o nome da variavel.
@@ -463,7 +468,7 @@ class Semantic_Analyzer(object):
 			else:
 				return False
 		elif(tipo == "relacional"):
-			if(token == "==" or token == "!=" or token == ">" or token == ">=" or token == "<" or token == "<=" or token == "="):
+			if(token == "==" or token == "!=" or token == ">" or token == ">=" or token == "<" or token == "<="):
 				return True
 			else:
 				return False
@@ -510,7 +515,7 @@ class Semantic_Analyzer(object):
 				self.__atr_expected_type = check["tipo"]
 				# Verifica se o identificador pertecente a uma constante
 				if(check["categoria"] == "constante"):
-					self.__error("[ERROR: linha " + linha + "] Erro semantico: Atribuicao Invalida - \"" + nome + "\" e uma constante.")
+					self.error("[ERROR: linha " + linha + "] Erro semantico: Atribuicao Invalida - \"" + nome + "\" e uma constante.")
 					return False
 				elif(check["categoria"] == "matriz" or check["categoria"] == "array"):
 					return self.__access_vector_matrix(nome, check, lexema, linha)
@@ -518,23 +523,23 @@ class Semantic_Analyzer(object):
 					if(lexema["dimensao"] == None):
 						return True # Consiste em uma variavel simples.
 					elif(len(lexema["dimensao"]) >= 1):
-						self.__error("[ERROR: linha " + linha + "] Erro semantico: \"" + nome + "\" nao e nem vetor nem matriz.")		
+						self.error("[ERROR: linha " + linha + "] Erro semantico: \"" + nome + "\" nao e nem vetor nem matriz.")		
 						return False
 			else:
 				# Como nao foi declarada, nao existe nenhum tipo associado a ela.
 				self.__atr_expected_type = ""
-				self.__error("[ERROR: linha " + linha + "] Erro semantico: Atribuicao Invalida - \"" + nome + "\" nao foi declarado.")
+				self.error("[ERROR: linha " + linha + "] Erro semantico: Atribuicao Invalida - \"" + nome + "\" nao foi declarado.")
 				return False
 
 	# =========================================================================
 	# Metodo que realiza a analise semantica de acesso a vetores e matrizes
 	def __access_vector_matrix(self, nome, data, lexema, linha):
 		if(lexema["dimensao"] == "composto"):
-			self.__error("[ERROR: linha " + linha + "] Erro semantico: Acesso Invalido - \"" + nome + "\". Elementos compostos nao sao permitidos como index de vetor ou matriz.")
+			self.error("[ERROR: linha " + linha + "] Erro semantico: Acesso Invalido - \"" + nome + "\". Elementos compostos nao sao permitidos como index de vetor ou matriz.")
 			return False
 		elif(lexema["dimensao"] == None): # Verifica se foi passados os index de acesso
 			# Nenhum index foi informado.
-			self.__error("[ERROR: linha " + linha + "] Erro semantico: Acesso Invalido - \"" + nome + "\". Nenhum index foi informado.")
+			self.error("[ERROR: linha " + linha + "] Erro semantico: Acesso Invalido - \"" + nome + "\". Nenhum index foi informado.")
 			return False
 		else:
 			# Pode ser um vetor ou uma matriz
@@ -545,14 +550,14 @@ class Semantic_Analyzer(object):
 					# Realiza analise do index do vetor
 					return self.__analysis_Vector(nome, size[0], linha)
 				else:
-					self.__error("[ERROR: linha " + linha + "] Erro semantico: Acesso Invalido - \"" + nome + "\" nao e um vetor.")
+					self.error("[ERROR: linha " + linha + "] Erro semantico: Acesso Invalido - \"" + nome + "\" nao e um vetor.")
 					return False
 			elif(len(size) == 2): # MATRIZ ===============================================================
 				if(data["categoria"] == "matriz"):
 					# Realiza analise dos index da matriz
 					return self.__analysis_Matrix(nome, size[0], size[1], linha)
 				else:
-					self.__error("[ERROR: linha " + linha + "] Erro semantico: Acesso Invalido - \"" + nome + "\" nao e uma matriz.")
+					self.error("[ERROR: linha " + linha + "] Erro semantico: Acesso Invalido - \"" + nome + "\" nao e uma matriz.")
 					return False
 		return False
 	# =========================================================================
@@ -569,19 +574,19 @@ class Semantic_Analyzer(object):
 				if(test != ""):
 					if(test["categoria"] == "variavel" or test["categoria"] == "constante"):
 						if(test["tipo"] != "inteiro"):
-							self.__error("[ERROR: linha " + assignment_line + "] Erro semantico: Acesso invalido na matriz - \"" + nome + "\". Esperando constante ou variavel do tipo \"inteiro\".")
+							self.error("[ERROR: linha " + assignment_line + "] Erro semantico: Acesso invalido na matriz - \"" + nome + "\". Esperando constante ou variavel do tipo \"inteiro\".")
 							result = False
 					else:
-						self.__error("[ERROR: linha " + assignment_line + "] Erro semantico: Acesso invalido na matriz - \"" + nome + "\". Esperando constante ou variavel do tipo \"inteiro\".") 
+						self.error("[ERROR: linha " + assignment_line + "] Erro semantico: Acesso invalido na matriz - \"" + nome + "\". Esperando constante ou variavel do tipo \"inteiro\".") 
 						result = False
 				else:
-					self.__error("[ERROR: linha " + assignment_line + "] Erro semantico: Acesso invalido - \"" + test["token"] + " nao foi declarado.") 
+					self.error("[ERROR: linha " + assignment_line + "] Erro semantico: Acesso invalido - \"" + test["token"] + " nao foi declarado.") 
 					result = False
 			elif(index["sigla"] == "NRO"):
 				number = coluna["token"]
 				# Verifica se o index recebido e um inteiro
 				if(len(number.split(".")) > 1):
-					self.__error("[ERROR: linha " + assignment_line + "] Erro semantico: Acesso Invalido - na matriz \"" + nome + "\". Esperando index do tipo \"inteiro\".")
+					self.error("[ERROR: linha " + assignment_line + "] Erro semantico: Acesso Invalido - na matriz \"" + nome + "\". Esperando index do tipo \"inteiro\".")
 					result = False
 		return result
 	# =========================================================================
@@ -596,19 +601,19 @@ class Semantic_Analyzer(object):
 					if(test["tipo"] == "inteiro"):
 						return True
 					else:
-						self.__error("[ERROR: linha " + assignment_line + "] Erro semantico: Acesso invalido no vetor - \"" + nome + "\". Esperando constante ou variavel do tipo \"inteiro\".")
+						self.error("[ERROR: linha " + assignment_line + "] Erro semantico: Acesso invalido no vetor - \"" + nome + "\". Esperando constante ou variavel do tipo \"inteiro\".")
 						return False
 				else:
-					self.__error("[ERROR: linha " + assignment_line + "] Erro semantico: Acesso invalido no vetor - \"" + nome + "\". Esperando constante ou variavel do tipo \"inteiro\".") 
+					self.error("[ERROR: linha " + assignment_line + "] Erro semantico: Acesso invalido no vetor - \"" + nome + "\". Esperando constante ou variavel do tipo \"inteiro\".") 
 					return False
 			else:
-				self.__error("[ERROR: linha " + assignment_line + "] Erro semantico: Acesso invalido - \"" + test["token"] + " nao foi declarado.") 
+				self.error("[ERROR: linha " + assignment_line + "] Erro semantico: Acesso invalido - \"" + test["token"] + " nao foi declarado.") 
 				return False
 		elif(coluna["sigla"] == "NRO"):
 			number = coluna["token"]
 			# Verifica se o index recebido e um inteiro
 			if(len(number.split(".")) > 1):
-				self.__error("[ERROR: linha " + assignment_line + "] Erro semantico: Acesso Invalido - no vetor \"" + nome + "\". Esperando index do tipo \"inteiro\".")
+				self.error("[ERROR: linha " + assignment_line + "] Erro semantico: Acesso Invalido - no vetor \"" + nome + "\". Esperando index do tipo \"inteiro\".")
 				return False
 			else:
 				return True
@@ -673,6 +678,8 @@ class Semantic_Analyzer(object):
 							self.__expected_type = atr["type"]
 						if(lexema["dimensao"] == "composto"):
 							categoria = "variavel"
+						elif(atr["dimensao"] == None):
+							categoria = "variavel"
 						elif(len(atr["dimensao"]) == 1):
 							categoria = "array"
 						elif(len(atr["dimensao"]) == 2):
@@ -680,7 +687,7 @@ class Semantic_Analyzer(object):
 						# Realiza a analise do acesso ao vetor/matriz
 						return self.__access_vector_matrix(check[0], {"categoria": categoria}, lexema, linha)
 					else:
-						self.__error("[ERROR: linha " + linha + "] Erro semantico: Atributo \"" + check[0] + "\" nao foi declarado.")
+						self.error("[ERROR: linha " + linha + "] Erro semantico: Atributo \"" + check[0] + "\" nao foi declarado.")
 						return False
 				else:
 					# O atributo e uma variavel simples.
@@ -695,14 +702,14 @@ class Semantic_Analyzer(object):
 							self.__expected_type = atr["type"]
 						return True
 					else:
-						self.__error("[ERROR: linha " + linha + "] Erro semantico: Atributo \"" + campos[1] + "\" nao foi declarado.")
+						self.error("[ERROR: linha " + linha + "] Erro semantico: Atributo \"" + campos[1] + "\" nao foi declarado.")
 						return False
 			else:
-				self.__error("[ERROR: linha " + linha + "] Erro semantico: \"" + campos[0] + "\" nao e um elemento composto.")
+				self.error("[ERROR: linha " + linha + "] Erro semantico: \"" + campos[0] + "\" nao e um elemento composto.")
 		else:
 			# Como nao foi declarada, nao existe nenhum tipo associado a ela.
 			self.__expected_type = ""
-			self.__error("[ERROR: linha " + linha + "] Erro semantico: \"" + campos[0] + "\" nao foi declarado.")
+			self.error("[ERROR: linha " + linha + "] Erro semantico: \"" + campos[0] + "\" nao foi declarado.")
 		return False
 
 	# =========================================================================
@@ -730,12 +737,12 @@ class Semantic_Analyzer(object):
 					if(lexema["dimensao"] == None):
 						return True # Consiste em uma variavel simples.
 					elif(len(lexema["dimensao"]) >= 1):
-						self.__error("[ERROR: linha " + linha + "] Erro semantico: \"" + nome + "\" nao e nem vetor nem matriz.")		
+						self.error("[ERROR: linha " + linha + "] Erro semantico: \"" + nome + "\" nao e nem vetor nem matriz.")		
 						return False
 			else:
 				# Como nao foi declarada, nao existe nenhum tipo associado a ela.
 				self.__expected_type = ""
-				self.__error("[ERROR: linha " + linha + "] Erro semantico: \"" + nome + "\" nao foi declarado.")
+				self.error("[ERROR: linha " + linha + "] Erro semantico: \"" + nome + "\" nao foi declarado.")
 				return False
 	# =========================================================================
 	# =========================================================================
@@ -744,23 +751,38 @@ class Semantic_Analyzer(object):
 		return self.__expected_type
 	# =========================================================================
 	# =========================================================================
+	# Metodo que retorna o tipo esperado em uma atribuicao
+	def return_atr_type(self):
+		return self.__atr_expected_type
+	# =========================================================================
+	# =========================================================================
 	# Metodo que realiza a analise de uma expressao para determinada estrutura (se, para, enquanto)
 	def expression_analyzer(self, linha, estrutura, lexema, tipos):
 		if(estrutura == "se" or estrutura == "enquanto"):
 			if(len(tipos) == 1):
 				if(tipos[0] != "booleano"):
-					self.__error("[ERROR: linha " + linha + "] Erro semantico: Esperando um valor do tipo booleano.")
+					self.error("[ERROR: linha " + linha + "] Erro semantico: Esperando um valor do tipo booleano.")
 			else:
 				# Verifica se existe algum operacao aritmetica. (nao e permitido)
 				for x in range(len(lexema)):
 					token = lexema[x]
 					if(self.check_art(token["token"]) == True):
-						self.__error("[ERROR: linha " + linha + "] Erro semantico: Nao sao permitidas expressoes aritmeticas na condicao do comando \"" + estrutura + "\".")
+						self.error("[ERROR: linha " + linha + "] Erro semantico: Nao sao permitidas expressoes aritmeticas na condicao do comando \"" + estrutura + "\".")
 						break
 			return True
-		elif(estrutura == "para"):
-			pass
-
+		elif(estrutura == "para_stop"):
+			# Verifica se existe algum operacao aritmetica. (nao e permitido)
+			search = False
+			for x in range(len(lexema)):
+				token = lexema[x]
+				if(self.check_log_rel("relacional", token["token"]) == True or self.check_log_rel("logico",token["token"]) == True ):
+					search = True
+			if(search == False):
+				self.error("[ERROR: linha " + linha + "] Erro semantico: E necessario a definicao da condicao de parada com operacoes logicas e/ou relacionais.")
+		elif(estrutura == "para_mod"):
+			pass # Sem tratamento
+	# =========================================================================
+	# =========================================================================		
 	# Verifica a sobrecarga.
 	def function_overload_analyzer(self, name, qtd, type):
 		control = 0
@@ -774,7 +796,8 @@ class Semantic_Analyzer(object):
 							if control == len(type[i]):
 								print('ERRO SEMÂNTICO')
 								print('------------------------------------------------------------------------------')
-
+	# =========================================================================
+	# =========================================================================	
 	# Verifica se a função foi declarada na hora da chamada.
 	def function_check_declaration(self, nameF, nameT):
 		if nameF in nameT:
@@ -782,7 +805,8 @@ class Semantic_Analyzer(object):
 		else:
 			print('ERRO SEMÂNTICO')
 			print('------------------------------------------------------------------------------')
-
+	# =========================================================================
+	# =========================================================================	
 	# Verifica se todos os parâmetros foram passados.
 	def function_check_param(self, qtdF, qtdT, nameF, nameT):
 		for i in range(len(nameT)):
@@ -792,7 +816,8 @@ class Semantic_Analyzer(object):
 				else:
 					print('ERRO SEMÂNTICO')
 					print('------------------------------------------------------------------------------')
-
+	# =========================================================================
+	# =========================================================================	
 	# Verifica ordem dos parâmetros na chamada da função.
 	def function_check_ord_param(self, nameF, nameT, typeF, typeT):
 		for i in range(len(nameT)):
@@ -801,5 +826,3 @@ class Semantic_Analyzer(object):
 					if typeF[j] != typeT[j]:
 						print('ERRO SEMÂNTICO')
 						print('------------------------------------------------------------------------------')
-
-	#Pendência: Passar a limpo chamadas, lembrar arquivo base
