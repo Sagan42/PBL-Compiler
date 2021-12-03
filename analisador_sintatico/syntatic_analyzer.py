@@ -33,6 +33,14 @@ class Syntatic_analyzer():
 		self.__VM_value      = []
 		# atributo que diz qual estrutura sintatica esta sendo analisada no momento. Ex: registros, constantes, ......
 		self.__currentElement = ""
+		# Array para armazenamento de nomes de funções
+		self.__function_overload_name = []
+		# Array para armazenar quantidade de parâmetros
+		self.__function_overload_qtd = []
+		self.__param_qtd             = 0;
+		# Arrays para armazenar tipos de parâmetros em ordem
+		self.__function_overload_param = [] # Cada posição se refere à uma função
+		self.__function_overload_types = []
 
 	def get_semantic_erros(self):
 		return self.__semantic_analyzer.get_erros()
@@ -1318,6 +1326,7 @@ class Syntatic_analyzer():
 	# <function_declaration2> ::= id <function_parameters> '{' <function_body> '}' <function_declaration>
 	def	function_declaration2(self):
 		if(self.match("IDE", 2) == True):
+			self.__function_overload_name.append(self.__currentToken["token"])
 			self.__currentToken = self.next_token()
 			self.function_parameters()
 			if(self.match("{", 1) == True):
@@ -1365,6 +1374,9 @@ class Syntatic_analyzer():
 					self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ['IDE'])
 					self.__error3_function_declaration()
 		elif(self.match(")", 1) == True):
+			self.__function_overload_qtd.append(self.__param_qtd)
+			self.__function_overload_param.append('NULL')
+			self.__semantic_analyzer.function_overload_analyzer(self.__function_overload_name, self.__function_overload_qtd, self.__function_overload_param)
 			self.__currentToken = self.next_token()
 			return
 		else:
@@ -1377,8 +1389,12 @@ class Syntatic_analyzer():
 	# <function_parameters2>  ::=      <primitive_type>        | id
 	def function_parameters2(self):
 		if(self.__functions_aux.First("primitive_type", self.__currentToken['token'], self.__currentToken['sigla']) == True):
+			self.__param_qtd += 1
+			self.__function_overload_types.append(self.__currentToken["token"])
 			self.__currentToken = self.next_token()
 		elif(self.match("IDE", 2) == True):
+			self.__param_qtd += 1
+			self.__function_overload_types.append(self.__currentToken["token"])
 			self.__currentToken = self.next_token()
 		else:
 			if(self.number_of_tokens() > 0):
@@ -1437,6 +1453,10 @@ class Syntatic_analyzer():
 			self.__currentToken = self.next_token()
 			self.function_parameters1()
 		elif(self.match(")", 1) == True):
+			self.__function_overload_qtd.append(self.__param_qtd)
+			self.__param_qtd = 0
+			self.__function_overload_param.append(self.__function_overload_types)
+			self.__semantic_analyzer.function_overload_analyzer(self.__function_overload_name, self.__function_overload_qtd, self.__function_overload_param)
 			self.__currentToken = self.next_token()
 			return
 		else:
@@ -1469,6 +1489,7 @@ class Syntatic_analyzer():
 			self.__currentToken = self.next_token()
 			self.varList2()
 		elif(self.match("IDE", 2) == True):
+			self.__semantic_analyzer.function_check_declaration(self.__currentToken["token"], self.__function_overload_name)
 			self.__currentToken = self.next_token()
 			self.varList1()
 		elif(self.match(")", 1) == True):
