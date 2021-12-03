@@ -742,7 +742,6 @@ class Semantic_Analyzer(object):
 	# Metodo que retorna o tipo da ultima variavel analisada.
 	def return_var_type(self):
 		return self.__expected_type
-<<<<<<< HEAD
 	# =========================================================================
 	# =========================================================================
 	# Metodo que realiza a analise de uma expressao para determinada estrutura (se, para, enquanto)
@@ -761,7 +760,6 @@ class Semantic_Analyzer(object):
 			return True
 		elif(estrutura == "para"):
 			pass
-=======
 
 	# Verifica a sobrecarga.
 	def function_overload_analyzer(self, name, qtd, type):
@@ -805,5 +803,3 @@ class Semantic_Analyzer(object):
 						print('------------------------------------------------------------------------------')
 
 	#Pendência: Passar a limpo chamadas, lembrar arquivo base
-
->>>>>>> origin/main
