@@ -125,3 +125,17 @@ class Files():
             with open(path, 'a') as f:
                 f.write(out)
             f.close()
+
+    def write_semantic_error(self, error):
+        # Monta o caminho de escrita do arquivo de saída.
+        path = self.__absolute_Path + self.__outputPath + "/" + self.__nameOutputFile
+        # Verifica se o arquivo existe
+        if not os.path.exists(path):
+            """Creates the output file"""
+            with open(path, 'w') as f:
+                f.write(error + "\n")
+            f.close()
+        else:
+            with open(path, 'a') as f:
+                f.write(error + "\n")
+            f.close()

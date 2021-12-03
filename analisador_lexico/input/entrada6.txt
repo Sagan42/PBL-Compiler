@@ -109,6 +109,28 @@ funcao vazio algoritmo () {
         char    char_atr;
         booleano bool_atr;
     }
+    
+    se( (a + b) == (a + Joao.carros[2]) ){
+    	se( (a && b) == verdadeiro ){
+    	
+    	}
+    }senao{
+    	se(a){
+    	
+    	}
+    	
+    	se(bool_atr){
+    		enquanto(a > b){
+    			enquanto((a + b) == 2){
+    			}
+    		}
+    	}
+    	
+    	se(cadeia_atr){
+    	}
+    }
+    
+    
     constante_atr = 2;
     global_atr = 0;
     global_atr = 1.4;

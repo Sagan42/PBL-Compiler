@@ -16,7 +16,7 @@ class Syntatic_analyzer():
 		self.__functions_aux = Auxiliary_Functions()
 		# Atributo que armazena a quantidade de erros detectados.
 		self.__erros         = 0;
-		self.__semantic_analyzer = Semantic_Analyzer()
+		self.__semantic_analyzer = Semantic_Analyzer(self.__files)
 		# Tabela de simbolos usada na captura dos dados para a analise semantica de registros, variaveis e constantes 
 		self.__Table      = {}
 		# Atributo que armazena um dicionario de tokens especificos para auxiliar a analise semantica
@@ -41,6 +41,9 @@ class Syntatic_analyzer():
 		# Arrays para armazenar tipos de parâmetros em ordem
 		self.__function_overload_param = [] # Cada posição se refere à uma função
 		self.__function_overload_types = []
+
+	def get_semantic_erros(self):
+		return self.__semantic_analyzer.get_erros()
 
 	def get_erros(self):
 		return self.__erros
@@ -1250,13 +1253,9 @@ class Syntatic_analyzer():
 				# e realizada.
 				if(result_expr == True and do_analysis == True):
 					print("FAZ ANALISE DA EXPRESSAO!!!!")
-					print(self.__expr_type)
 					self.__semantic_analyzer.right_Assignment(True, self.__currentToken["linha"], self.__expr_lexema, self.__expr_type,self.__lexema["dimensao"], self.__lexema["name"])
-					self.__expr_type = []
-					#self.__semantic_analyzer.atr_expression_analyzer(self.__currentToken["linha"], self.__expr_lexema, self.__expr_type)
-					self.__expr_lexema = []
-				else:
-					self.__expr_lexema = []
+				self.__expr_type   = []
+				self.__expr_lexema = []
 				self.atr_2()
 				return
 		else:
@@ -1624,7 +1623,12 @@ class Syntatic_analyzer():
 	# <args> ::= <expressao> |
 	def args(self):
 		if(self.__functions_aux.First("expressao", self.__currentToken["token"], self.__currentToken["sigla"]) == True):
-			self.expressao()
+			result_expr = self.expressao()
+			if(result_expr):
+				# Realiza a analise semantica da expressao
+				self.__semantic_analyzer.expression_analyzer(self.__currentToken["linha"], "enquanto", self.__expr_lexema, self.__expr_type)
+			self.__expr_lexema = []
+			self.__expr_type   = []
 			return
 		else:
 			return # vazio
@@ -1721,7 +1725,12 @@ class Syntatic_analyzer():
 			self.__currentToken = self.next_token()
 			if(self.match("(", 1) == True):
 				self.__currentToken = self.next_token()
-				self.expressao()
+				result_expr = self.expressao()
+				if(result_expr):
+					# Realiza a analise semantica da expressao
+					self.__semantic_analyzer.expression_analyzer(self.__currentToken["linha"], "se", self.__expr_lexema, self.__expr_type)
+				self.__expr_lexema = []
+				self.__expr_type   = []
 				if(self.match(")", 1) == True):
 					self.__currentToken = self.next_token()
 					if(self.match("{", 1) == True):
