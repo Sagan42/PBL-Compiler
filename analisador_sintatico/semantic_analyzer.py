@@ -755,3 +755,46 @@ class Semantic_Analyzer(object):
 	def return_var_type(self):
 		return self.__expected_type
 
+	# Verifica a sobrecarga.
+	def function_overload_analyzer(self, name, qtd, type):
+		control = 0
+		if len(name) > 1:
+			for i in range(len(name)):
+				if name[i] == name[len(name) - 1] and i != len(name) - 1:
+					if qtd[i] == qtd[len(name) - 1]:
+						for j in range(len(type[i])):
+							if type[i][j] == type[len(name) - 1][j]:
+								control += 1
+							if control == len(type[i]):
+								print('ERRO SEMÂNTICO')
+								print('------------------------------------------------------------------------------')
+
+	# Verifica se a função foi declarada na hora da chamada.
+	def function_check_declaration(self, nameF, nameT):
+		if nameF in nameT:
+			return
+		else:
+			print('ERRO SEMÂNTICO')
+			print('------------------------------------------------------------------------------')
+
+	# Verifica se todos os parâmetros foram passados.
+	def function_check_param(self, qtdF, qtdT, nameF, nameT):
+		for i in range(len(nameT)):
+			if nameF == nameT[i]:
+				if qtdT[i] == qtdF:
+					return
+				else:
+					print('ERRO SEMÂNTICO')
+					print('------------------------------------------------------------------------------')
+
+	# Verifica ordem dos parâmetros na chamada da função.
+	def function_check_ord_param(self, nameF, nameT, typeF, typeT):
+		for i in range(len(nameT)):
+			if nameF == nameT[i]:
+				for j in range(typeT[i]):
+					if typeF[j] != typeT[j]:
+						print('ERRO SEMÂNTICO')
+						print('------------------------------------------------------------------------------')
+
+	#Pendência: Passar a limpo chamadas, lembrar arquivo base
+
