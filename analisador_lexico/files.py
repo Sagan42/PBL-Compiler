@@ -2,9 +2,9 @@ import os
 
 class Files():
 	def __init__(self):
-		self.__absolute_Path  = os.path.abspath("")
-		self.__inputPath      = "/input"
-		self.__outputPath     = "/output"    #
+		self.__absolute_Path  = os.path.abspath("../")
+		self.__inputPath      =  "/analisador_lexico/input"
+		self.__outputPath     =  "/analisador_lexico/output"
 		self.__nameOutputFile = ""
 		self.__counterFile   = 0 
 		self.__inputFile_ID  = 0 	 # identificador do arquivo de entrada atual.
