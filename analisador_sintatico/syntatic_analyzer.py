@@ -1299,7 +1299,6 @@ class Syntatic_analyzer():
 				# Se a expressao e valida sintaticamente e o lado esquerdo da atribuicao tambem e valido, logo a analise semantica da expressa
 				# e realizada.
 				if(result_expr == True and do_analysis == True):
-					print("FAZ ANALISE DA EXPRESSAO!!!!")
 					self.__semantic_analyzer.right_Assignment(True, self.__currentToken["linha"], self.__expr_lexema, self.__expr_type,self.__lexema["dimensao"], self.__lexema["name"])
 				self.__expr_type   = []
 				self.__expr_lexema = []

@@ -75,6 +75,10 @@ funcao inteiro funcao_teste_1 ( ){
     retorno;
 }
 
+funcao inteiro funcao_teste_1 ( inteiro x){
+    retorno;
+}
+
 funcao inteiro funcao_teste_2 ( Pessoa nova_pessoa, inteiro local_1, real local_2, cadeia a[], inteiro b[][]){
     constantes {
         inteiro local_a = 2;                  % Ok
@@ -108,6 +112,28 @@ funcao vazio algoritmo () {
         cadeia  cadeia_atr;
         char    char_atr;
         booleano bool_atr;
+    }
+    
+    escreva(local, teste, array[2] array[b], "cadeia_de_caracteres.");
+    
+    escreva(write_local, teste, array[2], array[b], Joao.idade, Joao.idade[b], Joao.carros[2], "cadeia_de_caracteres.", 2, 'a');
+    
+    leia(local, teste, array[2], array[b], Joao.idade[b]);
+    leia(cadeia_atr, 2);
+    para( local = 2; a < b; a ++){
+    
+    }
+    para( array[0] = 2; a < b; a ++){
+    
+    }
+    para( cadeia_atr = 2; a < b; a ++){
+    
+    }
+    para( a_var_global = 2; (a + b); a ++){
+    
+    }
+    para( char_atr = 2; b < (b + c); b ++){
+    
     }
     
     se( (a + b) == (a + Joao.carros[2]) ){
