@@ -799,6 +799,6 @@ class Semantic_Analyzer(object):
 			if nameF == nameT[i]:
 				for j in range(typeT[i]):
 					aux = self.__st_var_const[paramF[j]]
-					aux2 = self.__st_registry[aux['tipo']]
+					aux2 = self.__st_registry[paramF[j]]
 					if aux['tipo'] != typeT[j] and aux2 == none:
 						self.__error("[ERROR: linha " + linha + "] Erro semantico: Função" + nameF + "recebeu parâmetros fora de ordem ou de tipos divergentes.")
