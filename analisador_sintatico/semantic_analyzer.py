@@ -793,12 +793,22 @@ class Semantic_Analyzer(object):
 				else:
 					self.__error("[ERROR: linha " + linha + "] Erro semantico: Função" + nameF + "espera mais parâmetros.")
 
-	# Verifica ordem/tipos dos parâmetros na chamada da função.
+	# Verifica a ordem dos parâmetros na chamada da função, através de seus tipos
 	def function_check_ord_param(self, nameF, nameT, paramF, typeT, linha):
 		for i in range(len(nameT)):
 			if nameF == nameT[i]:
-				for j in range(typeT[i]):
-					aux = self.__st_var_const[paramF[j]]
-					aux2 = self.__st_registry[paramF[j]]
-					if aux['tipo'] != typeT[j] and aux2 == none:
-						self.__error("[ERROR: linha " + linha + "] Erro semantico: Função" + nameF + "recebeu parâmetros fora de ordem ou de tipos divergentes.")
+				if typeT[i] != 'NULL':
+					for j in range(len(typeT[i])):
+						aux = self.__get_var_const(paramF[j])
+						aux2 = self.__get_registry(paramF[j])
+						if aux == "" and aux2 == "":
+							self.__error("[ERROR: linha " + linha + "] Erro semantico: Função" + nameF + "recebeu parâmetros não declarados.")
+							print('ERRO DE CHAMADA!!!')
+						elif len(aux) > 0:
+							if aux['tipo'] != typeT[i][j]:
+								self.__error("[ERROR: linha " + linha + "] Erro semantico: Função" + nameF + "recebeu parâmetros em ordens divergentes.")
+								print('ERRO DE CHAMADA!!!')
+						elif len(aux2) > 0:
+							if aux2['tipo'] != typeT[i][j]:
+								self.__error("[ERROR: linha " + linha + "] Erro semantico: Função" + nameF + "recebeu parâmetros em ordens divergentes.")
+								print('ERRO DE CHAMADA!!!')

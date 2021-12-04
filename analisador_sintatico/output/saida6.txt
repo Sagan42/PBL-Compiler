@@ -12,18 +12,21 @@
 [ERROR: linha 68] Erro semantico: variavel(global) "hello" está usando vazio como tipo.
 Esperado tipo: inteiro, real, char, cadeia, booleano.
 
-[ERROR: linha 80] Erro semantico: constante(local)  "c" com o mesmo nome de uma constante global.
-[ERROR: linha 81] Erro semantico: constante(local) "local_c" usando tipo incorreto para inicializacao. Esperado um valor do tipo: cadeia
+[ERROR: linha 84] Erro semantico: constante(local)  "c" com o mesmo nome de uma constante global.
+[ERROR: linha 85] Erro semantico: constante(local) "local_c" usando tipo incorreto para inicializacao. Esperado um valor do tipo: cadeia
 
-[ERROR: linha 82] Erro semantico: constante(local) "teste_vazio" está usando vazio como tipo.
+[ERROR: linha 86] Erro semantico: constante(local) "teste_vazio" está usando vazio como tipo.
 Esperado tipo: inteiro, real, char, cadeia, booleano.
 
-[ERROR: linha 83] Erro semantico: constante(local)  "a" com o mesmo nome de uma constante global.
-[ERROR: linha 84] Erro semantico: constante(local)  "b" com o mesmo nome de uma constante global.
-[ERROR: linha 88] Erro semantico: variavel(local)  "local_a" com o mesmo nome de uma constante (local).
-[ERROR: linha 89] Erro semantico: variavel(local)  "c" com o mesmo nome de uma constante (global).
-[ERROR: linha 90] Erro semantico: variavel(local)  "local_c" com o mesmo nome de uma constante (local).
-[ERROR: linha 92] Erro semantico: variavel(local)  "b" com o mesmo nome de uma constante (global).
-[ERROR: linha 100] Erro semantico: variavel(local)  "teste" com o mesmo nome de uma constante (global).
-linha 102[erro sintatico: token lido "a"], tokens esperados ["NRO"]
-[ERROR: linha 105] Erro semantico: variavel(local)  "Joao" nao e permitido inicializacao em tipos compostos.
+[ERROR: linha 87] Erro semantico: constante(local)  "a" com o mesmo nome de uma constante global.
+[ERROR: linha 88] Erro semantico: constante(local)  "b" com o mesmo nome de uma constante global.
+[ERROR: linha 92] Erro semantico: variavel(local)  "local_a" com o mesmo nome de uma constante (local).
+[ERROR: linha 93] Erro semantico: variavel(local)  "c" com o mesmo nome de uma constante (global).
+[ERROR: linha 94] Erro semantico: variavel(local)  "local_c" com o mesmo nome de uma constante (local).
+[ERROR: linha 96] Erro semantico: variavel(local)  "b" com o mesmo nome de uma constante (global).
+[ERROR: linha 104] Erro semantico: variavel(local)  "teste" com o mesmo nome de uma constante (global).
+linha 106[erro sintatico: token lido "a"], tokens esperados ["NRO"]
+[ERROR: linha 109] Erro semantico: variavel(local)  "Joao" nao e permitido inicializacao em tipos compostos.
+[ERROR: linha 119] Erro semantico: Funçãofuncao_teste_2recebeu parâmetros não declarados.
+[ERROR: linha 119] Erro semantico: Funçãofuncao_teste_2recebeu parâmetros não declarados.
+[ERROR: linha 119] Erro semantico: Funçãofuncao_teste_2recebeu parâmetros não declarados.

@@ -1497,7 +1497,7 @@ class Syntatic_analyzer():
 			self.__currentToken = self.next_token()
 			self.varList2()
 		elif(self.match("IDE", 2) == True):
-			self.__function_call_params = self.__currentToken["token"]
+			self.__function_call_params.append(self.__currentToken['token'])
 			self.__param_qtd_on += 1
 			self.__currentToken = self.next_token()
 			self.varList1()
@@ -1545,6 +1545,7 @@ class Syntatic_analyzer():
 			self.varList0()
 		elif(self.match(")", 1) == True):
 			self.__semantic_analyzer.function_check_param(self.__param_qtd_on, self.__function_name_on, self.__function_overload_qtd, self.__function_overload_name, self.__currentToken["linha"])
+			self.__semantic_analyzer.function_check_ord_param(self.__function_name_on, self.__function_overload_name, self.__function_call_params, self.__function_overload_param, self.__currentToken["linha"])
 			self.__function_name_on = ""
 			self.__param_qtd_on = 0
 			self.__currentToken = self.next_token()

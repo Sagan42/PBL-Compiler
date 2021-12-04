@@ -74,6 +74,10 @@ funcao inteiro funcao_teste_1 ( ){
     retorno;
 }
 
+funcao inteiro funcao_teste_3 (inteiro x, inteiro y){
+	retorno;
+}
+
 funcao inteiro funcao_teste_2 ( Pessoa nova_pessoa, inteiro local_1, real local_2, cadeia a[], inteiro b[][]){
     constantes {
         inteiro local_a = 2;                  % Ok
@@ -107,10 +111,13 @@ funcao vazio algoritmo () {
         cadeia  cadeia_atr;
         char    char_atr;
         booleano bool_atr;
+	inteiro x;
+	inteiro y;
     }
 
 	funcao_teste_1();
-	funcao_teste_2 (nova_pessoa, local_1, local_2, a, b)
+	funcao_teste_2 (nova_pessoa, local_1, local_2, a, b);
+	funcao_teste_3 (x, y);
     
     se( (a + b) == (a + Joao.carros[2]) ){
     	se( (a && b) == verdadeiro ){
