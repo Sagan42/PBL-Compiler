@@ -42,7 +42,7 @@ class Syntatic_analyzer():
 		self.__param_qtd             = 0;
 		# Arrays para armazenar tipos de parâmetros em ordem
 		self.__function_overload_param = [] # Cada posição se refere à uma função
-		self.__function_overload_types = []
+
 		# Array para armazenar tipos da chamada da função
 		self.__function_call_params    = []
 		# Nome da função atual
@@ -51,6 +51,7 @@ class Syntatic_analyzer():
 		self.__param_qtd_on          = 0;
 		# Auxílio para eventuais tokens
 		self.__aux_token             = ""
+		self.check_algoritmo = True
 
 	def get_semantic_erros(self):
 		return self.__semantic_analyzer.get_erros()
@@ -1366,6 +1367,7 @@ class Syntatic_analyzer():
 	# <function_declaration1> ::= algoritmo <main_function> | <function_declaration2>
 	def function_declaration1(self):
 		if(self.match("algoritmo", 1) == True):
+			self.check_algoritmo = False
 			self.__currentToken = self.next_token()
 			self.main_function()
 		elif(self.__functions_aux.First("function_declaration2", self.__currentToken['token'], self.__currentToken['sigla']) == True):
@@ -1405,6 +1407,7 @@ class Syntatic_analyzer():
 	# <function_parameters>   ::= '(' <function_parameters1>
 	def function_parameters(self):
 		if(self.match("(", 1) == True):
+			self.__function_overload_types = []
 			self.__currentToken = self.next_token()
 			self.function_parameters1()
 		else:
@@ -1429,7 +1432,8 @@ class Syntatic_analyzer():
 					self.__error3_function_declaration()
 		elif(self.match(")", 1) == True):
 			self.__function_overload_qtd.append(self.__param_qtd)
-			self.__function_overload_param.append('NULL')
+			if self.check_algoritmo:
+				self.__function_overload_param.append('NULL')
 			self.__semantic_analyzer.function_overload_analyzer(self.__function_overload_name, self.__function_overload_qtd, self.__function_overload_param, self.__currentToken["linha"])
 			self.__currentToken = self.next_token()
 			return
