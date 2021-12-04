@@ -1554,6 +1554,7 @@ class Syntatic_analyzer():
 		elif(self.match(")", 1) == True):
 			self.__semantic_analyzer.function_check_param(self.__param_qtd_on, self.__function_name_on, self.__function_overload_qtd, self.__function_overload_name, self.__currentToken["linha"])
 			self.__semantic_analyzer.function_check_ord_param(self.__function_name_on, self.__function_overload_name, self.__function_call_params, self.__function_overload_param, self.__currentToken["linha"])
+			self.__function_call_params.clear()
 			self.__currentToken = self.next_token()
 			if(self.match(";", 1) == True):
 				self.__currentToken = self.next_token()
@@ -1596,6 +1597,7 @@ class Syntatic_analyzer():
 		elif(self.match(")", 1) == True):
 			self.__semantic_analyzer.function_check_param(self.__param_qtd_on, self.__function_name_on, self.__function_overload_qtd, self.__function_overload_name, self.__currentToken["linha"])
 			self.__semantic_analyzer.function_check_ord_param(self.__function_name_on, self.__function_overload_name, self.__function_call_params, self.__function_overload_param, self.__currentToken["linha"])
+			self.__function_call_params.clear()
 			self.__function_name_on = ""
 			self.__param_qtd_on = 0
 			self.__currentToken = self.next_token()
