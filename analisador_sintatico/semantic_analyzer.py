@@ -784,7 +784,7 @@ class Semantic_Analyzer(object):
 	# =========================================================================
 	# =========================================================================		
 	# Verifica a sobrecarga.
-	def function_overload_analyzer(self, name, qtd, type):
+	def function_overload_analyzer(self, name, qtd, type, linha):
 		control = 0
 		if len(name) > 1:
 			for i in range(len(name)):
@@ -794,35 +794,33 @@ class Semantic_Analyzer(object):
 							if type[i][j] == type[len(name) - 1][j]:
 								control += 1
 							if control == len(type[i]):
-								print('ERRO SEMÂNTICO')
-								print('------------------------------------------------------------------------------')
-	# =========================================================================
-	# =========================================================================	
+								self.__error("[ERROR: linha " + linha + "] Erro semantico: Sobrecarga inválida, assinaturas idênticas.")
+
+
 	# Verifica se a função foi declarada na hora da chamada.
-	def function_check_declaration(self, nameF, nameT):
-		if nameF in nameT:
-			return
-		else:
-			print('ERRO SEMÂNTICO')
-			print('------------------------------------------------------------------------------')
-	# =========================================================================
-	# =========================================================================	
+	def function_check_declaration(self, nameF, nameT, linha):
+		if nameF != 'algoritmo':
+			if nameF in nameT:
+				return
+			else:
+				self.__error("[ERROR: linha " + linha + "] Erro semantico: Função" + nameF + "não declarada.")
+
+
 	# Verifica se todos os parâmetros foram passados.
-	def function_check_param(self, qtdF, qtdT, nameF, nameT):
+	def function_check_param(self, qtdF, nameF, qtdT, nameT, linha):
 		for i in range(len(nameT)):
 			if nameF == nameT[i]:
 				if qtdT[i] == qtdF:
 					return
 				else:
-					print('ERRO SEMÂNTICO')
-					print('------------------------------------------------------------------------------')
-	# =========================================================================
-	# =========================================================================	
-	# Verifica ordem dos parâmetros na chamada da função.
-	def function_check_ord_param(self, nameF, nameT, typeF, typeT):
+					self.__error("[ERROR: linha " + linha + "] Erro semantico: Função" + nameF + "espera mais parâmetros.")
+
+	# Verifica ordem/tipos dos parâmetros na chamada da função.
+	def function_check_ord_param(self, nameF, nameT, paramF, typeT, linha):
 		for i in range(len(nameT)):
 			if nameF == nameT[i]:
 				for j in range(typeT[i]):
-					if typeF[j] != typeT[j]:
-						print('ERRO SEMÂNTICO')
-						print('------------------------------------------------------------------------------')
+					aux = self.__st_var_const[paramF[j]]
+					aux2 = self.__st_registry[paramF[j]]
+					if aux['tipo'] != typeT[j] and aux2 == none:
+						self.__error("[ERROR: linha " + linha + "] Erro semantico: Função" + nameF + "recebeu parâmetros fora de ordem ou de tipos divergentes.")

@@ -70,7 +70,6 @@ variaveis {
 	inteiro global_atr;
 }
 
-
 funcao inteiro funcao_teste_1 ( ){
     retorno;
 }
@@ -113,6 +112,9 @@ funcao vazio algoritmo () {
         char    char_atr;
         booleano bool_atr;
     }
+
+	funcao_teste_1();
+	funcao_teste_2 (nova_pessoa, local_1, local_2, a, b)
     
     escreva(local, teste, array[2] array[b], "cadeia_de_caracteres.");
     

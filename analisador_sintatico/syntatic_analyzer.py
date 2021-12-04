@@ -43,6 +43,14 @@ class Syntatic_analyzer():
 		# Arrays para armazenar tipos de parâmetros em ordem
 		self.__function_overload_param = [] # Cada posição se refere à uma função
 		self.__function_overload_types = []
+		# Array para armazenar tipos da chamada da função
+		self.__function_call_params    = []
+		# Nome da função atual
+		self.__function_name_on      = ""
+		# Quantidade de parâmetros da função atual
+		self.__param_qtd_on          = 0;
+		# Auxílio para eventuais tokens
+		self.__aux_token             = ""
 
 	def get_semantic_erros(self):
 		return self.__semantic_analyzer.get_erros()
@@ -1422,7 +1430,7 @@ class Syntatic_analyzer():
 		elif(self.match(")", 1) == True):
 			self.__function_overload_qtd.append(self.__param_qtd)
 			self.__function_overload_param.append('NULL')
-			self.__semantic_analyzer.function_overload_analyzer(self.__function_overload_name, self.__function_overload_qtd, self.__function_overload_param)
+			self.__semantic_analyzer.function_overload_analyzer(self.__function_overload_name, self.__function_overload_qtd, self.__function_overload_param, self.__currentToken["linha"])
 			self.__currentToken = self.next_token()
 			return
 		else:
@@ -1502,7 +1510,7 @@ class Syntatic_analyzer():
 			self.__function_overload_qtd.append(self.__param_qtd)
 			self.__param_qtd = 0
 			self.__function_overload_param.append(self.__function_overload_types)
-			self.__semantic_analyzer.function_overload_analyzer(self.__function_overload_name, self.__function_overload_qtd, self.__function_overload_param)
+			self.__semantic_analyzer.function_overload_analyzer(self.__function_overload_name, self.__function_overload_qtd, self.__function_overload_param, self.__currentToken["linha"])
 			self.__currentToken = self.next_token()
 			return
 		else:
@@ -1535,10 +1543,13 @@ class Syntatic_analyzer():
 			self.__currentToken = self.next_token()
 			self.varList2()
 		elif(self.match("IDE", 2) == True):
-			self.__semantic_analyzer.function_check_declaration(self.__currentToken["token"], self.__function_overload_name)
+			self.__function_call_params = self.__currentToken["token"]
+			self.__param_qtd_on += 1
 			self.__currentToken = self.next_token()
 			self.varList1()
 		elif(self.match(")", 1) == True):
+			self.__semantic_analyzer.function_check_param(self.__param_qtd_on, self.__function_name_on, self.__function_overload_qtd, self.__function_overload_name, self.__currentToken["linha"])
+			self.__semantic_analyzer.function_check_ord_param(self.__function_name_on, self.__function_overload_name, self.__function_call_params, self.__function_overload_param, self.__currentToken["linha"])
 			self.__currentToken = self.next_token()
 			if(self.match(";", 1) == True):
 				self.__currentToken = self.next_token()
@@ -1579,6 +1590,9 @@ class Syntatic_analyzer():
 			self.__currentToken = self.next_token()
 			self.varList0()
 		elif(self.match(")", 1) == True):
+			self.__semantic_analyzer.function_check_param(self.__param_qtd_on, self.__function_name_on, self.__function_overload_qtd, self.__function_overload_name, self.__currentToken["linha"])
+			self.__function_name_on = ""
+			self.__param_qtd_on = 0
 			self.__currentToken = self.next_token()
 			if(self.match(";", 1) == True):
 				self.__currentToken = self.next_token()
@@ -1939,6 +1953,7 @@ class Syntatic_analyzer():
 	# <com_body_1> ::= <functionCall> | <var_atr_1>
 	def com_body_1(self):
 		if(self.__functions_aux.First("functionCall", self.__currentToken["token"], self.__currentToken["sigla"]) == True):
+			self.__semantic_analyzer.function_check_declaration(self.__aux_token, self.__function_overload_name, self.__currentToken["linha"])
 			self.functionCall()
 		elif(self.__functions_aux.First("var_atr_1", self.__currentToken["token"], self.__currentToken["sigla"]) == True):
 			self.__currentElement = "atribuicao"
@@ -2045,6 +2060,8 @@ class Syntatic_analyzer():
 			# Caso seja uma atribuicao, armazena o nome da variavel que estara recebendo um valor por meio da atribuicao.
 			self.__lexema["name"]     = self.__currentToken["token"]
 			self.__lexema["dimensao"] = None
+			self.__aux_token = self.__currentToken["token"]
+			self.__function_name_on = self.__currentToken["token"]
 			self.__currentToken = self.next_token()
 			self.com_body_1()
 			self.function_body2()

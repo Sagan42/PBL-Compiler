@@ -1,17 +1,18 @@
-[ERROR: linha 32] Erro semantico: constante(global)  "c" est√° sendo declarada mais de uma vez.
+[ERROR: linha 32] Erro semantico: constante(global)  "c" est· sendo declarada mais de uma vez.
 [ERROR: linha 33] Erro semantico: constante(global) "teste" usando tipo incorreto para inicializacao. Esperado um valor do tipo: cadeia
 
 [ERROR: linha 34] Erro semantico: constante(global) "teste_2" usando tipo incorreto para inicializacao. Esperado um valor do tipo: char
 
-[ERROR: linha 35] Erro semantico: constante(global)  "a" est√° sendo declarada mais de uma vez.
-[ERROR: linha 36] Erro semantico: constante(global)  "b" est√° sendo declarada mais de uma vez.
+[ERROR: linha 35] Erro semantico: constante(global)  "a" est· sendo declarada mais de uma vez.
+[ERROR: linha 36] Erro semantico: constante(global)  "b" est· sendo declarada mais de uma vez.
 [ERROR: linha 65] Erro semantico: variavel(global) "global_b" usando tipo incorreto para inicializacao. Esperado um valor do tipo: inteiro
 
-[ERROR: linha 66] Erro semantico: variavel(global)  "global_a" est√° sendo declarada mais de uma vez.
+[ERROR: linha 66] Erro semantico: variavel(global)  "global_a" est· sendo declarada mais de uma vez.
 [ERROR: linha 67] Erro semantico: variavel(global)  "c" com o mesmo nome de uma constante (global).
-[ERROR: linha 68] Erro semantico: variavel(global) "hello" est√° usando vazio como tipo.
+[ERROR: linha 68] Erro semantico: variavel(global) "hello" est· usando vazio como tipo.
 Esperado tipo: inteiro, real, char, cadeia, booleano.
 
+<<<<<<< HEAD
 [ERROR: linha 85] Erro semantico: constante(local)  "c" com o mesmo nome de uma constante global.
 [ERROR: linha 86] Erro semantico: constante(local) "local_c" usando tipo incorreto para inicializacao. Esperado um valor do tipo: cadeia
 
@@ -69,3 +70,20 @@ linha 174[erro sintatico: token lido "Joao"], tokens esperados [",",";"]
 [ERROR: linha 184] Erro semantico: Acesso Invalido - "carros" nao e uma matriz.
 [ERROR: linha 186] Erro semantico: Acesso invalido na matriz - "roupas". Esperando constante ou variavel do tipo "inteiro".
 [ERROR: linha 187] Erro semantico: Acesso Invalido - "roupas" nao e um vetor.
+=======
+[ERROR: linha 80] Erro semantico: constante(local)  "c" com o mesmo nome de uma constante global.
+[ERROR: linha 81] Erro semantico: constante(local) "local_c" usando tipo incorreto para inicializacao. Esperado um valor do tipo: cadeia
+
+[ERROR: linha 82] Erro semantico: constante(local) "teste_vazio" est· usando vazio como tipo.
+Esperado tipo: inteiro, real, char, cadeia, booleano.
+
+[ERROR: linha 83] Erro semantico: constante(local)  "a" com o mesmo nome de uma constante global.
+[ERROR: linha 84] Erro semantico: constante(local)  "b" com o mesmo nome de uma constante global.
+[ERROR: linha 88] Erro semantico: variavel(local)  "local_a" com o mesmo nome de uma constante (local).
+[ERROR: linha 89] Erro semantico: variavel(local)  "c" com o mesmo nome de uma constante (global).
+[ERROR: linha 90] Erro semantico: variavel(local)  "local_c" com o mesmo nome de uma constante (local).
+[ERROR: linha 92] Erro semantico: variavel(local)  "b" com o mesmo nome de uma constante (global).
+[ERROR: linha 100] Erro semantico: variavel(local)  "teste" com o mesmo nome de uma constante (global).
+linha 102[erro sintatico: token lido "a"], tokens esperados ["NRO"]
+[ERROR: linha 105] Erro semantico: variavel(local)  "Joao" nao e permitido inicializacao em tipos compostos.
+>>>>>>> b2f21e4a5552fef8d04468e076c51b5e1fc1fd77
