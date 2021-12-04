@@ -1,0 +1,183 @@
+{#
+registro teste_registro {
+    inteiro  a;
+    real     b;
+    cadeia   c;
+    booleano bool[2];
+    booleano bool_m[2][2];
+    cadeia   cad[a][2];
+    booleano bool_m2[b];
+    inteiro  bool_2[teste][teste];
+    real     b2[10][10];
+    Pessoa   teste_1;
+    vazio    teste_1[2][2];
+    inteiro  a[2];
+    real     r1,r2,d[2], e[2][a];
+    char     r4[2][1.5];
+    char     r5[3.0];
+}
+#}
+registro Pessoa {
+	cadeia  nome;
+    inteiro idade;
+    real    altura;
+    inteiro carros[2];
+    cadeia  roupas[10][10];
+    cadeia  cor_cabelo;
+}
+
+constantes {
+    inteiro a = 2;                           % Ok
+    real    b = 2.23, c = 23.40;             % Ok
+    inteiro c      = 2.2;                    % erro de variavel duplicada e inicializacao.
+    cadeia teste   = 'c';                    % Ok (erro de inicializacao)
+    char   teste_2 = "cadeia_de_caracteres"; % Ok (erro de inicializacao)
+    real    a      = 2.2;                    % erro de variavel duplicada
+    inteiro b      = 'a';                    % erro de variavel duplicada e inicializacao.
+    inteiro constante_atr = 0;
+}
+{#
+variaveis {
+	inteiro   a_var_global      = 0;
+	real      a_var_global_2    = 1.0;
+	inteiro   a_var_global_3;
+    inteiro   a_teste[2]    = [a, 2.1, 5];
+    booleano  a_teste_2[2]  = [verdadeiro, falso, "teste"];
+    inteiro a1[2], a2[3];
+    inteiro a3[2]    = [0,1];
+    real    a4[4]    = [2.1,5.0, 3, verdadeiro,1];
+    inteiro a5[2]    = [a_var_global, a_var_global_2, a_var_global_3];
+    real    a6[1][1] = [1,2; var_not_dlc];
+    char    a_c[4]   = ['a', 'b', a];
+    real    a7[2][2];
+    real    a8[2][2] = [a_var_global_2, 0, 0.3; a_var_global_3, 1.2; 1.3, 2.1, 2.2];
+  booleano  a9[2][2] = [a_var_global_2, falso; verdadeiro];
+  cadeia   a10[3][3] = ["linha_0"; "linha_1","teste_1", "teste_1","teste_1"; "linha_2"; "linha_3", "teste_3", "teste_3"];
+}
+#}
+% Linha x esta ultrapassando o numero de colunas que foi definido.
+% Preencha todas as colunas da linha x.
+% Numero de linhas utrapassou o limite definido na declaracao.
+% Preencha todas as linhas da matriz.
+
+variaveis {
+	inteiro global_a = 0;                               % Ok
+	inteiro global_b = 2.2;                             % Ok
+	real    global_a = "cadeia_de_caracteres";          % erro de variavel duplicada e inicializacao.
+	char    c        = "teste";                         % erro de variavel duplicada e inicializacao.
+	vazio   hello    = "";                              % Ok. Tem erro de vazio
+	booleano ok      = verdadeiro;                      % Ok
+	inteiro global_atr;
+}
+
+funcao inteiro funcao_teste_1 ( ){
+    retorno;
+}
+
+funcao inteiro funcao_teste_2 ( Pessoa nova_pessoa, inteiro local_1, real local_2, cadeia a[], inteiro b[][]){
+    constantes {
+        inteiro local_a = 2;                  % Ok
+        real    local_b = 2.23,c = 23.40;     % Ok para local_b. c = erro de variavel duplicada
+        cadeia  local_c = 'a';                % Ok. Tem erro de inicializacao
+        vazio   teste_vazio = "";             % Ok. Tem erro de vazio
+        inteiro       a = 0;                  % erro de variavel duplicada
+        real          b = 5.0;                % erro de variavel duplicada
+    }
+
+    variaveis {
+        inteiro  local_a       = 2;                   % erro de variavel duplicada
+        real     locao_teste_2 = 2.23,c = 23.40;      % erro de variavel duplicada para variavel c
+        cadeia   local_c      = 2;                    % erro de variavel duplicada e inicializacao
+        booleano local_d;                             % Ok
+        real          b;                              % erro de variavel duplicada
+    }
+    retorno;
+}
+
+funcao vazio algoritmo () {
+    variaveis {
+        inteiro local = 1;      % Ok
+        char    teste;          % erro de variavel duplicada
+        real    array[2];
+        real    array_2[a];
+        real    array_3[3];
+        real    matriz[3][3];
+        Pessoa  Joao = 0;
+        Pessoa  Gabriel;
+        cadeia  cadeia_atr;
+        char    char_atr;
+        booleano bool_atr;
+    }
+
+	funcao_teste_1();
+	funcao_teste_2 (nova_pessoa, local_1, local_2, a, b)
+    
+    se( (a + b) == (a + Joao.carros[2]) ){
+    	se( (a && b) == verdadeiro ){
+    	
+    	}
+    }senao{
+    	se(a){
+    	
+    	}
+    	
+    	se(bool_atr){
+    		enquanto(a > b){
+    			enquanto((a + b) == 2){
+    			}
+    		}
+    	}
+    	
+    	se(cadeia_atr){
+    	}
+    }
+    
+    
+    constante_atr = 2;
+    global_atr = 0;
+    global_atr = 1.4;
+    bool_atr   = 0;
+    bool_atr   = "cadeia";
+    bool_atr   = verdadeiro;
+    char_atr   = 1;
+    char_atr   = 1 + 2;
+    char_atr   = 'a';
+    cadeia_atr = 1;
+    cadeia_atr = 1.4;
+    cadeia_atr = verdadeiro;
+    cadeia_atr = 1 + 2;
+    cadeia_atr = "valor_valido" 
+    Joao.idade = ( (a + b) / (c[1] + d[a][b] + 2 + Joao.idade + Joao.carros[b] + Joao.carros[Joao.idade] ) ) * 3;
+    Joao.idade = 1 + 2;
+    Joao.idade = 1 + 3.5;
+    Joao.altura = 2.5;
+    Joao.carros[0]    = 1.5;
+    Joao.carros[a]    = "error";
+    Joao.cor_cabelo   = "preto";
+    Joao.cor_cabelo   = 'a';
+    Joao.carros[b]    = 0;
+    Joao.carros[Joao.idade] = 2;
+    Joao.carros[0][0]       = a;
+    Joao.roupas[0][local]   = "cadeia de caracteres";
+    Joao.roupas[0][b]       = 2;
+    Joao.roupas[0]          = "error";
+    {#
+    global_a  = 2;  % OK
+    a         = 2;  % Erro de atribuicao em constante
+    local_alg = 3;  % Erro de variavel nao declarada 
+    array     = 1.2 % Erro de nao informar um index para acesso
+    array[local]   = 2;
+    array[p.idade] = 0;
+    array[b]       = 0;
+    array[0]       = 0;
+    array[2.5]     = 0;
+    array[1][1]    = 0;
+    matriz[0]      = 0;
+    matriz[2][2]   = 0;
+    matriz[2][local]   = 0;
+    matriz[b][c]       = 0;
+    matriz[2][p.idade] = 0;
+    matriz[c][2]       = 0;
+    #}
+    retorno;
+}

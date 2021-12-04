@@ -1,0 +1,47 @@
+* Ideias:
+
+1 - Armazenar várias tabelas de símbolos:
+	1.1 - Para Variáveis.
+	1.3 - Para Constantes.
+	1.4 - Para registros.
+	1.5 - Para funções.
+	
+2 - Realizar a Análise Semântica em paralelo com a Sintática:
+	Armazenar o lexema que está sendo construido e sempre que chegarmos em um local da gramática que finalize uma estrutura, a análise semântica é feita para fins de validação. Por exemplo, após a identificação do nome de uma variável, é realiza uma busca na tabela de símbolos de Variáveis para assegurar que esse nome ainda não foi utilizado em nenhuma outra variável, seja local ou global.
+	
+3 - Para definição do escopo local de variáveis e constantes em funções, podemos criar uma tabela de símbolos e realizar a análise semântica com essa tabela somente enquanto a análise sintática dessa função estiver em curso. Após o término, transfere as informações semânticas adquiridas para um outro local e limpa a tabela para que a análise de uma nova função possa ser iniciada.
+
+====================================================================================================
+* Possível erros para variaveis e constantes:
+
+Ok 1 - Declaração de variáveis/constantes locais com o mesmo nome de uma global.
+
+2 - Atribuições/Inicialização de variáveis e constantes sem um valor do tipo correspondente.
+
+3 - Utilizar o tipo vazio sem ser o tipo de retorno de uma função.
+
+Ok 4 - Declarar uma variável/constante mais de uma vez no mesmo escopo.
+
+5 - Usar um tipo de registro que não foi declarado.
+
+6 - Inicialização de vetor e matriz de forma incorreta.
+
+
+{"tipo": "", "id": "", "valor": ""}
+
+tipo id = valor;
+tipo id = valor, id = valor, id = valor;
+
+
+# ERRROS de variavel com variavel e constantes com constantes.
+# Erros de variaveis/constantes globais:
+# 	1 - Global com Global
+
+# Erros de variaveis/constantes locais:
+# 	1 - Global com Local
+#   2 - Local com Local
+
+# ERROS de variavel com constantes.
+# 	1 - Variavel global com constante global ou local.
+#   2 - Variavel local com constante local ou global
+#	3 - Constante global com variavel local.

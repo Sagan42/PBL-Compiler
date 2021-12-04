@@ -19,11 +19,46 @@ from auxiliary_functions import Auxiliary_functions
 # 10 = simbolo invalido
 # 11 = cadeia de caracteres
 # 12 = comentario de bloco
-success  = []  # Lista que armazena os resultados de sucesso da analise
+#success  = []  # Lista que armazena os resultados de sucesso da analise
 failures = []  # Lista que armazena os resultados de falha da analise
+tokens   = []
 files    = Files()
 
-def add_success(line, sigla, lexema, success_operation):
+#def add_success(line, sigla, lexema, success_operation):
+#	global success
+#	global failures
+#	value = ""
+#	if(line >= 0 and line < 10):
+#		value = "0" + str(line)
+#	else:
+#		value = str(line)
+#	value += " " + sigla + " " + lexema
+#	if(success_operation):
+#		success.append(value)
+#	else:
+#		failures.append(value)
+
+#def salve_result():
+#	global success
+#	global failures
+#	size_sucess   = len(success)
+#	size_failures = len(failures)
+#	if(size_sucess > 0):
+#		while(len(success) > 0):
+#			data = success.pop(0)       # Retira o primeiro elemento da lista
+#			if "\n" in data:
+#				data = data.replace("\n","") # Retira o \n para escrita no arquivo de saída
+#			files.write_in_file(data)  # Armazena os resultados de sucesso no arquivo de saída correspondente ao arquivo de entrada
+#			files.write_in_file("\n")
+#	if(size_failures > 0):
+#		while(len(failures) > 0):
+#			data = failures.pop(0)       # Retira o primeiro elemento da lista
+#			if "\n" in data:
+#				data = data.replace("\n","") # Retira o \n para escrita no arquivo de saída
+#			files.write_in_file("\n")
+#			files.write_in_file(data)   # Armazena os resultados de falha no arquivo de saída correspondente ao arquivo de entrada
+
+def add_token(line, sigla, lexema):
 	global success
 	global failures
 	value = ""
@@ -32,37 +67,39 @@ def add_success(line, sigla, lexema, success_operation):
 	else:
 		value = str(line)
 	value += " " + sigla + " " + lexema
-	if(success_operation):
-		success.append(value)
+	tokens.append(value)
+
+def add_failures_tokens(line, sigla, lexema):
+	global success
+	global failures
+	value = ""
+	if(line >= 0 and line < 10):
+		value = "0" + str(line)
 	else:
-		failures.append(value)
+		value = str(line)
+	value += " " + sigla + " " + lexema
+	print("[ERROR] erro lexico" + "[" + sigla + "]: Linha [" + str(line) + "] Lexema: " + lexema)
+	failures.append(value)
 
 def salve_result():
 	global success
 	global failures
-	size_sucess   = len(success)
-	size_failures = len(failures)
-	if(size_sucess > 0):
-		while(len(success) > 0):
-			data = success.pop(0)       # Retira o primeiro elemento da lista
+	failures = []                            # Limpa a lista de erros lexicos
+	size = len(tokens)
+	if(size > 0):
+		while(len(tokens) > 0):
+			data = tokens.pop(0)             # Retira o primeiro elemento da lista
 			if "\n" in data:
 				data = data.replace("\n","") # Retira o \n para escrita no arquivo de saída
-			files.write_in_file(data)  # Armazena os resultados de sucesso no arquivo de saída correspondente ao arquivo de entrada
+			files.write_in_file(data)        # Armazena os resultados de sucesso no arquivo de saída correspondente ao arquivo de entrada
 			files.write_in_file("\n")
-	if(size_failures > 0):
-		while(len(failures) > 0):
-			data = failures.pop(0)       # Retira o primeiro elemento da lista
-			if "\n" in data:
-				data = data.replace("\n","") # Retira o \n para escrita no arquivo de saída
-			files.write_in_file("\n")
-			files.write_in_file(data)   # Armazena os resultados de falha no arquivo de saída correspondente ao arquivo de entrada
 
 def analyze_result(line, result):
 	sigla = result[0]
+	# Verifica se corresponde a um erro lexico
 	if(sigla == "SII" or sigla == "CMF" or sigla == "NMF" or sigla == "CaMF" or sigla == "CoMF" or sigla == "OpMF"):
-		add_success(line, sigla, result[1], False)
-	elif(sigla == "PRE" or sigla == "IDE" or sigla == "NRO" or sigla == "DEL" or sigla == "REL" or sigla == "LOG" or sigla == "LOG" or sigla == "ART" or sigla == "SIB" or sigla == "CAR" or sigla == "CAD"):
-		add_success(line, sigla, result[1], True)
+		add_failures_tokens(line, sigla, result[1])
+	add_token(line, sigla, result[1])
 
 def main():
 	functions = Auxiliary_functions()
@@ -70,11 +107,15 @@ def main():
 	state     = 1                   # Estado inicial
 	current_line = 0                # Linha inicial de um arquivo.
 	result = files.set_inputFiles() # Verifica todos os arquivos de entrada e seta o primeiro arquivo a ser lido.
+	files.delete_out_files()        # Exclue todos os arquivos de saida para iniciar uma nova analise
 	if(result):                     # Inicia o processamento dos arquivos de entrada.
 		state = 1                   # Estado inicial
 		while(True):                # Loop para analise de todos os arquivos de entrada.
 			content      = files.getContent()           # Captura o conteudo do arquivo atual que esta sendo analisado.
 			current_line = 0
+			print("==================================================================")
+			print("[INFO] Análise Léxica Iniciada.")
+			print("[INFO] ARQUIVO: " + files.get_number_of_input())
 			while(current_line < (len(content)) ):  # Loop para analise do arquivo atual
 				nextLine         = content[current_line]
 				initial_position = 0
@@ -185,11 +226,14 @@ def main():
 						else:
 							nextLine  = content[current_line] # Atualiza o vetor que contém a linha atual.
 				current_line += 1                           # Finalizou uma linha e inicia a analise de outra.
+			print("==================================================================")
+			print("[INFO] Análise Léxica do arquivo " + files.get_number_of_input() + " encerrada.")
 			if(len(failures) > 0):
 				print("[INFO] " + files.getCurrent_File_Name() + ": " + str(len(failures)) + " erros.")
 			else:
 				print("[INFO] " + files.getCurrent_File_Name() + ": sem erros.")
-			salve_result()                                  # Salva os possíveis resultados de falha e sucesso da analise do arquivo atual.
+			print("==================================================================\n")
+			salve_result()     # Salva os possíveis resultados de falha e sucesso da analise do arquivo atual.
 			result = files.set_nextFile()
 			if(result == False):
 				print("[INFO] Analise Finalizada.")
