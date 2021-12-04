@@ -74,13 +74,12 @@ funcao inteiro funcao_teste_1 ( ){
     retorno;
 }
 
-<<<<<<< HEAD
 funcao inteiro funcao_teste_3 (inteiro x, inteiro y){
 	retorno;
-=======
+}
+
 funcao inteiro funcao_teste_1 ( inteiro x){
     retorno;
->>>>>>> 03109f26741ca03ad20c37497f42ec3cb50dc219
 }
 
 funcao inteiro funcao_teste_2 ( Pessoa nova_pessoa, inteiro local_1, real local_2, cadeia a[], inteiro b[][]){
