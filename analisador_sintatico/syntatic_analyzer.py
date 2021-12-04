@@ -28,6 +28,8 @@ class Syntatic_analyzer():
 		# Atributo que armazena os tipos de cada variavel/constante e numero utilizada em um expressao (na ordem em que aparecem)
 		self.__expr_type     = []
 		self.__currentScope  = ""
+		# Atributo que armazena os tokens referentes as variaveis utilizadas nos comandos leia e escreva.
+		self.__read_write_var = {}
 		# Array para armazenar os valores usados na inicializacao de vetores e matrizes. Cada posicao consiste
 		# em um token. Tais valores são armazenados na ordem em que são lidos da cadeia de entrada.
 		self.__VM_value      = []
@@ -273,21 +275,25 @@ class Syntatic_analyzer():
 	def elem_registro(self):
 		if(self.match(".", 1) == True):
 			# Armazena o lexema que esta compondo a estrutura de acesso ao registro
-			if(self.__currentElement == "atribuicao"):
+			if(self.__currentElement == "atribuicao" or self.__currentElement == "atr_para"):
 				self.__lexema["name"] += self.__currentToken["token"]
 			elif(self.__currentElement == "expressao"):
 				self.__expr_var["name"] += self.__currentToken["token"]
 				# Armazena no vetor lexema, os tokens que auxiliarao para analise semantica das expressoes
 				self.__expr_lexema.append(self.__currentToken)
+			elif(self.__currentElement == "escreva" or self.__currentElement == "leia"):
+				self.__read_write_var["name"] += self.__currentToken["token"]
 			self.__currentToken = self.next_token()
 			if(self.match("IDE", 2) == True):
 				# Armazena o lexema que esta compondo a estrutura de acesso ao registro
-				if(self.__currentElement == "atribuicao"):
+				if(self.__currentElement == "atribuicao" or self.__currentElement == "atr_para"):
 					self.__lexema["name"] += self.__currentToken["token"]
 				elif(self.__currentElement == "expressao"):
 					self.__expr_var["name"] += self.__currentToken["token"]
 					# Armazena no vetor lexema, os tokens que auxiliarao para analise semantica das expressoes
 					self.__expr_lexema.append(self.__currentToken)
+				elif(self.__currentElement == "escreva" or self.__currentElement == "leia"):
+					self.__read_write_var["name"] += self.__currentToken["token"]
 				self.__currentToken = self.next_token()
 				result = self.nested_elem_registro()
 				if(result):
@@ -314,21 +320,25 @@ class Syntatic_analyzer():
 	def nested_elem_registro(self):
 		if(self.match(".", 1) == True):
 			# Armazena o lexema que esta compondo a estrutura de acesso ao registro
-			if(self.__currentElement == "atribuicao"):
+			if(self.__currentElement == "atribuicao" or self.__currentElement == "atr_para"):
 				self.__lexema["name"] += self.__currentToken["token"]
 			elif(self.__currentElement == "expressao"):
 				self.__expr_var["name"] += self.__currentToken["token"]
 				# Armazena no vetor lexema, os tokens que auxiliarao para analise semantica das expressoes
 				self.__expr_lexema.append(self.__currentToken)
+			elif(self.__currentElement == "escreva" or self.__currentElement == "leia"):
+				self.__read_write_var["name"] += self.__currentToken["token"]
 			self.__currentToken = self.next_token()
 			if(self.match("IDE", 2) == True):
 				# Armazena o lexema que esta compondo a estrutura de acesso ao registro
-				if(self.__currentElement == "atribuicao"):
+				if(self.__currentElement == "atribuicao" or self.__currentElement == "atr_para"):
 					self.__lexema["name"] += self.__currentToken["token"]
 				elif(self.__currentElement == "expressao"):
 					self.__expr_var["name"] += self.__currentToken["token"]
 					# Armazena no vetor lexema, os tokens que auxiliarao para analise semantica das expressoes
 					self.__expr_lexema.append(self.__currentToken)
+				elif(self.__currentElement == "escreva" or self.__currentElement == "leia"):
+					self.__read_write_var["name"] += self.__currentToken["token"]
 				self.__currentToken = self.next_token()
 				result = self.nested_elem_registro1()
 				if(result):
@@ -860,7 +870,9 @@ class Syntatic_analyzer():
 				self.__expr_var["dimensao"] = []
 				# Adiciona o token ao vetor lexema, para analise semantica.
 				self.__expr_lexema.append(self.__currentToken)
-			elif(self.__currentElement == "atribuicao"):
+			elif(self.__currentElement == "escreva" or self.__currentElement == "leia"):
+				self.__read_write_var["dimensao"] = []
+			elif(self.__currentElement == "atribuicao" or self.__currentElement == "atr_para"):
 				self.__lexema["dimensao"] = []
 			elif(self.__currentElement == "registro"):
 				self.__lexema["dimensao"] = ""
@@ -891,13 +903,15 @@ class Syntatic_analyzer():
 	# <v_m_access1>  ::= id  <v_m_access2>                    | number ']' <v_m_access3> 
 	def v_m_access1(self):
 		if(self.match("IDE", 2) == True):
-			if(self.__currentElement == "atribuicao"):
+			if(self.__currentElement == "atribuicao" or self.__currentElement == "atr_para"):
 				# adiciona o primeiro index de acesso ao elemento.
 				self.__lexema["dimensao"].append(self.__currentToken)
 			elif(self.__currentElement == "expressao"):
 				self.__expr_var["dimensao"].append(self.__currentToken)
 				# Adiciona o token ao vetor lexema, para analise semantica.
-				self.__expr_lexema.append(self.__currentToken) 
+				self.__expr_lexema.append(self.__currentToken)
+			elif(self.__currentElement == "escreva" or self.__currentElement == "leia"):
+				self.__read_write_var["dimensao"].append(self.__currentToken)
 			self.__currentToken = self.next_token()
 			result = self.v_m_access2()
 			if(result):
@@ -909,13 +923,15 @@ class Syntatic_analyzer():
 			if(self.__currentElement == "registro"):
 				# Armazena o numero de linhas caso seja matriz, ou tamanho do vetor
 				self.__lexema["dimensao"] = self.__lexema["dimensao"] + str(self.__currentToken["token"])
-			elif(self.__currentElement == "atribuicao"):
+			elif(self.__currentElement == "atribuicao" or self.__currentElement == "atr_para"):
 				# adiciona o primeiro index de acesso ao elemento.
 				self.__lexema["dimensao"].append(self.__currentToken)
 			elif(self.__currentElement == "expressao"):
 				self.__expr_var["dimensao"].append(self.__currentToken)
 				# Adiciona o token ao vetor lexema, para analise semantica.
 				self.__expr_lexema.append(self.__currentToken)
+			elif(self.__currentElement == "escreva" or self.__currentElement == "leia"):
+				self.__read_write_var["dimensao"].append(self.__currentToken)
 			self.__currentToken = self.next_token()
 			if(self.match("]", 1) == True):
 				if(self.__currentElement == "expressao"):
@@ -963,6 +979,8 @@ class Syntatic_analyzer():
 				self.__lexema["dimensao"] = "composto"
 			elif(self.__currentElement == "expressao"):
 				self.__expr_var["dimensao"] = "composto"
+			elif(self.__currentElement == "escreva" or self.__currentElement == "leia"):
+				self.__read_write_var["dimensao"] = "composto"
 			self.elem_registro()
 			if(self.match("]", 1) == True):
 				if(self.__currentElement == "expressao"):
@@ -1029,12 +1047,13 @@ class Syntatic_analyzer():
 	# === Gramatica para o comando escreva ==================================================
 	# <write_cmd>   ::= escreva '(' <write_value> <write_value_list> ')' ';'
 	def write_cmd(self):
+		self.__currentElement = "escreva"
 		if(self.match("escreva", 1)):
 			self.__currentToken = self.next_token()
 			if(self.match("(", 1)):
 				self.__currentToken = self.next_token()
-				self.write_value()
-				self.write_value_list()
+				result = self.write_value()
+				self.write_value_list(result)
 				if(self.match(")", 1)):
 					self.__currentToken = self.next_token()
 					if(self.match(";", 1)):
@@ -1058,52 +1077,62 @@ class Syntatic_analyzer():
 					self.__error1escreva()
 
 	# <write_value_list> ::= ',' <write_value> <write_value_list> |
-	def write_value_list(self):
+	def write_value_list(self, result):
 		if(self.match(",", 1)):
+			if(result):
+				# Faz a analise semantica da estrutura usada no comando.
+				self.__semantic_analyzer.analyzer_param(self.__currentToken["linha"], self.__read_write_var)
+			self.__read_write_var["name"]     = ""
+			self.__read_write_var["dimensao"] = None
 			self.__currentToken = self.next_token()
-			self.write_value()
-			self.write_value_list()
+			result = self.write_value()
+			self.write_value_list(result)
 		else:
+			if(result):
+				# Faz a analise semantica da estrutura usada no comando.
+				self.__semantic_analyzer.analyzer_param(self.__currentToken["linha"], self.__read_write_var)
+			self.__read_write_var = {}
 			return # Vazio
 
 	# <write_value>      ::= id <write_value_1> | number | cad | char
 	def write_value(self):
 		if(self.match("NRO", 2) == True or self.match("CAR", 2) == True or self.match("CAD", 2) == True):
 			self.__currentToken = self.next_token()
-			return
+			return False
 		elif(self.match("IDE", 2) == True):
+			self.__read_write_var["name"]     = self.__currentToken["token"]
+			self.__read_write_var["dimensao"] = None 
 			self.__currentToken = self.next_token()
-			self.write_value_1()
-			return
+			return self.write_value_1()
 		else:
 			if(self.number_of_tokens() > 0): # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando valor identificador, número, cadeia ou caracteres.\n")
 				self.__erros += 1
 				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["IDE", "NRO", "CAD", "CAR"])
 				self.__error3escreva()
+			return False
 	
 	# <write_value_1>    ::= <v_m_access> | <elem_registro> |
 	def write_value_1(self):
 		if(self.__functions_aux.First("v_m_access", self.__currentToken["token"], self.__currentToken["sigla"] ) == True):
-			self.v_m_access()
-			return
+			return self.v_m_access()
 		elif(self.__functions_aux.First("elem_registro", self.__currentToken["token"], self.__currentToken["sigla"] ) == True):
-			self.elem_registro()
-			return
+			return self.elem_registro()
 		else:
-			return # Vazio
+			return True # Vazio
 
 
 	# =======================================================================================
 	# === Gramatica para o comando leia ====================================================
 	# <read_cmd> ::= leia '(' <read_value> <read_value_list> ')' ';'
 	def read_cmd(self):
+		self.__currentElement = "leia"
 		if(self.match("leia", 1)):
 			self.__currentToken = self.next_token()
 			if(self.match("(", 1)):
 				self.__currentToken = self.next_token()
-				self.read_value()
-				self.read_value_list()
+				result = self.read_value()
+				self.read_value_list(result)
 				if(self.match(")", 1)):
 					self.__currentToken = self.next_token()
 					if(self.match(";", 1)):
@@ -1127,12 +1156,20 @@ class Syntatic_analyzer():
 					self.__error1leia()
 
 	# <read_value_list> ::= ',' <read_value> <read_value_list> |
-	def read_value_list(self):
+	def read_value_list(self, result):
 		if(self.match(",", 1)):
+			if(result):
+				# Faz a analise semantica da estrutura usada no comando.
+				self.__semantic_analyzer.analyzer_param(self.__currentToken["linha"], self.__read_write_var)
+			self.__read_write_var["name"]     = ""
+			self.__read_write_var["dimensao"] = None
 			self.__currentToken = self.next_token()
-			self.read_value()
-			self.read_value_list()
+			result = self.read_value()
+			self.read_value_list(result)
 		else:
+			if(result):
+				# Faz a analise semantica da estrutura usada no comando.
+				self.__semantic_analyzer.analyzer_param(self.__currentToken["linha"], self.__read_write_var)
 			return True # Vazio
 
 	# <read_value>      ::= id <read_value_1>
@@ -1143,6 +1180,9 @@ class Syntatic_analyzer():
 				self.__expr_var["dimensao"] = None 
 				# Adiciona o token ao vetor lexema, para analise semantica.
 				self.__expr_lexema.append(self.__currentToken)
+			elif(self.__currentElement == "leia"):
+				self.__read_write_var["name"]     = self.__currentToken["token"]
+				self.__read_write_var["dimensao"] = None 
 			self.__currentToken = self.next_token()
 			result = self.read_value_1()
 			if(result):
@@ -1155,6 +1195,7 @@ class Syntatic_analyzer():
 				self.__erros += 1
 				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["IDE"])
 				self.__error3leia()
+			return False
 	
 	# <read_value_1>    ::= <v_m_access> | <elem_registro> |
 	def read_value_1(self):
@@ -1224,6 +1265,12 @@ class Syntatic_analyzer():
 			# Retorna True caso a analise tenha sido feito com sucesso. Dando seguimento a analise semantica
 			# do lado direito da atribuicao.
 			result = self.__semantic_analyzer.left_Assignment(self.__currentToken["linha"],self.__lexema)
+			if(self.__currentElement == "atr_para"):
+				atr_type = self.__semantic_analyzer.return_atr_type()
+				# Verifica o tipo esperado na atribuicao no loop "para". Somente é aceito tipos inteiros e reais.
+				if(atr_type == "cadeia" or atr_type == "char" or atr_type == "booleano"):
+					result = False
+					self.__semantic_analyzer.error("[ERROR: linha " + self.__currentToken["linha"] + "] Erro semantico: \"" + self.__lexema["name"] + "\" precisa ser do tipo inteiro ou real.")
 			if(result == False):
 				# Limpa o dicionario
 				self.__lexema = {}
@@ -1260,7 +1307,6 @@ class Syntatic_analyzer():
 				# Se a expressao e valida sintaticamente e o lado esquerdo da atribuicao tambem e valido, logo a analise semantica da expressa
 				# e realizada.
 				if(result_expr == True and do_analysis == True):
-					print("FAZ ANALISE DA EXPRESSAO!!!!")
 					self.__semantic_analyzer.right_Assignment(True, self.__currentToken["linha"], self.__expr_lexema, self.__expr_type,self.__lexema["dimensao"], self.__lexema["name"])
 				self.__expr_type   = []
 				self.__expr_lexema = []
@@ -1705,7 +1751,7 @@ class Syntatic_analyzer():
 	# <init> ::= <var_atr> | ';'
 	def init(self):
 		if(self.__functions_aux.First("var_atr", self.__currentToken["token"], self.__currentToken["sigla"]) == True):
-			self.var_atr()
+			self.com_para_var_atr()
 		elif(self.match(";",1) == True):
 			self.__currentToken = self.next_token()
 		else:
@@ -1718,7 +1764,12 @@ class Syntatic_analyzer():
 	# <stop> ::= <expressao> |
 	def stop(self):
 		if(self.__functions_aux.First("expressao", self.__currentToken["token"], self.__currentToken["sigla"]) == True):
-			self.expressao()
+			result = self.expressao()
+			if(result):
+				# Realiza a analise semantica da expressao
+				self.__semantic_analyzer.expression_analyzer(self.__currentToken["linha"], "para_stop", self.__expr_lexema, self.__expr_type)
+			self.__expr_lexema = []
+			self.__expr_type   = []
 			return
 		else:
 			return # vazio
@@ -1726,10 +1777,53 @@ class Syntatic_analyzer():
 	# <step> ::= <expressao> |
 	def step(self):
 		if(self.__functions_aux.First("expressao", self.__currentToken["token"], self.__currentToken["sigla"]) == True):
-			self.expressao()
+			result = self.expressao()
+			if(result):
+				# Realiza a analise semantica da expressao
+				self.__semantic_analyzer.expression_analyzer(self.__currentToken["linha"], "para_mod", self.__expr_lexema, self.__expr_type)
+			self.__expr_lexema = []
+			self.__expr_type   = []
 			return
 		else:
 			return # vazio
+	
+	def com_para_var_atr(self):
+		if(self.match("IDE", 2) == True):
+			self.__currentElement     = "atr_para"
+			# Armazena o nome da variavel que estara recebendo um valor por meio da atribuicao.
+			self.__lexema["name"]     = self.__currentToken["token"]
+			self.__lexema["dimensao"] = None
+			self.__currentToken   = self.next_token()
+			self.com_para_var_atr_1()
+			return
+		else:
+			if(self.number_of_tokens() > 0):
+				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token identificador.\n")
+				self.__erros += 1
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["IDE"])
+				self.__error_com_enquanto_e_com_para()
+				return
+	
+	def com_para_var_atr_1(self):
+		self.__currentElement = "atr_para"
+		if(self.__functions_aux.First("atr", self.__currentToken["token"], self.__currentToken["sigla"] ) == True):
+			self.atr()
+			return
+		elif(self.__functions_aux.First("v_m_access", self.__currentToken["token"], self.__currentToken["sigla"] ) == True):
+			self.v_m_access()
+			self.atr()
+			return
+		elif(self.__functions_aux.First("elem_registro", self.__currentToken["token"], self.__currentToken["sigla"] ) == True):
+			self.elem_registro()
+			self.atr()
+			return
+		else:
+			if(self.number_of_tokens() > 0):
+				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token '=', '[' , '.'\n")
+				self.__erros += 1
+				self.__files.write_in_file(self.__currentToken['linha'], self.__currentToken["token"], ["=", "[", "."])
+				self.__error_com_enquanto_e_com_para()
+				return
 	# =========================================================================================
 	# =========================================================================================	
 	# == Gramática para o comando se e senao ==================================================
