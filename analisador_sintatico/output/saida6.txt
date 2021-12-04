@@ -1,58 +1,29 @@
-[ERROR: linha 32] Erro semantico: constante(global)  "c" est√° sendo declarada mais de uma vez.
+[ERROR: linha 32] Erro semantico: constante(global)  "c" est· sendo declarada mais de uma vez.
 [ERROR: linha 33] Erro semantico: constante(global) "teste" usando tipo incorreto para inicializacao. Esperado um valor do tipo: cadeia
 
 [ERROR: linha 34] Erro semantico: constante(global) "teste_2" usando tipo incorreto para inicializacao. Esperado um valor do tipo: char
 
-[ERROR: linha 35] Erro semantico: constante(global)  "a" est√° sendo declarada mais de uma vez.
-[ERROR: linha 36] Erro semantico: constante(global)  "b" est√° sendo declarada mais de uma vez.
+[ERROR: linha 35] Erro semantico: constante(global)  "a" est· sendo declarada mais de uma vez.
+[ERROR: linha 36] Erro semantico: constante(global)  "b" est· sendo declarada mais de uma vez.
 [ERROR: linha 65] Erro semantico: variavel(global) "global_b" usando tipo incorreto para inicializacao. Esperado um valor do tipo: inteiro
 
-[ERROR: linha 66] Erro semantico: variavel(global)  "global_a" est√° sendo declarada mais de uma vez.
+[ERROR: linha 66] Erro semantico: variavel(global)  "global_a" est· sendo declarada mais de uma vez.
 [ERROR: linha 67] Erro semantico: variavel(global)  "c" com o mesmo nome de uma constante (global).
-[ERROR: linha 68] Erro semantico: variavel(global) "hello" est√° usando vazio como tipo.
+[ERROR: linha 68] Erro semantico: variavel(global) "hello" est· usando vazio como tipo.
 Esperado tipo: inteiro, real, char, cadeia, booleano.
 
-[ERROR: linha 81] Erro semantico: constante(local)  "c" com o mesmo nome de uma constante global.
-[ERROR: linha 82] Erro semantico: constante(local) "local_c" usando tipo incorreto para inicializacao. Esperado um valor do tipo: cadeia
+[ERROR: linha 80] Erro semantico: constante(local)  "c" com o mesmo nome de uma constante global.
+[ERROR: linha 81] Erro semantico: constante(local) "local_c" usando tipo incorreto para inicializacao. Esperado um valor do tipo: cadeia
 
-[ERROR: linha 83] Erro semantico: constante(local) "teste_vazio" est√° usando vazio como tipo.
+[ERROR: linha 82] Erro semantico: constante(local) "teste_vazio" est· usando vazio como tipo.
 Esperado tipo: inteiro, real, char, cadeia, booleano.
 
-[ERROR: linha 84] Erro semantico: constante(local)  "a" com o mesmo nome de uma constante global.
-[ERROR: linha 85] Erro semantico: constante(local)  "b" com o mesmo nome de uma constante global.
-[ERROR: linha 89] Erro semantico: variavel(local)  "local_a" com o mesmo nome de uma constante (local).
-[ERROR: linha 90] Erro semantico: variavel(local)  "c" com o mesmo nome de uma constante (global).
-[ERROR: linha 91] Erro semantico: variavel(local)  "local_c" com o mesmo nome de uma constante (local).
-[ERROR: linha 93] Erro semantico: variavel(local)  "b" com o mesmo nome de uma constante (global).
-[ERROR: linha 101] Erro semantico: variavel(local)  "teste" com o mesmo nome de uma constante (global).
-linha 103[erro sintatico: token lido "a"], tokens esperados ["NRO"]
-[ERROR: linha 106] Erro semantico: variavel(local)  "Joao" nao e permitido inicializacao em tipos compostos.
-[ERROR: linha 113] Erro semantico: Nao sao permitidas expressoes aritmeticas na condicao do comando "se".
-[ERROR: linha 118] Erro semantico: Esperando um valor do tipo booleano.
-[ERROR: linha 124] Erro semantico: Nao sao permitidas expressoes aritmeticas na condicao do comando "enquanto".
-[ERROR: linha 129] Erro semantico: Esperando um valor do tipo booleano.
-[ERROR: linha 134] Erro semantico: Atribuicao Invalida - "constante_atr" e uma constante.
-[ERROR: linha 136] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo inteiro.
-[ERROR: linha 137] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo booleano.
-[ERROR: linha 138] Erro semantico: Atribuicao Invalida em "bool_atr. Esperando um valor do tipo: "booleano"
-[ERROR: linha 140] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo char.
-[ERROR: linha 141] Erro semantico: Atribuicao Invalida - Nao e permitido operacoes com variaveis do tipo char.
-[ERROR: linha 143] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo cadeia.
-[ERROR: linha 144] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo cadeia.
-[ERROR: linha 145] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo cadeia.
-[ERROR: linha 146] Erro semantico: Atribuicao Invalida - Nao e permitido operacoes com variaveis do tipo cadeia.
-linha 148[erro sintatico: token lido "Joao"], tokens esperados [",",";"]
-[ERROR: linha 148] Erro semantico: "c" nao e nem vetor nem matriz.
-[ERROR: linha 148] Erro semantico: "d" nao foi declarado.
-[ERROR: linha 148] Erro semantico: Acesso invalido no vetor - "carros". Esperando constante ou variavel do tipo "inteiro".
-[ERROR: linha 148] Erro semantico: Acesso Invalido - "carros". Elementos compostos nao sao permitidos como index de vetor ou matriz.
-[ERROR: linha 148] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo inteiro.
-[ERROR: linha 150] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo inteiro.
-[ERROR: linha 152] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo inteiro.
-[ERROR: linha 153] Erro semantico: Atribuicao Invalida em "Joao.carros. Esperando um valor do tipo: "inteiro"
-[ERROR: linha 155] Erro semantico: Atribuicao Invalida em "Joao.cor_cabelo. Esperando um valor do tipo: "cadeia"
-[ERROR: linha 156] Erro semantico: Acesso invalido no vetor - "carros". Esperando constante ou variavel do tipo "inteiro".
-[ERROR: linha 157] Erro semantico: Acesso Invalido - "carros". Elementos compostos nao sao permitidos como index de vetor ou matriz.
-[ERROR: linha 158] Erro semantico: Acesso Invalido - "carros" nao e uma matriz.
-[ERROR: linha 160] Erro semantico: Acesso invalido na matriz - "roupas". Esperando constante ou variavel do tipo "inteiro".
-[ERROR: linha 161] Erro semantico: Acesso Invalido - "roupas" nao e um vetor.
+[ERROR: linha 83] Erro semantico: constante(local)  "a" com o mesmo nome de uma constante global.
+[ERROR: linha 84] Erro semantico: constante(local)  "b" com o mesmo nome de uma constante global.
+[ERROR: linha 88] Erro semantico: variavel(local)  "local_a" com o mesmo nome de uma constante (local).
+[ERROR: linha 89] Erro semantico: variavel(local)  "c" com o mesmo nome de uma constante (global).
+[ERROR: linha 90] Erro semantico: variavel(local)  "local_c" com o mesmo nome de uma constante (local).
+[ERROR: linha 92] Erro semantico: variavel(local)  "b" com o mesmo nome de uma constante (global).
+[ERROR: linha 100] Erro semantico: variavel(local)  "teste" com o mesmo nome de uma constante (global).
+linha 102[erro sintatico: token lido "a"], tokens esperados ["NRO"]
+[ERROR: linha 105] Erro semantico: variavel(local)  "Joao" nao e permitido inicializacao em tipos compostos.

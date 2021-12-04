@@ -70,7 +70,6 @@ variaveis {
 	inteiro global_atr;
 }
 
-
 funcao inteiro funcao_teste_1 ( ){
     retorno;
 }
@@ -109,6 +108,9 @@ funcao vazio algoritmo () {
         char    char_atr;
         booleano bool_atr;
     }
+
+	funcao_teste_1();
+	funcao_teste_2 (nova_pessoa, local_1, local_2, a, b)
     
     se( (a + b) == (a + Joao.carros[2]) ){
     	se( (a && b) == verdadeiro ){
