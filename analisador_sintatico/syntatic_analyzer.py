@@ -117,7 +117,6 @@ class Syntatic_analyzer():
 		self.__currentScope   = "local"
 		self.__currentElement = "funcao"
 		self.function_declaration()
-		self.__semantic_analyzer.Print_st_var_const()
 	# ============================================================================================
 	# === Gramatica para declaracao de elementos do tipo registro ================================
 	# <declaration_reg>    ::= registro id '{' <declaration_reg1> |
@@ -1388,6 +1387,8 @@ class Syntatic_analyzer():
 			if(self.match("{", 1) == True):
 				self.__currentToken = self.next_token()
 				self.function_body()
+				# Exclue todas as variaveis locais declaradas. Porque elas ja foram analisadas.
+				self.__semantic_analyzer.remove_local_var_const()
 				if(self.match("}", 1) == True):
 					self.__currentToken = self.next_token()
 					self.function_declaration()
@@ -2810,6 +2811,8 @@ class Syntatic_analyzer():
 			elif(self.match("{", 1) == True):
 				self.__currentToken = self.next_token()
 				self.function_body()
+				# Exclue todas as variaveis locais declaradas. Porque elas ja foram analisadas.
+				self.__semantic_analyzer.remove_local_var_const()
 				return
 			elif(self.__functions_aux.First("com_enquanto",self.__currentToken['token'], self.__currentToken['sigla']) == True):
 				self.function_body2()
