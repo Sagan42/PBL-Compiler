@@ -1,4 +1,3 @@
-{#
 registro teste_registro {
     inteiro  a;
     real     b;
@@ -16,7 +15,7 @@ registro teste_registro {
     char     r4[2][1.5];
     char     r5[3.0];
 }
-#}
+
 registro Pessoa {
 	cadeia  nome;
     inteiro idade;
@@ -85,7 +84,7 @@ funcao inteiro funcao_teste_3 (inteiro x, inteiro y){
 	retorno;
 }
 
-funcao inteiro funcao_teste_1 ( inteiro x){
+funcao inteiro funcao_teste_1 (inteiro x){
     retorno;
 }
 
@@ -131,10 +130,10 @@ funcao vazio algoritmo () {
 		inteiro x;
 		inteiro y;
     }
-
+	funcao_teste_1(Joao.idade[b], a);
 	funcao_teste_1();
 	funcao_teste_2 (nova_pessoa, local_1, local_2, a, b);
-	funcao_teste_3 (x, y);
+	funcao_teste_3 (x);
     
     escreva(local, teste, array[2] array[b], "cadeia_de_caracteres.");
     

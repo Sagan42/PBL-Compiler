@@ -1,134 +1,94 @@
-[ERROR: linha 32] Erro semantico: constante(global)  "c" está sendo declarada mais de uma vez.
-[ERROR: linha 33] Erro semantico: constante(global) "teste" usando tipo incorreto para inicializacao. Esperado um valor do tipo: cadeia
+[ERROR: linha 07] Erro semantico: atributo "cad" do registro "teste_registro" esta usando um tipo incorreto para dimensionamento. Esperado um valor numerico do tipo: "inteiro".
+[ERROR: linha 08] Erro semantico: atributo "bool_m2" do registro "teste_registro" esta usando um tipo incorreto para dimensionamento. Esperado um valor numerico do tipo: "inteiro".
+[ERROR: linha 09] Erro semantico: atributo "bool_2" do registro "teste_registro" esta usando um tipo incorreto para dimensionamento. Esperado um valor numerico do tipo: "inteiro".
+[ERROR: linha 11] Erro semantico: atributo "teste_1" do registro "teste_registro" esta usando um tipo invalido para atributos em elementos compostos. Esperado tipo: "inteiro", "real", "booleano", "cadeia", "char".
+[ERROR: linha 12] Erro semantico: atributo "teste_1" do registro "teste_registro" esta usando um tipo invalido para atributos em elementos compostos. Esperado tipo: "inteiro", "real", "booleano", "cadeia", "char".
+[ERROR: linha 13] Erro semantico: atributo "a" do registro "teste_registro" esta sendo declarado mais de uma vez.
+[ERROR: linha 14] Erro semantico: atributo "e" do registro "teste_registro" esta usando um tipo incorreto para dimensionamento. Esperado um valor numerico do tipo: "inteiro".
+[ERROR: linha 15] Erro semantico: atributo "r4" do registro "teste_registro" esta usando um tipo incorreto para dimensionamento. Esperado um valor numerico do tipo: "inteiro".
+[ERROR: linha 16] Erro semantico: atributo "r5" do registro "teste_registro" esta usando um tipo incorreto para dimensionamento. Esperado um valor numerico do tipo: "inteiro".
+[ERROR: linha 31] Erro semantico: constante(global)  "c" está sendo declarada mais de uma vez.
+[ERROR: linha 32] Erro semantico: constante(global) "teste" usando tipo incorreto para inicializacao. Esperado um valor do tipo: cadeia
 
-[ERROR: linha 34] Erro semantico: constante(global) "teste_2" usando tipo incorreto para inicializacao. Esperado um valor do tipo: char
+[ERROR: linha 33] Erro semantico: constante(global) "teste_2" usando tipo incorreto para inicializacao. Esperado um valor do tipo: char
 
-[ERROR: linha 35] Erro semantico: constante(global)  "a" está sendo declarada mais de uma vez.
-[ERROR: linha 36] Erro semantico: constante(global)  "b" está sendo declarada mais de uma vez.
-[ERROR: linha 65] Erro semantico: variavel(global) "global_b" usando tipo incorreto para inicializacao. Esperado um valor do tipo: inteiro
+[ERROR: linha 34] Erro semantico: constante(global)  "a" está sendo declarada mais de uma vez.
+[ERROR: linha 35] Erro semantico: constante(global)  "b" está sendo declarada mais de uma vez.
+[ERROR: linha 64] Erro semantico: variavel(global) "global_b" usando tipo incorreto para inicializacao. Esperado um valor do tipo: inteiro
 
-[ERROR: linha 66] Erro semantico: variavel(global)  "global_a" está sendo declarada mais de uma vez.
-[ERROR: linha 67] Erro semantico: variavel(global)  "c" com o mesmo nome de uma constante (global).
-[ERROR: linha 68] Erro semantico: variavel(global) "hello" está usando vazio como tipo.
+[ERROR: linha 65] Erro semantico: variavel(global)  "global_a" está sendo declarada mais de uma vez.
+[ERROR: linha 66] Erro semantico: variavel(global)  "c" com o mesmo nome de uma constante (global).
+[ERROR: linha 67] Erro semantico: variavel(global) "hello" está usando vazio como tipo.
 Esperado tipo: inteiro, real, char, cadeia, booleano.
 
-[ERROR: linha 95] Erro semantico: constante(local)  "c" com o mesmo nome de uma constante global.
-[ERROR: linha 96] Erro semantico: constante(local) "local_c" usando tipo incorreto para inicializacao. Esperado um valor do tipo: cadeia
+[ERROR: linha 94] Erro semantico: constante(local)  "c" com o mesmo nome de uma constante global.
+[ERROR: linha 95] Erro semantico: constante(local) "local_c" usando tipo incorreto para inicializacao. Esperado um valor do tipo: cadeia
 
-[ERROR: linha 97] Erro semantico: constante(local) "teste_vazio" está usando vazio como tipo.
+[ERROR: linha 96] Erro semantico: constante(local) "teste_vazio" está usando vazio como tipo.
 Esperado tipo: inteiro, real, char, cadeia, booleano.
 
-<<<<<<< HEAD
-[ERROR: linha 98] Erro semantico: constante(local)  "a" com o mesmo nome de uma constante global.
-[ERROR: linha 99] Erro semantico: constante(local)  "b" com o mesmo nome de uma constante global.
-[ERROR: linha 103] Erro semantico: variavel(local)  "local_a" com o mesmo nome de uma constante (local).
-[ERROR: linha 104] Erro semantico: variavel(local)  "c" com o mesmo nome de uma constante (global).
-[ERROR: linha 105] Erro semantico: variavel(local)  "local_c" com o mesmo nome de uma constante (local).
-[ERROR: linha 107] Erro semantico: variavel(local)  "b" com o mesmo nome de uma constante (global).
-[ERROR: linha 119] Erro semantico: variavel(local)  "local_a" com o mesmo nome de uma constante (local).
-[ERROR: linha 121] Erro semantico: variavel(local)  "teste" com o mesmo nome de uma constante (global).
-linha 123[erro sintatico: token lido "a"], tokens esperados ["NRO"]
-[ERROR: linha 126] Erro semantico: variavel(local)  "Joao" nao e permitido inicializacao em tipos compostos.
-linha 139[erro sintatico: token lido "array"], tokens esperados [")"]
-[ERROR: linha 141] Erro semantico: "write_local" nao foi declarado.
-[ERROR: linha 141] Erro semantico: Acesso invalido no vetor - "array". Esperando constante ou variavel do tipo "inteiro".
-[ERROR: linha 141] Erro semantico: Acesso Invalido - "idade" nao e um vetor.
-[ERROR: linha 143] Erro semantico: Acesso invalido no vetor - "array". Esperando constante ou variavel do tipo "inteiro".
-[ERROR: linha 143] Erro semantico: Acesso Invalido - "idade" nao e um vetor.
-linha 144[erro sintatico: token lido "2"], tokens esperados ["IDE"]
-linha 148[erro sintatico: token lido "="], tokens esperados [")"]
-linha 148[erro sintatico: token lido "<"], tokens esperados ["(","="]
-[ERROR: linha 151] Erro semantico: "cadeia_atr" precisa ser do tipo inteiro ou real.
-[ERROR: linha 154] Erro semantico: Atribuicao Invalida - "a_var_global" nao foi declarado.
-[ERROR: linha 154] Erro semantico: E necessario a definicao da condicao de parada com operacoes logicas e/ou relacionais.
-[ERROR: linha 157] Erro semantico: "char_atr" precisa ser do tipo inteiro ou real.
-[ERROR: linha 161] Erro semantico: Nao sao permitidas expressoes aritmeticas na condicao do comando "se".
-[ERROR: linha 166] Erro semantico: Esperando um valor do tipo booleano.
-[ERROR: linha 172] Erro semantico: Nao sao permitidas expressoes aritmeticas na condicao do comando "enquanto".
-[ERROR: linha 177] Erro semantico: Esperando um valor do tipo booleano.
-[ERROR: linha 182] Erro semantico: Atribuicao Invalida - "constante_atr" e uma constante.
-[ERROR: linha 184] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo inteiro.
-[ERROR: linha 185] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo booleano.
-[ERROR: linha 186] Erro semantico: Atribuicao Invalida em "bool_atr. Esperando um valor do tipo: "booleano"
-[ERROR: linha 188] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo char.
-[ERROR: linha 189] Erro semantico: Atribuicao Invalida - Nao e permitido operacoes com variaveis do tipo char.
+[ERROR: linha 97] Erro semantico: constante(local)  "a" com o mesmo nome de uma constante global.
+[ERROR: linha 98] Erro semantico: constante(local)  "b" com o mesmo nome de uma constante global.
+[ERROR: linha 102] Erro semantico: variavel(local)  "local_a" com o mesmo nome de uma constante (local).
+[ERROR: linha 103] Erro semantico: variavel(local)  "c" com o mesmo nome de uma constante (global).
+[ERROR: linha 104] Erro semantico: variavel(local)  "local_c" com o mesmo nome de uma constante (local).
+[ERROR: linha 106] Erro semantico: variavel(local)  "b" com o mesmo nome de uma constante (global).
+[ERROR: linha 118] Erro semantico: variavel(local)  "local_a" com o mesmo nome de uma constante (local).
+[ERROR: linha 120] Erro semantico: variavel(local)  "teste" com o mesmo nome de uma constante (global).
+linha 122[erro sintatico: token lido "a"], tokens esperados ["NRO"]
+[ERROR: linha 125] Erro semantico: variavel(local)  "Joao" nao e permitido inicializacao em tipos compostos.
+[ERROR: linha 133] Erro semantico: Acesso Invalido - "idade" nao e um vetor.
+[ERROR: linha 133] Erro semantico: Função "funcao_teste_1" espera menos parâmetros.
+[ERROR: linha 133] Erro semantico: Função "funcao_teste_1" espera menos parâmetros.
+[ERROR: linha 135] Erro semantico: "nova_pessoa" nao foi declarado.
+[ERROR: linha 135] Erro semantico: "local_1" nao foi declarado.
+[ERROR: linha 135] Erro semantico: "local_2" nao foi declarado.
+[ERROR: linha 135] Erro semantico: Função "funcao_teste_2" recebeu parâmetros não declarados.
+[ERROR: linha 135] Erro semantico: Função "funcao_teste_2" recebeu parâmetros não declarados.
+[ERROR: linha 135] Erro semantico: Função "funcao_teste_2" recebeu parâmetros não declarados.
+[ERROR: linha 135] Erro semantico: Função "funcao_teste_2" recebeu parâmetros em ordens divergentes.
+[ERROR: linha 135] Erro semantico: Função "funcao_teste_2" recebeu parâmetros em ordens divergentes.
+[ERROR: linha 136] Erro semantico: Função "funcao_teste_3" espera mais parâmetros.
+[ERROR: linha 136] Erro semantico: Função "funcao_teste_3" recebeu menos parâmetros do que o esperado.
+linha 138[erro sintatico: token lido "array"], tokens esperados [")"]
+[ERROR: linha 140] Erro semantico: "write_local" nao foi declarado.
+[ERROR: linha 140] Erro semantico: Acesso invalido no vetor - "array". Esperando constante ou variavel do tipo "inteiro".
+[ERROR: linha 140] Erro semantico: Acesso Invalido - "idade" nao e um vetor.
+[ERROR: linha 142] Erro semantico: Acesso invalido no vetor - "array". Esperando constante ou variavel do tipo "inteiro".
+[ERROR: linha 142] Erro semantico: Acesso Invalido - "idade" nao e um vetor.
+linha 143[erro sintatico: token lido "2"], tokens esperados ["IDE"]
+linha 147[erro sintatico: token lido "="], tokens esperados [")"]
+linha 147[erro sintatico: token lido "<"], tokens esperados ["(","="]
+[ERROR: linha 150] Erro semantico: "cadeia_atr" precisa ser do tipo inteiro ou real.
+[ERROR: linha 153] Erro semantico: Atribuicao Invalida - "a_var_global" nao foi declarado.
+[ERROR: linha 153] Erro semantico: E necessario a definicao da condicao de parada com operacoes logicas e/ou relacionais.
+[ERROR: linha 156] Erro semantico: "char_atr" precisa ser do tipo inteiro ou real.
+[ERROR: linha 160] Erro semantico: Nao sao permitidas expressoes aritmeticas na condicao do comando "se".
+[ERROR: linha 165] Erro semantico: Esperando um valor do tipo booleano.
+[ERROR: linha 171] Erro semantico: Nao sao permitidas expressoes aritmeticas na condicao do comando "enquanto".
+[ERROR: linha 176] Erro semantico: Esperando um valor do tipo booleano.
+[ERROR: linha 181] Erro semantico: Atribuicao Invalida - "constante_atr" e uma constante.
+[ERROR: linha 183] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo inteiro.
+[ERROR: linha 184] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo booleano.
+[ERROR: linha 185] Erro semantico: Atribuicao Invalida em "bool_atr. Esperando um valor do tipo: "booleano"
+[ERROR: linha 187] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo char.
+[ERROR: linha 188] Erro semantico: Atribuicao Invalida - Nao e permitido operacoes com variaveis do tipo char.
+[ERROR: linha 190] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo cadeia.
 [ERROR: linha 191] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo cadeia.
 [ERROR: linha 192] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo cadeia.
-[ERROR: linha 193] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo cadeia.
-[ERROR: linha 194] Erro semantico: Atribuicao Invalida - Nao e permitido operacoes com variaveis do tipo cadeia.
-linha 196[erro sintatico: token lido "Joao"], tokens esperados [",",";"]
-[ERROR: linha 196] Erro semantico: "c" nao e nem vetor nem matriz.
-[ERROR: linha 196] Erro semantico: "d" nao foi declarado.
-[ERROR: linha 196] Erro semantico: Acesso invalido no vetor - "carros". Esperando constante ou variavel do tipo "inteiro".
-[ERROR: linha 196] Erro semantico: Acesso Invalido - "carros". Elementos compostos nao sao permitidos como index de vetor ou matriz.
-[ERROR: linha 196] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo inteiro.
-[ERROR: linha 198] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo inteiro.
-[ERROR: linha 200] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo inteiro.
-[ERROR: linha 201] Erro semantico: Atribuicao Invalida em "Joao.carros. Esperando um valor do tipo: "inteiro"
-[ERROR: linha 203] Erro semantico: Atribuicao Invalida em "Joao.cor_cabelo. Esperando um valor do tipo: "cadeia"
-[ERROR: linha 204] Erro semantico: Acesso invalido no vetor - "carros". Esperando constante ou variavel do tipo "inteiro".
-[ERROR: linha 205] Erro semantico: Acesso Invalido - "carros". Elementos compostos nao sao permitidos como index de vetor ou matriz.
-[ERROR: linha 206] Erro semantico: Acesso Invalido - "carros" nao e uma matriz.
-[ERROR: linha 208] Erro semantico: Acesso invalido na matriz - "roupas". Esperando constante ou variavel do tipo "inteiro".
-[ERROR: linha 209] Erro semantico: Acesso Invalido - "roupas" nao e um vetor.
-=======
-[ERROR: linha 91] Erro semantico: constante(local)  "a" com o mesmo nome de uma constante global.
-[ERROR: linha 92] Erro semantico: constante(local)  "b" com o mesmo nome de uma constante global.
-[ERROR: linha 96] Erro semantico: variavel(local)  "local_a" com o mesmo nome de uma constante (local).
-[ERROR: linha 97] Erro semantico: variavel(local)  "c" com o mesmo nome de uma constante (global).
-[ERROR: linha 98] Erro semantico: variavel(local)  "local_c" com o mesmo nome de uma constante (local).
-[ERROR: linha 100] Erro semantico: variavel(local)  "b" com o mesmo nome de uma constante (global).
-[ERROR: linha 108] Erro semantico: variavel(local)  "teste" com o mesmo nome de uma constante (global).
-linha 110[erro sintatico: token lido "a"], tokens esperados ["NRO"]
-[ERROR: linha 113] Erro semantico: variavel(local)  "Joao" nao e permitido inicializacao em tipos compostos.
-<<<<<<< HEAD
-=======
-[ERROR: linha 123] Erro semantico: Fun��ofuncao_teste_2recebeu par�metros n�o declarados.
-[ERROR: linha 123] Erro semantico: Fun��ofuncao_teste_2recebeu par�metros n�o declarados.
-[ERROR: linha 123] Erro semantico: Fun��ofuncao_teste_2recebeu par�metros n�o declarados.
-[ERROR: linha 123] Erro semantico: Fun��ofuncao_teste_2recebeu par�metros em ordens divergentes.
-[ERROR: linha 123] Erro semantico: Fun��ofuncao_teste_2recebeu par�metros em ordens divergentes.
-linha 126[erro sintatico: token lido "array"], tokens esperados [")"]
-[ERROR: linha 128] Erro semantico: "write_local" nao foi declarado.
-[ERROR: linha 128] Erro semantico: Acesso invalido no vetor - "array". Esperando constante ou variavel do tipo "inteiro".
-[ERROR: linha 128] Erro semantico: Acesso Invalido - "idade" nao e um vetor.
-[ERROR: linha 130] Erro semantico: Acesso invalido no vetor - "array". Esperando constante ou variavel do tipo "inteiro".
-[ERROR: linha 130] Erro semantico: Acesso Invalido - "idade" nao e um vetor.
-linha 131[erro sintatico: token lido "2"], tokens esperados ["IDE"]
-linha 135[erro sintatico: token lido "="], tokens esperados [")"]
-linha 135[erro sintatico: token lido "<"], tokens esperados ["(","="]
-[ERROR: linha 138] Erro semantico: "cadeia_atr" precisa ser do tipo inteiro ou real.
-[ERROR: linha 141] Erro semantico: Atribuicao Invalida - "a_var_global" nao foi declarado.
-[ERROR: linha 141] Erro semantico: E necessario a definicao da condicao de parada com operacoes logicas e/ou relacionais.
-[ERROR: linha 144] Erro semantico: "char_atr" precisa ser do tipo inteiro ou real.
-[ERROR: linha 148] Erro semantico: Nao sao permitidas expressoes aritmeticas na condicao do comando "se".
-[ERROR: linha 153] Erro semantico: Esperando um valor do tipo booleano.
-[ERROR: linha 159] Erro semantico: Nao sao permitidas expressoes aritmeticas na condicao do comando "enquanto".
-[ERROR: linha 164] Erro semantico: Esperando um valor do tipo booleano.
-[ERROR: linha 169] Erro semantico: Atribuicao Invalida - "constante_atr" e uma constante.
-[ERROR: linha 171] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo inteiro.
-[ERROR: linha 172] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo booleano.
-[ERROR: linha 173] Erro semantico: Atribuicao Invalida em "bool_atr. Esperando um valor do tipo: "booleano"
-[ERROR: linha 175] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo char.
-[ERROR: linha 176] Erro semantico: Atribuicao Invalida - Nao e permitido operacoes com variaveis do tipo char.
-[ERROR: linha 178] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo cadeia.
-[ERROR: linha 179] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo cadeia.
-[ERROR: linha 180] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo cadeia.
-[ERROR: linha 181] Erro semantico: Atribuicao Invalida - Nao e permitido operacoes com variaveis do tipo cadeia.
-linha 183[erro sintatico: token lido "Joao"], tokens esperados [",",";"]
-[ERROR: linha 183] Erro semantico: "c" nao e nem vetor nem matriz.
-[ERROR: linha 183] Erro semantico: "d" nao foi declarado.
-[ERROR: linha 183] Erro semantico: Acesso invalido no vetor - "carros". Esperando constante ou variavel do tipo "inteiro".
-[ERROR: linha 183] Erro semantico: Acesso Invalido - "carros". Elementos compostos nao sao permitidos como index de vetor ou matriz.
-[ERROR: linha 183] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo inteiro.
-[ERROR: linha 185] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo inteiro.
-[ERROR: linha 187] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo inteiro.
-[ERROR: linha 188] Erro semantico: Atribuicao Invalida em "Joao.carros. Esperando um valor do tipo: "inteiro"
-[ERROR: linha 190] Erro semantico: Atribuicao Invalida em "Joao.cor_cabelo. Esperando um valor do tipo: "cadeia"
-[ERROR: linha 191] Erro semantico: Acesso invalido no vetor - "carros". Esperando constante ou variavel do tipo "inteiro".
-[ERROR: linha 192] Erro semantico: Acesso Invalido - "carros". Elementos compostos nao sao permitidos como index de vetor ou matriz.
-[ERROR: linha 193] Erro semantico: Acesso Invalido - "carros" nao e uma matriz.
-[ERROR: linha 195] Erro semantico: Acesso invalido na matriz - "roupas". Esperando constante ou variavel do tipo "inteiro".
-[ERROR: linha 196] Erro semantico: Acesso Invalido - "roupas" nao e um vetor.
->>>>>>> f55e7b27059362e5cc9b041663f1367bfa347b74
->>>>>>> 3c9756d04c970236bc59dd6a6b616db1924fdeb2
+[ERROR: linha 193] Erro semantico: Atribuicao Invalida - Nao e permitido operacoes com variaveis do tipo cadeia.
+linha 195[erro sintatico: token lido "Joao"], tokens esperados [",",";"]
+[ERROR: linha 195] Erro semantico: "c" nao e nem vetor nem matriz.
+[ERROR: linha 195] Erro semantico: "d" nao foi declarado.
+[ERROR: linha 195] Erro semantico: Acesso invalido no vetor - "carros". Esperando constante ou variavel do tipo "inteiro".
+[ERROR: linha 195] Erro semantico: Acesso Invalido - "carros". Elementos compostos nao sao permitidos como index de vetor ou matriz.
+[ERROR: linha 195] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo inteiro.
+[ERROR: linha 197] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo inteiro.
+[ERROR: linha 199] Erro semantico: Atribuicao Invalida - Esperando um valor do tipo inteiro.
+[ERROR: linha 200] Erro semantico: Atribuicao Invalida em "Joao.carros. Esperando um valor do tipo: "inteiro"
+[ERROR: linha 202] Erro semantico: Atribuicao Invalida em "Joao.cor_cabelo. Esperando um valor do tipo: "cadeia"
+[ERROR: linha 203] Erro semantico: Acesso invalido no vetor - "carros". Esperando constante ou variavel do tipo "inteiro".
+[ERROR: linha 204] Erro semantico: Acesso Invalido - "carros". Elementos compostos nao sao permitidos como index de vetor ou matriz.
+[ERROR: linha 205] Erro semantico: Acesso Invalido - "carros" nao e uma matriz.
+[ERROR: linha 207] Erro semantico: Acesso invalido na matriz - "roupas". Esperando constante ou variavel do tipo "inteiro".
+[ERROR: linha 208] Erro semantico: Acesso Invalido - "roupas" nao e um vetor.

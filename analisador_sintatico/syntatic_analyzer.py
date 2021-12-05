@@ -281,7 +281,7 @@ class Syntatic_analyzer():
 				self.__expr_var["name"] += self.__currentToken["token"]
 				# Armazena no vetor lexema, os tokens que auxiliarao para analise semantica das expressoes
 				self.__expr_lexema.append(self.__currentToken)
-			elif(self.__currentElement == "escreva" or self.__currentElement == "leia"):
+			elif(self.__currentElement == "escreva" or self.__currentElement == "leia" or self.__currentElement == "chamada"):
 				self.__read_write_var["name"] += self.__currentToken["token"]
 			self.__currentToken = self.next_token()
 			if(self.match("IDE", 2) == True):
@@ -292,7 +292,7 @@ class Syntatic_analyzer():
 					self.__expr_var["name"] += self.__currentToken["token"]
 					# Armazena no vetor lexema, os tokens que auxiliarao para analise semantica das expressoes
 					self.__expr_lexema.append(self.__currentToken)
-				elif(self.__currentElement == "escreva" or self.__currentElement == "leia"):
+				elif(self.__currentElement == "escreva" or self.__currentElement == "leia" or self.__currentElement == "chamada"):
 					self.__read_write_var["name"] += self.__currentToken["token"]
 				self.__currentToken = self.next_token()
 				result = self.nested_elem_registro()
@@ -326,7 +326,7 @@ class Syntatic_analyzer():
 				self.__expr_var["name"] += self.__currentToken["token"]
 				# Armazena no vetor lexema, os tokens que auxiliarao para analise semantica das expressoes
 				self.__expr_lexema.append(self.__currentToken)
-			elif(self.__currentElement == "escreva" or self.__currentElement == "leia"):
+			elif(self.__currentElement == "escreva" or self.__currentElement == "leia" or self.__currentElement == "chamada"):
 				self.__read_write_var["name"] += self.__currentToken["token"]
 			self.__currentToken = self.next_token()
 			if(self.match("IDE", 2) == True):
@@ -337,7 +337,7 @@ class Syntatic_analyzer():
 					self.__expr_var["name"] += self.__currentToken["token"]
 					# Armazena no vetor lexema, os tokens que auxiliarao para analise semantica das expressoes
 					self.__expr_lexema.append(self.__currentToken)
-				elif(self.__currentElement == "escreva" or self.__currentElement == "leia"):
+				elif(self.__currentElement == "escreva" or self.__currentElement == "leia" or self.__currentElement == "chamada"):
 					self.__read_write_var["name"] += self.__currentToken["token"]
 				self.__currentToken = self.next_token()
 				result = self.nested_elem_registro1()
@@ -870,7 +870,7 @@ class Syntatic_analyzer():
 				self.__expr_var["dimensao"] = []
 				# Adiciona o token ao vetor lexema, para analise semantica.
 				self.__expr_lexema.append(self.__currentToken)
-			elif(self.__currentElement == "escreva" or self.__currentElement == "leia"):
+			elif(self.__currentElement == "escreva" or self.__currentElement == "leia" or self.__currentElement == "chamada"):
 				self.__read_write_var["dimensao"] = []
 			elif(self.__currentElement == "atribuicao" or self.__currentElement == "atr_para"):
 				self.__lexema["dimensao"] = []
@@ -910,7 +910,7 @@ class Syntatic_analyzer():
 				self.__expr_var["dimensao"].append(self.__currentToken)
 				# Adiciona o token ao vetor lexema, para analise semantica.
 				self.__expr_lexema.append(self.__currentToken)
-			elif(self.__currentElement == "escreva" or self.__currentElement == "leia"):
+			elif(self.__currentElement == "escreva" or self.__currentElement == "leia" or self.__currentElement == "chamada"):
 				self.__read_write_var["dimensao"].append(self.__currentToken)
 			self.__currentToken = self.next_token()
 			result = self.v_m_access2()
@@ -930,7 +930,7 @@ class Syntatic_analyzer():
 				self.__expr_var["dimensao"].append(self.__currentToken)
 				# Adiciona o token ao vetor lexema, para analise semantica.
 				self.__expr_lexema.append(self.__currentToken)
-			elif(self.__currentElement == "escreva" or self.__currentElement == "leia"):
+			elif(self.__currentElement == "escreva" or self.__currentElement == "leia" or self.__currentElement == "chamada"):
 				self.__read_write_var["dimensao"].append(self.__currentToken)
 			self.__currentToken = self.next_token()
 			if(self.match("]", 1) == True):
@@ -979,7 +979,7 @@ class Syntatic_analyzer():
 				self.__lexema["dimensao"] = "composto"
 			elif(self.__currentElement == "expressao"):
 				self.__expr_var["dimensao"] = "composto"
-			elif(self.__currentElement == "escreva" or self.__currentElement == "leia"):
+			elif(self.__currentElement == "escreva" or self.__currentElement == "leia" or self.__currentElement == "chamada"):
 				self.__read_write_var["dimensao"] = "composto"
 			self.elem_registro()
 			if(self.match("]", 1) == True):
@@ -1533,6 +1533,7 @@ class Syntatic_analyzer():
 	# <functionCall> ::= '(' <varList0>
 	def functionCall(self):
 		if(self.match("(", 1) == True):
+			self.__currentElement = "chamada"
 			self.__currentToken = self.next_token()
 			self.varList0()
 		else:
@@ -1548,6 +1549,9 @@ class Syntatic_analyzer():
 			self.__currentToken = self.next_token()
 			self.varList2()
 		elif(self.match("IDE", 2) == True):
+			if(self.__currentElement == "chamada"):
+				self.__read_write_var["name"]     = self.__currentToken["token"]
+				self.__read_write_var["dimensao"] = None 
 			self.__function_call_params.append(self.__currentToken['token'])
 			self.__param_qtd_on += 1
 			self.__currentToken = self.next_token()
@@ -1576,13 +1580,13 @@ class Syntatic_analyzer():
 	# <varList1>     ::= <varList2>     | <v_m_access> <varList2> | <elem_registro> <varList2>
 	def varList1(self):
 		if(self.__functions_aux.First("varList2",self.__currentToken['token'], self.__currentToken['sigla']) == True):
-			self.varList2()
+			self.varList2(True)
 		elif(self.__functions_aux.First("v_m_access",self.__currentToken['token'], self.__currentToken['sigla']) == True):
-			self.v_m_access()
-			self.varList2()
+			result = self.v_m_access()
+			self.varList2(result)
 		elif(self.__functions_aux.First("elem_registro",self.__currentToken['token'], self.__currentToken['sigla']) == True):
-			self.elem_registro()
-			self.varList2()
+			result = self.elem_registro()
+			self.varList2(result)
 		else:
 			if(self.number_of_tokens() > 0):  # Verifica se existe tokens a serem analisados.
 				print("[ERROR] Erro sintático na linha " + self.__currentToken['linha'] + ". Esperando token ',' ou '[' ou '.'.\n")
@@ -1591,11 +1595,21 @@ class Syntatic_analyzer():
 				self.__error_functionCall()
 
 	# <varList2>     ::= ',' <varList0> | ')' ';'
-	def varList2(self):
+	def varList2(self, result):
 		if(self.match(",", 1) == True):
+			if(result):
+				# Faz a analise semantica da estrutura usada no comando.
+				self.__semantic_analyzer.analyzer_param(self.__currentToken["linha"], self.__read_write_var)
+			self.__read_write_var["name"]     = ""
+			self.__read_write_var["dimensao"] = None
 			self.__currentToken = self.next_token()
 			self.varList0()
 		elif(self.match(")", 1) == True):
+			if(result):
+				# Faz a analise semantica da estrutura usada no comando.
+				self.__semantic_analyzer.analyzer_param(self.__currentToken["linha"], self.__read_write_var)
+			self.__read_write_var["name"]     = ""
+			self.__read_write_var["dimensao"] = None
 			self.__semantic_analyzer.function_check_param(self.__param_qtd_on, self.__function_name_on, self.__function_overload_qtd, self.__function_overload_name, self.__currentToken["linha"])
 			self.__semantic_analyzer.function_check_ord_param(self.__function_name_on, self.__function_overload_name, self.__function_call_params, self.__function_overload_param, self.__currentToken["linha"])
 			self.__function_call_params.clear()
