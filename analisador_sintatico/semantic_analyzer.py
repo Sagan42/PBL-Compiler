@@ -807,7 +807,7 @@ class Semantic_Analyzer(object):
 							if type[i][j] == type[len(name) - 1][j]:
 								control += 1
 							if control == len(type[i]):
-								self.__error("[ERROR: linha " + linha + "] Erro semantico: Sobrecarga inválida, assinaturas idênticas.")
+								self.error("[ERROR: linha " + linha + "] Erro semantico: Sobrecarga inválida, assinaturas idênticas.")
 
 
 	# Verifica se a função foi declarada na hora da chamada.
@@ -816,7 +816,7 @@ class Semantic_Analyzer(object):
 			if nameF in nameT:
 				return
 			else:
-				self.__error("[ERROR: linha " + linha + "] Erro semantico: Função" + nameF + "não declarada.")
+				self.error("[ERROR: linha " + linha + "] Erro semantico: Função" + nameF + "não declarada.")
 
 
 	# Verifica se todos os parâmetros foram passados.
@@ -826,7 +826,7 @@ class Semantic_Analyzer(object):
 				if qtdT[i] == qtdF:
 					return
 				else:
-					self.__error("[ERROR: linha " + linha + "] Erro semantico: Função" + nameF + "espera mais parâmetros.")
+					self.error("[ERROR: linha " + linha + "] Erro semantico: Função" + nameF + "espera mais parâmetros.")
 
 	# Verifica a ordem dos parâmetros na chamada da função, através de seus tipos
 	def function_check_ord_param(self, nameF, nameT, paramF, typeT, linha):
@@ -841,9 +841,12 @@ class Semantic_Analyzer(object):
 						elif len(aux) > 0:
 							if aux['tipo'] != typeT[i][j]:
 								print('ERRO DE CHAMADA!!!')
+							self.error("[ERROR: linha " + linha + "] Erro semantico: Função" + nameF + "recebeu parâmetros não declarados.")
+						elif len(aux) > 0:
+							if aux['tipo'] != typeT[i][j]:
+								self.error("[ERROR: linha " + linha + "] Erro semantico: Função" + nameF + "recebeu parâmetros em ordens divergentes.")
 						elif len(aux2) > 0:
 							if aux2['tipo'] != typeT[i][j]:
-
-								print('ERRO DE CHAMADA!!!')
+								self.error("[ERROR: linha " + linha + "] Erro semantico: Função" + nameF + "recebeu parâmetros em ordens divergentes.")
 				else:
 					return
