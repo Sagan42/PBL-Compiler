@@ -33,6 +33,19 @@ class Semantic_Analyzer(object):
 		print("===================================================================================")
 	# ========================================================================================
 	# ========================================================================================
+	# Metodo que exclue todas as variaveis e constantes locais analisadas dentro de uma funcao.
+	def remove_local_var_const(self):
+		# Pega todas as chaves (nomes das variaveis e constantes) da tabela
+		keys = list(self.__st_var_const.keys())
+		if(len(keys) > 0):
+			for x in range(len(keys)):
+				name  = keys[x]
+				value = self.__st_var_const[name]
+				if(value["escopo"] == "local"):
+					# Exclue a variavel/constante local declarada na funcao
+					del self.__st_var_const[name]
+	# ========================================================================================
+	# ========================================================================================
 	# Metodo para armazenar dados na tabela de varaveis e constantes.
 	def add_var_const(self, name, data):
 		new_entry = { "tipo": data["tipo"], "categoria": data["categoria"], "dimensao": data["dimensao"], "escopo": data["escopo"], "init": data["init"] }
@@ -824,6 +837,10 @@ class Semantic_Analyzer(object):
 						aux = self.__get_var_const(paramF[j])
 						aux2 = self.__get_registry(paramF[j])
 						if aux == "" and aux2 == "":
+							print('ERRO DE CHAMADA!!!')
+						elif len(aux) > 0:
+							if aux['tipo'] != typeT[i][j]:
+								print('ERRO DE CHAMADA!!!')
 							self.error("[ERROR: linha " + linha + "] Erro semantico: Função" + nameF + "recebeu parâmetros não declarados.")
 						elif len(aux) > 0:
 							if aux['tipo'] != typeT[i][j]:
