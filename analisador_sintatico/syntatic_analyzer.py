@@ -117,7 +117,6 @@ class Syntatic_analyzer():
 		self.__currentScope   = "local"
 		self.__currentElement = "funcao"
 		self.function_declaration()
-		self.__semantic_analyzer.Print_st_var_const()
 	# ============================================================================================
 	# === Gramatica para declaracao de elementos do tipo registro ================================
 	# <declaration_reg>    ::= registro id '{' <declaration_reg1> |

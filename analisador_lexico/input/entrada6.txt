@@ -71,10 +71,17 @@ variaveis {
 }
 
 funcao inteiro funcao_teste_1 ( ){
+	variaveis {
+		inteiro var_teste_1;
+	}
     retorno;
 }
 
 funcao inteiro funcao_teste_3 (inteiro x, inteiro y){
+	variaveis {
+		inteiro var_teste_1;
+		inteiro var_teste_2;
+	}
 	retorno;
 }
 
@@ -103,7 +110,13 @@ funcao inteiro funcao_teste_2 ( Pessoa nova_pessoa, inteiro local_1, real local_
 }
 
 funcao vazio algoritmo () {
+    constantes {
+        inteiro local_a = 2;                  % Ok
+        real    local_b = 2.23;               % Ok
+    }
+
     variaveis {
+    	real    local_a = 3;
         inteiro local = 1;      % Ok
         char    teste;          % erro de variavel duplicada
         real    array[2];
@@ -115,8 +128,8 @@ funcao vazio algoritmo () {
         cadeia  cadeia_atr;
         char    char_atr;
         booleano bool_atr;
-	inteiro x;
-	inteiro y;
+		inteiro x;
+		inteiro y;
     }
 
 	funcao_teste_1();
