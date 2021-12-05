@@ -837,14 +837,10 @@ class Semantic_Analyzer(object):
 						aux = self.__get_var_const(paramF[j])
 						aux2 = self.__get_registry(paramF[j])
 						if aux == "" and aux2 == "":
-							print('ERRO DE CHAMADA!!!')
-						elif len(aux) > 0:
-							if aux['tipo'] != typeT[i][j]:
-								print('ERRO DE CHAMADA!!!')
 							self.error("[ERROR: linha " + linha + "] Erro semantico: Função" + nameF + "recebeu parâmetros não declarados.")
 						elif len(aux) > 0:
 							if aux['tipo'] != typeT[i][j]:
-								self.error("[ERROR: linha " + linha + "] Erro semantico: Função" + nameF + "recebeu parâmetros em ordens divergentes.")
+								self.error("[ERROR: linha " + linha + "] Erro semantico: Função" + nameF + "recebeu parâmetros em ordens divergentes.")		
 						elif len(aux2) > 0:
 							if aux2['tipo'] != typeT[i][j]:
 								self.error("[ERROR: linha " + linha + "] Erro semantico: Função" + nameF + "recebeu parâmetros em ordens divergentes.")
